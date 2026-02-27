@@ -1,11 +1,10 @@
 ---
 title: "Running OpenClaw 24/7 for Literally $0: The Infrastructure Arbitrage Nobody's Talking About"
-date: "2026-02-01"
+date: "2026-02-13"
 author: "Prashant Choudhary"
-excerpt: "While everyone's burning hundreds of dollars weekly on AI tokens, one developer figured out how to run a 24/7 autonomous bot for literally zero dollars. Here's the complete infrastructure blueprint that breaks all conventional wisdom."
+description: "While everyone's burning hundreds of dollars weekly on AI tokens, one developer figured out how to run a 24/7 autonomous bot for literally zero dollars. Here's the complete infrastructure blueprint that breaks all conventional wisdom."
 tags: ["ai", "cloud-infrastructure", "openclaw", "cost-optimization", "devops", "gcp"]
-published: true
-readingTime: 12
+---
 
 # Running OpenClaw 24/7 for Literally $0: The Infrastructure Arbitrage Nobody's Talking About
 
