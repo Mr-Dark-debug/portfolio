@@ -38,8 +38,7 @@ const actions = [
 
 export function ChatExperience() {
   // Use @ai-sdk/react useChat hook
-  // We explicitly cast to any to avoid strict version mismatch issues if present, similar to sidebar fix
-  const { messages, sendMessage, isLoading, setMessages, reload } = useChat() as any
+  const { messages, append, isLoading, setMessages, reload } = useChat();
 
   // Add initial welcome message if none exist
   React.useEffect(() => {
@@ -55,7 +54,7 @@ export function ChatExperience() {
   }, [messages.length, setMessages])
 
   const handleSendMessage = async (data: { message: string; model: string }) => {
-    await sendMessage({
+    await append({
       role: 'user',
       content: data.message,
     }, {
@@ -64,7 +63,7 @@ export function ChatExperience() {
   };
 
   const handleSuggestionSelect = (suggestion: string) => {
-    sendMessage({
+    append({
       role: 'user',
       content: suggestion
     });

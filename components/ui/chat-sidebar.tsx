@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useChat } from "@ai-sdk/react";
-import { X, Sparkles, Send, Link2, Keyboard, Brain } from "lucide-react";
+import { X, Sparkles, Send, Link2, Keyboard, Brain, ChevronDown, ChevronUp, Copy, RotateCcw, Share2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -56,16 +56,120 @@ function hasReasoningParts(message: any): boolean {
   return Boolean(message.parts?.some((part: any) => part.type === "reasoning"));
 }
 
+function getReasoningText(message: any): string {
+  if (message.parts && Array.isArray(message.parts)) {
+    return message.parts
+      .filter((part: any) => part.type === "reasoning")
+      .map((part: any) => part.reasoning || part.text)
+      .filter(Boolean)
+      .join("\n");
+  }
+  return "";
+}
+
+const ReasoningContent = ({ 
+  reasoningText, 
+  isLoading, 
+  t 
+}: { 
+  reasoningText: string; 
+  isLoading: boolean; 
+  t: any 
+}) => {
+  const [isExpanded, setIsExpanded] = React.useState(isLoading);
+
+  // Auto-expand while reasoning is in progress
+  React.useEffect(() => {
+    if (isLoading) {
+      setIsExpanded(true);
+    }
+  }, [isLoading]);
+
+  return (
+    <div className={cn("mb-2 border-b border-purple-200 pb-2 dark:border-purple-800", !isLoading && "opacity-80")}>
+      <button 
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 mb-1 hover:text-purple-700 dark:hover:text-purple-300 transition-colors group"
+      >
+        <Brain className="h-3 w-3" />
+        <span className="font-medium underline-offset-2 group-hover:underline">
+          {isLoading ? t("reasoning") : t("reasoningDone")}
+        </span>
+        {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+      </button>
+      {isExpanded && (
+        <div className="text-xs text-zinc-500 dark:text-zinc-400 italic whitespace-pre-wrap animate-in fade-in slide-in-from-top-1 duration-200">
+          {reasoningText}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
   const t = useTranslations("Chat");
   const locale = useLocale();
-  const { messages, sendMessage, status, error } = useChat({ id: "portfolio-chat" }) as any;
+  const { messages, append, reload, status, error } = useChat({ id: "portfolio-chat" });
   const isLoading = status === "streaming" || status === "submitted";
   const [inputValue, setInputValue] = React.useState("");
   const [selectedModel, setSelectedModel] = React.useState("openai/gpt-oss-120b");
   const [isModelMenuOpen, setIsModelMenuOpen] = React.useState(false);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+  const [copiedId, setCopiedId] = React.useState<string | null>(null);
+
+  const handleCopy = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleShare = async (text: string) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "AI Answer from Prashant's Portfolio",
+          text: text,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      handleCopy(text, "share");
+    }
+  };
+
+  const MessageActions = ({ message, text }: { message: any; text: string }) => {
+    if (message.role !== "assistant" || !text) return null;
+
+    return (
+      <div className="mt-2 flex items-center gap-1 transition-opacity">
+        <button
+          onClick={() => handleCopy(text, message.id)}
+          className="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-500 dark:text-zinc-400 transition-colors"
+          title="Copy"
+        >
+          {copiedId === message.id ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+        </button>
+        <button
+          onClick={() => handleShare(text)}
+          className="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-500 dark:text-zinc-400 transition-colors"
+          title="Share"
+        >
+          <Share2 className="h-3.5 w-3.5" />
+        </button>
+        <button
+          onClick={() => reload()}
+          className="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-500 dark:text-zinc-400 transition-colors"
+          title="Retry"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    );
+  };
 
   const models = [
     { id: "qwen/qwen3-32b", name: "Qwen 3 32B" },
@@ -93,7 +197,7 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
     setInputValue("");
 
     try {
-      await sendMessage(
+      await append(
         { role: "user", content: text },
         { body: { model: selectedModel, locale } },
       );
@@ -175,11 +279,12 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
             <div className="space-y-4 p-4">
               {messages.map((message: any) => {
                 const messageText = getMessageText(message);
-                const isThinking = message.role === "assistant" && !messageText && isLoading;
-                const showReasoning = hasReasoningParts(message);
+                const reasoningText = getReasoningText(message);
+                const isThinking = message.role === "assistant" && !messageText && !reasoningText && !message.toolInvocations?.length && isLoading;
+                const showReasoning = reasoningText.length > 0;
 
                 return (
-                  <div key={message.id} className={cn("flex gap-3", message.role === "user" ? "justify-end" : "justify-start")}>
+                  <div key={message.id} className={cn("flex gap-3 group", message.role === "user" ? "justify-end" : "justify-start")}>
                     {message.role === "assistant" && (
                       <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
                         {isThinking ? <Brain className="h-4 w-4 animate-pulse text-purple-600 dark:text-purple-400" /> : <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-400" />}
@@ -199,13 +304,27 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
                           <span className="text-sm font-medium">{t("thinking")}</span>
                         </div>
                       )}
+
+                      {/* Tool Invocations */}
+                      {message.toolInvocations?.map((toolInvocation: any) => {
+                        const { toolName, toolCallId, state } = toolInvocation;
+                        if (state === 'call') {
+                          return (
+                            <div key={toolCallId} className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-2">
+                              <Link2 className="h-3 w-3 animate-pulse" />
+                              <span>{t("usingTool", { tool: toolName })}</span>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
+
                       {showReasoning && (
-                        <div className="mb-2 border-b border-purple-200 pb-2 dark:border-purple-800">
-                          <div className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400">
-                            <Brain className="h-3 w-3" />
-                            <span className="italic">{t("reasoningDone")}</span>
-                          </div>
-                        </div>
+                        <ReasoningContent 
+                          reasoningText={reasoningText} 
+                          isLoading={isLoading && !messageText} 
+                          t={t} 
+                        />
                       )}
                       {messageText && (
                         <div
@@ -218,6 +337,7 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>{messageText}</ReactMarkdown>
                         </div>
                       )}
+                      <MessageActions message={message} text={messageText} />
                     </div>
                   </div>
                 );

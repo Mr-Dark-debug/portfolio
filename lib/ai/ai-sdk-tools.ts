@@ -9,29 +9,29 @@ import {
 
 export function createPortfolioTools() {
   return {
-    getVerifiedProfileInfo: tool({
-      description: "Use for verified public facts about Prashant Choudhary, his education, and public links.",
+    get_verified_profile_info: tool({
+      description: "Retrieves the verified facts about Prashant Choudhary (education, public links, etc.).",
       inputSchema: z.object({
         topic: z.string().optional().describe("Requested profile topic."),
       }),
       execute: getVerifiedProfileInfo,
     }),
-    searchWeb: tool({
-      description: "Search the public web when the user asks for general current or external context.",
+    search_web: tool({
+      description: "Performs a public-web search for general information (e.g., technical topics, news, public pages).",
       inputSchema: z.object({
         query: z.string().describe("Search query."),
       }),
       execute: searchWeb,
     }),
-    fetchPublicProfilePage: tool({
-      description: "Fetch approved public profile pages such as Prashant's website, GitHub, LinkedIn, YouTube, blog, or X.",
+    fetch_public_profile_page: tool({
+      description: "Fetches the content of an approved public URL from Prashant's profiles (website, GitHub, LinkedIn, YouTube, blog, X, etc.).",
       inputSchema: z.object({
         url: z.string().url().describe("Approved public profile URL."),
       }),
       execute: fetchPublicProfilePage,
     }),
-    readLocalPortfolioContent: tool({
-      description: "Search local markdown blog/portfolio content in this repository.",
+    read_local_portfolio_content: tool({
+      description: "Looks through the markdown files that make up Prashant's portfolio repository (e.g., blog posts, project write-ups) to find relevant excerpts.",
       inputSchema: z.object({
         query: z.string().describe("Topic or keyword to search for."),
       }),
