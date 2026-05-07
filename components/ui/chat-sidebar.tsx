@@ -1,11 +1,12 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { useChat } from '@ai-sdk/react'
-import { X, Sparkles, Send, Link2, Keyboard, Brain } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import * as React from "react";
+import { useChat } from "@ai-sdk/react";
+import { X, Sparkles, Send, Link2, Keyboard, Brain } from "lucide-react";
+import { cn } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ChatSidebarProps {
   isOpen: boolean;
@@ -13,23 +14,16 @@ interface ChatSidebarProps {
 }
 
 const SUGGESTED_PROMPTS = [
-  { label: "Tell me about your projects", icon: "🚀" },
-  { label: "What's your tech stack?", icon: "💻" },
-  { label: "Your AI experience?", icon: "🤖" },
-  { label: "Are you available?", icon: "📅" },
-  { label: "Tell me about PocketLLM", icon: "📱" },
-  { label: "What is MugShot Studio?", icon: "🎨" },
+  { key: "projects", icon: "🚀" },
+  { key: "stack", icon: "💻" },
+  { key: "experience", icon: "🤖" },
+  { key: "availability", icon: "📅" },
+  { key: "education", icon: "🎓" },
+  { key: "studio", icon: "🎨" },
 ];
 
-// Sparkle icon for the header
 const SparkleIcon = () => (
-  <svg
-    fill="none"
-    height="40"
-    viewBox="0 0 48 48"
-    width="40"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg fill="none" height="40" viewBox="0 0 48 48" width="40" xmlns="http://www.w3.org/2000/svg" aria-hidden>
     <defs>
       <linearGradient id="sparkle-gradient" x1="24" y1="0" x2="24" y2="48" gradientUnits="userSpaceOnUse">
         <stop offset="0" stopColor="#a855f7" stopOpacity="0.8" />
@@ -47,302 +41,200 @@ const SparkleIcon = () => (
   </svg>
 );
 
-// Helper function to extract text content from message parts (AI SDK 5.0 format)
 function getMessageText(message: any): string {
-  // 1. Prioritize standard 'content' string if available
-  if (typeof message.content === 'string' && message.content.length > 0) {
-    return message.content;
-  }
-
-  // 2. AI SDK 5.0 uses 'parts' array
+  if (typeof message.content === "string" && message.content.length > 0) return message.content;
   if (message.parts && Array.isArray(message.parts)) {
-    const textParts = message.parts
-      .filter((part: any) => part.type === 'text')
+    return message.parts
+      .filter((part: any) => part.type === "text")
       .map((part: any) => part.text)
-      .join('');
-
-    if (textParts) return textParts;
+      .join("");
   }
-
-  return '';
+  return "";
 }
 
-// Helper function to check if message has reasoning parts
 function hasReasoningParts(message: any): boolean {
-  if (!message.parts || !Array.isArray(message.parts)) return false;
-  return message.parts.some((part: any) => part.type === 'reasoning');
-}
-
-// Helper function to get reasoning text
-function getReasoningText(message: any): string {
-  if (!message.parts || !Array.isArray(message.parts)) return '';
-  return message.parts
-    .filter((part: any) => part.type === 'reasoning')
-    .map((part: any) => part.text || part.reasoning || '')
-    .join('');
+  return Boolean(message.parts?.some((part: any) => part.type === "reasoning"));
 }
 
 export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
-  // AI SDK 5.0 API
-  const { messages, sendMessage, status, error } = useChat({
-    id: 'portfolio-chat',
-  }) as any
-
-  const isLoading = status === 'streaming' || status === 'submitted';
-
-  const [inputValue, setInputValue] = React.useState('')
-  const messagesEndRef = React.useRef<HTMLDivElement>(null)
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  React.useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  React.useEffect(() => {
-    if (isOpen && textareaRef.current) {
-      setTimeout(() => textareaRef.current?.focus(), 100)
-    }
-  }, [isOpen])
-
-  // Log real errors (not SDK finish event validation issues)
-  React.useEffect(() => {
-    if (error && !error.message?.includes('Type validation failed')) {
-      console.error('[Chat] Error:', error.message);
-    }
-  }, [error])
-
-  // Model selector state
-  const [selectedModel, setSelectedModel] = React.useState('llama-3.3-70b-versatile');
+  const t = useTranslations("Chat");
+  const locale = useLocale();
+  const { messages, sendMessage, status, error } = useChat({ id: "portfolio-chat" }) as any;
+  const isLoading = status === "streaming" || status === "submitted";
+  const [inputValue, setInputValue] = React.useState("");
+  const [selectedModel, setSelectedModel] = React.useState("openai/gpt-oss-120b");
   const [isModelMenuOpen, setIsModelMenuOpen] = React.useState(false);
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   const models = [
-    { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B' },
-    { id: 'openai/gpt-oss-120b', name: 'GPT OSS 120B' }
+    { id: "qwen/qwen3-32b", name: "Qwen 3 32B" },
+    { id: "openai/gpt-oss-120b", name: "GPT OSS 120B" },
   ];
 
-  const currentModelName = models.find(m => m.id === selectedModel)?.name || 'Llama 3.3 70B';
+  const currentModelName = models.find((model) => model.id === selectedModel)?.name || "GPT OSS 120B";
 
-  const handleSend = async () => {
-    if (!inputValue.trim() || isLoading) return
+  React.useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-    const message = inputValue.trim()
-    setInputValue('')
+  React.useEffect(() => {
+    if (isOpen) setTimeout(() => textareaRef.current?.focus(), 100);
+  }, [isOpen]);
+
+  React.useEffect(() => {
+    if (error && !error.message?.includes("Type validation failed")) {
+      console.error("[Chat] Error:", error.message);
+    }
+  }, [error]);
+
+  const handleSend = async (text = inputValue.trim()) => {
+    if (!text || isLoading) return;
+    setInputValue("");
 
     try {
-      // AI SDK 5.0 send message format
-      await sendMessage({
-        role: 'user',
-        content: message
-      }, {
-        body: { model: selectedModel }
-      })
-    } catch (e) {
-      console.error('Failed to send message:', e)
+      await sendMessage(
+        { role: "user", content: text },
+        { body: { model: selectedModel, locale } },
+      );
+    } catch (sendError) {
+      console.error("Failed to send message:", sendError);
     }
-  }
+  };
 
-  const handleSuggestedClick = async (suggestion: string) => {
-    if (isLoading) return
-
-    try {
-      await sendMessage({
-        role: 'user',
-        content: suggestion
-      }, {
-        body: { model: selectedModel }
-      })
-    } catch (e) {
-      console.error('Failed to send suggestion:', e)
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSend();
     }
-  }
+  };
 
-  // ... (handleKeyDown and handleInputChange stay mostly the same but ensure they are inside the component)
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
-    }
-  }
-
-  // Auto-resize textarea
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value)
-    const textarea = e.target
-    textarea.style.height = 'auto'
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 150)}px`
-  }
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(event.target.value);
+    event.target.style.height = "auto";
+    event.target.style.height = `${Math.min(event.target.scrollHeight, 150)}px`;
+  };
 
   return (
     <>
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
-          onClick={onClose}
-        />
-      )}
+      {isOpen && <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={onClose} />}
 
-      {/* Sidebar */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={t("title")}
         className={cn(
-          'fixed right-0 top-0 h-screen w-full sm:w-[420px] bg-white dark:bg-zinc-900 shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-in-out border-l border-zinc-200 dark:border-zinc-800',
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+          "fixed right-0 top-0 z-50 flex h-[100svh] w-full flex-col border-l border-zinc-200 bg-white shadow-2xl transition-transform duration-300 ease-in-out dark:border-zinc-800 dark:bg-zinc-900 sm:w-[420px]",
+          isOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
+        <div className="flex items-center justify-between border-b border-zinc-200 p-4 dark:border-zinc-800">
           <div className="flex items-center gap-3">
             <SparkleIcon />
             <div>
-              <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Generative Answers</h2>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">Powered by {currentModelName}</p>
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">{t("title")}</h2>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">{t("poweredBy", { model: currentModelName })}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition"
-            aria-label="Close chat"
+            className="rounded-lg p-2 transition hover:bg-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 dark:hover:bg-zinc-800"
+            aria-label={t("close")}
           >
-            <X className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+            <X className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
           </button>
         </div>
 
-        {/* Messages Area */}
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center p-6 space-y-6">
+            <div className="flex h-full flex-col items-center justify-center space-y-6 p-6 text-center">
               <SparkleIcon />
-
               <div className="space-y-2">
-                <h3 className="text-xl font-medium text-zinc-500 dark:text-zinc-400">
-                  Hi there! 👋
-                </h3>
-                <h4 className="text-lg font-medium text-zinc-900 dark:text-white">
-                  Ask me anything about Prashant
-                </h4>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xs">
-                  I can tell you about his projects, skills, experience, or anything else you'd like to know!
-                </p>
+                <h3 className="text-xl font-medium text-zinc-500 dark:text-zinc-400">{t("greeting")}</h3>
+                <h4 className="text-lg font-medium text-zinc-900 dark:text-white">{t("emptyTitle")}</h4>
+                <p className="max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{t("emptyDescription")}</p>
               </div>
-
-              {/* Suggested prompts */}
-              <div className="flex flex-wrap items-center justify-center gap-2 max-w-sm">
-                {SUGGESTED_PROMPTS.map((prompt, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSuggestedClick(prompt.label)}
-                    disabled={isLoading}
-                    className="px-3 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 text-zinc-700 dark:text-zinc-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-purple-300 dark:hover:border-purple-700 hover:text-purple-700 dark:hover:text-purple-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <span className="mr-1">{prompt.icon}</span>
-                    {prompt.label}
-                  </button>
-                ))}
+              <div className="flex max-w-sm flex-wrap items-center justify-center gap-2">
+                {SUGGESTED_PROMPTS.map((prompt) => {
+                  const label = t(`suggestions.${prompt.key}`);
+                  return (
+                    <button
+                      key={prompt.key}
+                      onClick={() => handleSend(label)}
+                      disabled={isLoading}
+                      className="min-h-9 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-700 transition-all hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300 dark:hover:border-purple-700 dark:hover:bg-purple-900/20 dark:hover:text-purple-300"
+                    >
+                      <span className="mr-1" aria-hidden>{prompt.icon}</span>
+                      {label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           ) : (
-            <div className="p-4 space-y-4">
+            <div className="space-y-4 p-4">
               {messages.map((message: any) => {
                 const messageText = getMessageText(message);
-                const isThinking = message.role === 'assistant' && !messageText && isLoading;
+                const isThinking = message.role === "assistant" && !messageText && isLoading;
                 const showReasoning = hasReasoningParts(message);
 
                 return (
-                  <div
-                    key={message.id}
-                    className={cn(
-                      "flex gap-3",
-                      message.role === 'user' ? 'justify-end' : 'justify-start'
-                    )}
-                  >
-                    {message.role === 'assistant' && (
-                      <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
-                        {isThinking ? (
-                          <Brain className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-pulse" />
-                        ) : (
-                          <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                        )}
+                  <div key={message.id} className={cn("flex gap-3", message.role === "user" ? "justify-end" : "justify-start")}>
+                    {message.role === "assistant" && (
+                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
+                        {isThinking ? <Brain className="h-4 w-4 animate-pulse text-purple-600 dark:text-purple-400" /> : <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-400" />}
                       </div>
                     )}
                     <div
                       className={cn(
-                        "max-w-[85%] rounded-2xl px-4 py-3 text-sm overflow-hidden",
-                        message.role === 'user'
-                          ? "bg-purple-600 text-white rounded-br-md"
-                          : "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white rounded-bl-md"
+                        "max-w-[85%] overflow-hidden rounded-2xl px-4 py-3 text-sm",
+                        message.role === "user"
+                          ? "rounded-br-md bg-purple-600 text-white"
+                          : "rounded-bl-md bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-white",
                       )}
                     >
-                      {/* Thinking animation */}
                       {isThinking && (
                         <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
-                          <Brain className="w-4 h-4 animate-pulse" />
-                          <span className="text-sm font-medium">Thinking...</span>
-                          <div className="flex gap-1">
-                            <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" />
-                            <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
-                            <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
-                          </div>
+                          <Brain className="h-4 w-4 animate-pulse" />
+                          <span className="text-sm font-medium">{t("thinking")}</span>
                         </div>
                       )}
-
-                      {/* Reasoning indicator */}
                       {showReasoning && (
-                        <div className="mb-2 pb-2 border-b border-purple-200 dark:border-purple-800">
-                          <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 text-xs">
-                            <Brain className="w-3 h-3" />
-                            <span className="italic">Reasoning completed</span>
+                        <div className="mb-2 border-b border-purple-200 pb-2 dark:border-purple-800">
+                          <div className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400">
+                            <Brain className="h-3 w-3" />
+                            <span className="italic">{t("reasoningDone")}</span>
                           </div>
                         </div>
                       )}
-
-                      {/* Message content with markdown */}
                       {messageText && (
-                        <div className={cn(
-                          "prose prose-sm max-w-none",
-                          message.role === 'user'
-                            ? "prose-invert"
-                            : "dark:prose-invert prose-zinc",
-                          "prose-p:my-1 prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5",
-                          "prose-code:bg-zinc-200 dark:prose-code:bg-zinc-700 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs",
-                          "prose-pre:bg-zinc-200 dark:prose-pre:bg-zinc-900 prose-pre:p-3 prose-pre:rounded-lg",
-                          "prose-a:text-purple-600 dark:prose-a:text-purple-400 prose-a:underline"
-                        )}>
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {messageText}
-                          </ReactMarkdown>
+                        <div
+                          className={cn(
+                            "prose prose-sm max-w-none",
+                            message.role === "user" ? "prose-invert" : "prose-zinc dark:prose-invert",
+                            "prose-p:my-1 prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-a:text-purple-600 prose-a:underline dark:prose-a:text-purple-400",
+                          )}
+                        >
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{messageText}</ReactMarkdown>
                         </div>
                       )}
                     </div>
                   </div>
                 );
               })}
-              {/* Show loading indicator only when no assistant message exists yet */}
-              {isLoading && messages.length > 0 && messages[messages.length - 1]?.role === 'user' && (
-                <div className="flex gap-3 justify-start">
-                  <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
-                    <Brain className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-pulse" />
+              {isLoading && messages[messages.length - 1]?.role === "user" && (
+                <div className="flex justify-start gap-3">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
+                    <Brain className="h-4 w-4 animate-pulse text-purple-600 dark:text-purple-400" />
                   </div>
-                  <div className="bg-zinc-100 dark:bg-zinc-800 rounded-2xl rounded-bl-md px-4 py-3">
-                    <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
-                      <span className="text-sm font-medium">Thinking...</span>
-                      <div className="flex gap-1.5">
-                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" />
-                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
-                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
-                      </div>
-                    </div>
+                  <div className="rounded-2xl rounded-bl-md bg-zinc-100 px-4 py-3 dark:bg-zinc-800">
+                    <span className="text-sm font-medium text-purple-600 dark:text-purple-400">{t("thinking")}</span>
                   </div>
                 </div>
               )}
-              {/* Only show errors that aren't the known SDK finish event issue */}
-              {error && !error.message?.includes('Type validation failed') && !error.message?.includes('"type":"finish"') && (
-                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
-                  Error: {error.message}
+              {error && !error.message?.includes("Type validation failed") && !error.message?.includes('"type":"finish"') && (
+                <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
+                  {t("errorPrefix")}: {error.message || t("fallbackError")}
                 </div>
               )}
               <div ref={messagesEndRef} />
@@ -350,48 +242,44 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
           )}
         </div>
 
-        {/* Input Area */}
-        <div className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-          {/* Text Input */}
+        <div className="border-t border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
           <div className="relative border-b border-zinc-200 dark:border-zinc-700">
             <textarea
               ref={textareaRef}
               value={inputValue}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              placeholder="Ask me anything about Prashant..."
-              className="w-full resize-none bg-transparent px-4 py-4 pr-12 text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none min-h-[56px] max-h-[150px]"
+              placeholder={t("inputPlaceholder")}
+              aria-label={t("inputPlaceholder")}
+              className="max-h-[150px] min-h-[56px] w-full resize-none bg-transparent px-4 py-4 pr-12 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none dark:text-white"
               rows={1}
             />
             <button
-              onClick={handleSend}
+              onClick={() => handleSend()}
               disabled={!inputValue.trim() || isLoading}
+              aria-label={t("send")}
               className={cn(
-                "absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all",
+                "absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500",
                 inputValue.trim()
-                  ? "bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-500/25"
-                  : "bg-zinc-200 dark:bg-zinc-700 text-zinc-400 dark:text-zinc-500 cursor-not-allowed"
+                  ? "bg-purple-600 text-white shadow-md shadow-purple-500/25 hover:bg-purple-700"
+                  : "cursor-not-allowed bg-zinc-200 text-zinc-400 dark:bg-zinc-700 dark:text-zinc-500",
               )}
             >
-              <Send className="w-4 h-4" />
+              <Send className="h-4 w-4" />
             </button>
           </div>
 
-          {/* Footer Controls */}
-          <div className="flex items-center justify-between px-4 py-2 bg-zinc-50 dark:bg-zinc-800/50">
+          <div className="flex items-center justify-between gap-2 bg-zinc-50 px-4 py-2 dark:bg-zinc-800/50">
             <div className="relative">
               <button
                 onClick={() => setIsModelMenuOpen(!isModelMenuOpen)}
-                className="flex items-center gap-1.5 px-2 py-1 rounded bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-medium hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
+                aria-label={t("modelMenu")}
+                className="flex min-h-8 items-center gap-1.5 rounded bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 transition-colors hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50"
               >
                 {currentModelName}
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
               </button>
-
               {isModelMenuOpen && (
-                <div className="absolute bottom-full left-0 mb-2 w-48 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden z-50">
+                <div className="absolute bottom-full left-0 z-50 mb-2 w-48 overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
                   {models.map((model) => (
                     <button
                       key={model.id}
@@ -400,8 +288,8 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
                         setIsModelMenuOpen(false);
                       }}
                       className={cn(
-                        "w-full text-left px-3 py-2 text-xs hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors",
-                        selectedModel === model.id ? "text-purple-600 dark:text-purple-400 font-medium" : "text-zinc-700 dark:text-zinc-300"
+                        "w-full px-3 py-2 text-left text-xs transition-colors hover:bg-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-purple-500 dark:hover:bg-zinc-700",
+                        selectedModel === model.id ? "font-medium text-purple-600 dark:text-purple-400" : "text-zinc-700 dark:text-zinc-300",
                       )}
                     >
                       {model.name}
@@ -410,20 +298,19 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
                 </div>
               )}
             </div>
-
             <div className="flex items-center gap-1">
-              <button className="flex items-center gap-1.5 px-2 py-1 text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded transition">
-                <Link2 className="w-3.5 h-3.5" />
-                Attach
+              <button className="flex min-h-8 items-center gap-1.5 rounded px-2 py-1 text-xs text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-300">
+                <Link2 className="h-3.5 w-3.5" />
+                <span className="hidden xs:inline sm:inline">{t("attach")}</span>
               </button>
-              <button className="flex items-center gap-1.5 px-2 py-1 text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded transition">
-                <Keyboard className="w-3.5 h-3.5" />
-                Shortcuts
+              <button className="flex min-h-8 items-center gap-1.5 rounded px-2 py-1 text-xs text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-300">
+                <Keyboard className="h-3.5 w-3.5" />
+                <span className="hidden xs:inline sm:inline">{t("shortcuts")}</span>
               </button>
             </div>
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }

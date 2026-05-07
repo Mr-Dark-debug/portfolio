@@ -1,0 +1,303 @@
+{
+  "LocaleLayout": {
+    "metadata": {
+      "title": "Prashant Choudhary - AI/ML Engineer & Full-Stack Developer",
+      "description": "AI/ML engineer and full-stack developer building practical AI products, developer education, and production-ready software."
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Choose language",
+    "placeholder": "Language"
+  },
+  "HomePage": {
+    "title": "PRASHANT CHOUDHARY",
+    "roles": {
+      "ai": "AI Engineer",
+      "ml": "ML Engineer",
+      "prompt": "Prompt Engineer",
+      "fullstack": "Full Stack Developer",
+      "backend": "Backend Engineer"
+    },
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "experience": "Experience",
+      "education": "Education",
+      "projects": "Projects",
+      "skills": "Skills",
+      "blog": "Blog",
+      "contact": "Contact"
+    },
+    "hero": {
+      "iam": "I am an",
+      "available": "Available for work",
+      "future": "Building the Future with AI",
+      "profileRole": "AI Engineer & Full Stack Developer",
+      "profileAlt": "Portrait of Prashant Choudhary"
+    },
+    "about": {
+      "eyebrow": "About",
+      "title": "AI builder focused on useful, multilingual products.",
+      "description": "I build AI, ML, and full-stack systems that turn ideas into practical software. My work spans LLM applications, mobile experiences, backend services, and developer education.",
+      "masters": "Currently pursuing a Master’s in NLP at the University of Trier. The program started on 13 April 2026 and is ongoing.",
+      "linksLabel": "Public profile links"
+    },
+    "experience": {
+      "title": "Professional Experience",
+      "description": "My journey in the tech industry, working with AI, ML, and software development.",
+      "items": [
+        {
+          "year": "2026",
+          "entries": [
+            {
+              "title": "Developer & Founder - MugShot Studio",
+              "period": "Dec 2025 - Present",
+              "meta": "Self-employed"
+            },
+            {
+              "title": "Founder & Developer - Syntax & Sips",
+              "period": "Oct 2025 - Present",
+              "meta": "India",
+              "description": "Built a content platform for ML, data science, and developer education with weekly playbooks and tutorials."
+            },
+            {
+              "title": "Software Testing as User - Nothing",
+              "period": "Feb 2023 - Present",
+              "meta": "Location: India (Remote)",
+              "description": "Skills: Testing, Communication, Manual Testing"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "entries": [
+            {
+              "title": "Junior AI/ML Backend Engineer - EnactOn Technologies",
+              "period": "Jul 2025 - Nov 2025",
+              "meta": "Location: Surat, Gujarat, India (On-site)",
+              "description": "Full-time"
+            },
+            {
+              "title": "Jr. AI/ML Engineer - Proposal.biz",
+              "period": "Jul 2025 - Nov 2025",
+              "meta": "Location: Surat, Gujarat, India (Hybrid)"
+            },
+            {
+              "title": "AI Prompt Engineer Intern - EnactOn Technologies",
+              "period": "Dec 2024 - Jul 2025",
+              "meta": "Location: India (On-site)",
+              "description": "Skills: Artificial Intelligence (AI), Generative AI Studio, Machine Learning Algorithms"
+            },
+            {
+              "title": "Community Member - Generation Nothing",
+              "period": "Jun 2023 - Oct 2025",
+              "meta": "Location: India (Remote)",
+              "description": "Skills: Communication"
+            }
+          ]
+        },
+        {
+          "year": "2024",
+          "entries": [
+            {
+              "title": "Amalthea 2024 Hackathon (IIT Gandhinagar)",
+              "period": "Dec 2024",
+              "meta": "Location: Gandhinagar, Gujarat, India (On-site)",
+              "description": "AI Engineer | Top 7/50 Teams. Built a multilingual healthcare app with AI-driven IVR.",
+              "extra": "Tech Stack: Python, FastAPI, Dialogflow, Twilio, Gemini, PyTorch"
+            },
+            {
+              "title": "AI/ML Intern - JBcodeapp",
+              "period": "May 2024 - Jun 2024",
+              "meta": "Location: Greater Surat Area (On-site)",
+              "bullets": [
+                "Image-based face recognition using the face_recognition library",
+                "Real-time video face recognition with OpenCV",
+                "Applied AI/ML techniques to enhance web functionality"
+              ]
+            }
+          ]
+        },
+        {
+          "year": "2023",
+          "entries": [
+            {
+              "title": "AI/ML Engineer Intern - ALGOBRAIN AI",
+              "period": "Sep 2023 - Jan 2024",
+              "meta": "Location: Surat, Gujarat, India (On-site)",
+              "description": "Skills: Rasa, Dialogflow, TensorFlow, Communication"
+            },
+            {
+              "title": "Moderator - Google Developer Students Club",
+              "period": "Jun 2022 - Sep 2023",
+              "meta": "Location: Surat, Gujarat, India",
+              "description": "Skills: Communication, Time Management, Team Management"
+            }
+          ]
+        },
+        {
+          "year": "2022",
+          "entries": [
+            {
+              "title": "Moderator - Google Developer Students Club",
+              "period": "Jun 2022 - Sep 2023",
+              "meta": "Location: Surat, Gujarat, India",
+              "description": "Started role as Moderator."
+            }
+          ]
+        },
+        {
+          "year": "2021",
+          "entries": [
+            {
+              "title": "Freelance Editor - Fiverr",
+              "period": "Feb 2021 - Jul 2023",
+              "description": "Skills: Adobe Premiere Pro, Blender, Lightroom, After Effects, Photoshop"
+            }
+          ]
+        }
+      ]
+    },
+    "education": {
+      "title": "Educational Journey",
+      "description": "My academic path in Artificial Intelligence, Data Science, and Natural Language Processing.",
+      "items": [
+        {
+          "title": "Master’s Degree",
+          "heading": "Master’s in Natural Language Processing",
+          "school": "University of Trier",
+          "period": "13 Apr 2026 - Present (Ongoing)",
+          "description": "Currently pursuing a Master’s in NLP. No additional academic details are assumed."
+        },
+        {
+          "title": "Bachelor’s Degree",
+          "heading": "Bachelor’s Degree in Artificial Intelligence and Data Science",
+          "school": "Uka Tarsadia University",
+          "period": "Sep 2021 - Jul 2025 (Completed)",
+          "description": "Skills: Pattern Recognition, Data Mining, AI, Flask, Data Structures, PyTorch, Hadoop, SciPy, Deep Learning, Pandas, Data Analytics"
+        },
+        {
+          "title": "Grade XII",
+          "heading": "Grade XII, Science",
+          "school": "Gyanjyot School",
+          "period": "Physics, Chemistry, Maths",
+          "description": "Skills: Probability, Team Leadership, Time Management, Statistics"
+        },
+        {
+          "title": "Grade X",
+          "heading": "Grade X",
+          "school": "NILKANTH VIDYALAYA"
+        }
+      ]
+    },
+    "buttons": {
+      "menu": "Menu",
+      "askAi": "Ask A.I"
+    },
+    "a11y": {
+      "openMenu": "Open navigation menu",
+      "closeMenu": "Close navigation menu",
+      "openChat": "Open AI chat assistant",
+      "linkedin": "Open LinkedIn profile",
+      "github": "Open GitHub profile",
+      "email": "Send email"
+    },
+    "footer": {
+      "description": "AI/ML Engineer & Full Stack Developer building useful products with modern AI and software engineering.",
+      "aiPrompt": "Have doubts? Ask an AI summarizer",
+      "rights": "All rights reserved.",
+      "craftedBy": "Crafted by {name}",
+      "externalPrompt": "Act as an assistant for Prashant. Analyze his portfolio at {url}. Answer questions about his skills, projects, experience, education, and public profile links based on the website content."
+    }
+  },
+  "Projects": {
+    "title": "Featured Projects",
+    "description": "Pinned and top-starred repositories from my GitHub profile and organizations.",
+    "loading": "Loading projects from GitHub...",
+    "viewProfile": "View GitHub Profile",
+    "moreTitle": "More Projects",
+    "moreDescription": "Additional repositories and contributions.",
+    "noDescription": "No description available",
+    "noShortDescription": "No description"
+  },
+  "Skills": {
+    "title": "Technologies & Tools",
+    "description": "My technical arsenal for building intelligent solutions."
+  },
+  "Contact": {
+    "title": "Get in Touch",
+    "description": "Have a question or want to work together? I’d love to hear from you. Send me a message and I’ll respond as soon as possible.",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "subscribe": "Subscribe to newsletter",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Failed to send message. Please try again.",
+    "placeholders": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "subject": "Project Inquiry",
+      "message": "Your message here..."
+    }
+  },
+  "Chat": {
+    "title": "Generative Answers",
+    "poweredBy": "Powered by {model}",
+    "greeting": "Hi there!",
+    "emptyTitle": "Ask me anything about Prashant",
+    "emptyDescription": "I can answer questions about his projects, skills, experience, education, and public profile links.",
+    "thinking": "Thinking...",
+    "reasoningDone": "Reasoning completed",
+    "inputPlaceholder": "Ask me anything about Prashant...",
+    "send": "Send message",
+    "close": "Close chat",
+    "modelMenu": "Choose AI model",
+    "attach": "Attach",
+    "shortcuts": "Shortcuts",
+    "errorPrefix": "Error",
+    "fallbackError": "I could not complete that request right now. Please try again.",
+    "suggestions": {
+      "projects": "Tell me about your projects",
+      "stack": "What’s your tech stack?",
+      "experience": "Your AI experience?",
+      "availability": "Are you available?",
+      "education": "What are you studying now?",
+      "studio": "What is MugShot Studio?"
+    }
+  },
+  "Blog": {
+    "metadata": {
+      "title": "Blog | Prashant Choudhary - AI Engineer",
+      "description": "Insights, tutorials, and thoughts on AI, machine learning, web development, and software engineering."
+    },
+    "brand": "Captain’s Log",
+    "loading": "Loading the Captain’s Log...",
+    "toggleSearch": "Toggle search",
+    "backHome": "Back to Base",
+    "searchPlaceholder": "Search logs by keyword or topic...",
+    "filterLabel": "Filter by Frequency",
+    "allSignals": "All Signals",
+    "logsFound": "{count} Logs Found",
+    "gridView": "Grid View",
+    "listView": "List View",
+    "filteringBy": "Filtering by:",
+    "noResults": "No logs found in this sector.",
+    "clearFilters": "Clear all filters",
+    "readMore": "Read more",
+    "minRead": "{minutes} min read",
+    "minShort": "{minutes} min",
+    "footer": "Transmitting from the command deck · © {year} Captain Prashant",
+    "post": {
+      "back": "Back to Command Deck",
+      "home": "Home",
+      "writtenBy": "Written by",
+      "authorRole": "AI Engineer & Full Stack Developer",
+      "previous": "Previous",
+      "next": "Next",
+      "rights": "© {year} Prashant Choudhary. All rights reserved."
+    }
+  }
+}

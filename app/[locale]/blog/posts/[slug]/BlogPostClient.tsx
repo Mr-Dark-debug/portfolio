@@ -20,6 +20,7 @@ import { SaveBookmarkButton } from "@/components/blog/features/SaveBookmarkButto
 import { updateReadingProgress } from "@/lib/blog/api";
 import { cn } from "@/lib/utils";
 import type { BlogPost, BlogPostMeta } from "@/lib/blog/types";
+import { useLocale, useTranslations } from "next-intl";
 
 interface BlogPostClientProps {
     post: BlogPost;
@@ -32,6 +33,9 @@ export default function BlogPostClient({
     previousPost,
     nextPost
 }: BlogPostClientProps) {
+    const t = useTranslations("Blog.post");
+    const commonT = useTranslations("Blog");
+    const locale = useLocale();
     // Track reading progress & highlight code
     useEffect(() => {
         const handleScroll = () => {
@@ -77,7 +81,7 @@ export default function BlogPostClient({
                             className="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-purple-600 transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
-                            <span className="hidden sm:inline">Back to Command Deck</span>
+                            <span className="hidden sm:inline">{t("back")}</span>
                         </Link>
 
                         <div className="flex items-center gap-4">
@@ -85,6 +89,7 @@ export default function BlogPostClient({
                             <Link
                                 href="/"
                                 className="p-2 text-zinc-600 hover:text-purple-600 transition-colors flex-shrink-0"
+                                aria-label={t("home")}
                             >
                                 <Home className="w-5 h-5" />
                             </Link>
@@ -129,7 +134,7 @@ export default function BlogPostClient({
                             <span className="flex items-center gap-2">
                                 <Calendar className="w-4 h-4" />
                                 <span className="truncate max-w-[150px] sm:max-w-none">
-                                    {new Date(post.date).toLocaleDateString('en-US', {
+                                    {new Date(post.date).toLocaleDateString(locale, {
                                         year: 'numeric',
                                         month: 'long',
                                         day: 'numeric'
@@ -138,7 +143,7 @@ export default function BlogPostClient({
                             </span>
                             <span className="flex items-center gap-2">
                                 <Clock className="w-4 h-4" />
-                                {post.readingTime} min read
+                                {commonT("minRead", { minutes: post.readingTime })}
                             </span>
                         </div>
 
@@ -218,9 +223,9 @@ export default function BlogPostClient({
                         {post.author.charAt(0)}
                     </div>
                     <div>
-                        <p className="text-sm text-zinc-500">Written by</p>
+                        <p className="text-sm text-zinc-500">{t("writtenBy")}</p>
                         <p className="text-lg font-semibold text-zinc-900">{post.author}</p>
-                        <p className="text-sm text-zinc-500">AI Engineer & Full Stack Developer</p>
+                        <p className="text-sm text-zinc-500">{t("authorRole")}</p>
                     </div>
                 </div>
             </section>
@@ -235,7 +240,7 @@ export default function BlogPostClient({
                         >
                             <p className="flex items-center gap-2 text-sm text-zinc-500 mb-2">
                                 <ArrowLeft className="w-4 h-4" />
-                                Previous
+                                {t("previous")}
                             </p>
                             <p className="font-semibold text-zinc-900 group-hover:text-purple-600 transition-colors line-clamp-2">
                                 {previousPost.title}
@@ -252,7 +257,7 @@ export default function BlogPostClient({
                             )}
                         >
                             <p className="flex items-center justify-end gap-2 text-sm text-zinc-500 mb-2">
-                                Next
+                                {t("next")}
                                 <ArrowRight className="w-4 h-4" />
                             </p>
                             <p className="font-semibold text-zinc-900 group-hover:text-purple-600 transition-colors line-clamp-2">
@@ -266,9 +271,7 @@ export default function BlogPostClient({
             {/* Footer */}
             <footer className="border-t border-zinc-200 py-8">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-                    <p className="text-sm text-zinc-500">
-                        © {new Date().getFullYear()} Prashant Choudhary. All rights reserved.
-                    </p>
+                    <p className="text-sm text-zinc-500">{t("rights", { year: new Date().getFullYear() })}</p>
                 </div>
             </footer>
         </div>

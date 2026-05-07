@@ -9,6 +9,7 @@ import Image from "next/image";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import { cn } from "@/lib/utils";
 import type { BlogPostMeta } from "@/lib/blog/types";
+import { useLocale, useTranslations } from "next-intl";
 
 interface BlogPageClientProps {
     posts: BlogPostMeta[];
@@ -16,6 +17,8 @@ interface BlogPageClientProps {
 }
 
 export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
+    const t = useTranslations("Blog");
+    const locale = useLocale();
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -48,7 +51,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
     if (!mounted) {
         return (
             <div className="min-h-screen bg-white flex items-center justify-center">
-                <div className="animate-pulse text-purple-600">Loading the Captain&apos;s Log...</div>
+                <div className="animate-pulse text-purple-600">{t("loading")}</div>
             </div>
         );
     }
@@ -69,7 +72,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                         {/* Left: Branding */}
                         <div className="flex items-center gap-2">
                             <span className="font-bold text-lg text-black">
-                                Captain&apos;s Log
+                                {t("brand")}
                             </span>
                         </div>
 
@@ -83,7 +86,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                                         ? "bg-purple-100 text-purple-600"
                                         : "text-zinc-500 hover:text-purple-600 hover:bg-zinc-100"
                                 )}
-                                aria-label="Toggle search"
+                                aria-label={t("toggleSearch")}
                             >
                                 <Search className="w-5 h-5" />
                             </button>
@@ -93,7 +96,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                                 className="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-purple-600 transition-colors"
                             >
                                 <ArrowLeft className="w-4 h-4" />
-                                <span className="hidden sm:inline">Back to Base</span>
+                                <span className="hidden sm:inline">{t("backHome")}</span>
                             </Link>
                         </div>
                     </div>
@@ -114,7 +117,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                                     <input
                                         type="search"
-                                        placeholder="Search logs by keyword or topic..."
+                                        placeholder={t("searchPlaceholder")}
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         className="w-full pl-12 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
@@ -133,7 +136,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                                 {/* Tag Filters */}
                                 <div className="flex flex-col items-center gap-3">
                                     <p className="text-xs text-zinc-500 font-medium uppercase tracking-wider">
-                                        Filter by Frequency
+                                        {t("filterLabel")}
                                     </p>
                                     <div className="flex flex-wrap justify-center gap-2">
                                         <button
@@ -145,7 +148,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                                                     : "bg-white border border-zinc-200 text-zinc-600 hover:border-purple-200 hover:text-purple-600"
                                             )}
                                         >
-                                            All Signals
+                                            {t("allSignals")}
                                         </button>
                                         {tags.map((tag) => (
                                             <button
@@ -178,7 +181,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <p className="text-sm font-medium text-zinc-500">
-                            {filteredPosts.length} Logs Found
+                            {t("logsFound", { count: filteredPosts.length })}
                         </p>
 
                         <div className="flex items-center gap-2 bg-zinc-100 p-1 rounded-lg">
@@ -190,7 +193,8 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                                         ? "bg-white text-purple-600 shadow-sm"
                                         : "text-zinc-500 hover:text-zinc-700"
                                 )}
-                                title="Grid View"
+                                title={t("gridView")}
+                                aria-label={t("gridView")}
                             >
                                 <LayoutGrid className="w-4 h-4" />
                             </button>
@@ -202,7 +206,8 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                                         ? "bg-white text-purple-600 shadow-sm"
                                         : "text-zinc-500 hover:text-zinc-700"
                                 )}
-                                title="List View"
+                                title={t("listView")}
+                                aria-label={t("listView")}
                             >
                                 <List className="w-4 h-4" />
                             </button>
@@ -216,7 +221,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                 {/* Results count (Moved to toolbar, keeping conditional message if needed or removing) */}
                 {(searchQuery || selectedTag) && (
                     <p className="text-zinc-500 mb-6 text-center">
-                        Filtering by: {selectedTag && <span className="text-purple-600 font-medium">#{selectedTag}</span>}
+                        {t("filteringBy")} {selectedTag && <span className="text-purple-600 font-medium">#{selectedTag}</span>}
                         {searchQuery && selectedTag && " & "}
                         {searchQuery && <span>"{searchQuery}"</span>}
                     </p>
@@ -230,7 +235,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                     >
                         <Anchor className="w-16 h-16 text-zinc-300 mx-auto mb-4" />
                         <p className="text-xl text-zinc-500 mb-4">
-                            No logs found in this sector, Captain!
+                            {t("noResults")}
                         </p>
                         <button
                             onClick={() => {
@@ -239,7 +244,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                             }}
                             className="text-purple-600 hover:underline"
                         >
-                            Clear all filters
+                            {t("clearFilters")}
                         </button>
                     </motion.div>
                 ) : (
@@ -318,12 +323,12 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
                                             <span className="flex items-center gap-1.5">
                                                 <Calendar className="w-3.5 h-3.5" />
                                                 <span className="truncate max-w-[80px] sm:max-w-none">
-                                                    {new Date(post.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                                    {new Date(post.date).toLocaleDateString(locale, { month: 'short', day: 'numeric' })}
                                                 </span>
                                             </span>
                                             <span className="flex items-center gap-1.5">
                                                 <Clock className="w-3.5 h-3.5" />
-                                                {post.readingTime} min
+                                                {t("minShort", { minutes: post.readingTime })}
                                             </span>
                                         </div>
                                     </div>
@@ -337,9 +342,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageClientProps) {
             {/* Footer */}
             <footer className="border-t border-zinc-200 py-8">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <p className="text-zinc-600 text-sm">
-                        🚀 Transmitting from the command deck • © {new Date().getFullYear()} Captain Prashant
-                    </p>
+                    <p className="text-zinc-600 text-sm">{t("footer", { year: new Date().getFullYear() })}</p>
                 </div>
             </footer>
         </div >

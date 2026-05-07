@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowRight, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { BlogPostMeta } from "@/lib/blog/types";
+import { useLocale, useTranslations } from "next-intl";
 
 interface BlogCardProps {
     post: BlogPostMeta;
@@ -14,6 +15,8 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post, index = 0, featured = false }: BlogCardProps) {
+    const t = useTranslations("Blog");
+    const locale = useLocale();
     return (
         <motion.article
             initial={{ opacity: 0, y: 20 }}
@@ -69,7 +72,7 @@ export function BlogCard({ post, index = 0, featured = false }: BlogCardProps) {
                     <div className="flex items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400 mb-3">
                         <span className="flex items-center gap-1.5">
                             <Calendar className="w-4 h-4" />
-                            {new Date(post.date).toLocaleDateString('en-US', {
+                            {new Date(post.date).toLocaleDateString(locale, {
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric'
@@ -77,7 +80,7 @@ export function BlogCard({ post, index = 0, featured = false }: BlogCardProps) {
                         </span>
                         <span className="flex items-center gap-1.5">
                             <Clock className="w-4 h-4" />
-                            {post.readingTime} min read
+                            {t("minRead", { minutes: post.readingTime })}
                         </span>
                     </div>
 
@@ -104,7 +107,7 @@ export function BlogCard({ post, index = 0, featured = false }: BlogCardProps) {
                             {post.author}
                         </span>
                         <span className="flex items-center gap-1 text-sm font-medium text-purple-600 dark:text-purple-400 group-hover:gap-2 transition-all">
-                            Read more
+                            {t("readMore")}
                             <ArrowRight className="w-4 h-4" />
                         </span>
                     </div>

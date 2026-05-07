@@ -39,7 +39,7 @@ A next-generation portfolio and blog platform built with Next.js 15, React 19, a
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **AI Integration**: [Groq SDK](https://groq.com/) (Llama 3.3 70B Versatile)
+- **AI Integration**: [Groq SDK](https://groq.com/) (Qwen 3 32B)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Markdown**: `remark`, `rehype`, `gray-matter`, `highlight.js`
 - **Fonts**: Inter & JetBrains Mono

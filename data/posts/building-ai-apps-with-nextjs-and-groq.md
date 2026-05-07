@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
   
   const result = await streamText({
-    model: groq('llama-3.3-70b-versatile'),
+    model: groq('qwen/qwen3-32b'),
     messages,
     temperature: 0.7,
   });

@@ -1,0 +1,40 @@
+{
+  "LocaleLayout": {
+    "metadata": {
+      "title": "Prashant Choudhary - Ingeniero de IA/ML y desarrollador full-stack",
+      "description": "Ingeniero de IA/ML y desarrollador full-stack que crea productos de IA prácticos, educación para desarrolladores y software listo para producción."
+    }
+  },
+  "LanguageSwitcher": {"label": "Elegir idioma", "placeholder": "Idioma"},
+  "HomePage": {
+    "roles": {"ai": "Ingeniero de IA", "ml": "Ingeniero de ML", "prompt": "Ingeniero de prompts", "fullstack": "Desarrollador full-stack", "backend": "Ingeniero backend"},
+    "nav": {"home": "Inicio", "about": "Sobre mí", "experience": "Experiencia", "education": "Educación", "projects": "Proyectos", "skills": "Habilidades", "blog": "Blog", "contact": "Contacto"},
+    "hero": {"iam": "Soy", "available": "Disponible para trabajar", "future": "Construyendo el futuro con IA", "profileRole": "Ingeniero de IA y desarrollador full-stack", "profileAlt": "Retrato de Prashant Choudhary"},
+    "about": {
+      "eyebrow": "Sobre mí",
+      "title": "Constructor de IA centrado en productos útiles y multilingües.",
+      "description": "Construyo sistemas de IA, ML y full-stack que convierten ideas en software práctico. Mi trabajo incluye aplicaciones con LLM, experiencias móviles, servicios backend y educación para desarrolladores.",
+      "masters": "Actualmente curso un máster en NLP en la Universidad de Trier. El programa comenzó el 13 de abril de 2026 y sigue en curso.",
+      "linksLabel": "Enlaces públicos de perfil"
+    },
+    "experience": {"title": "Experiencia profesional", "description": "Mi recorrido en tecnología, trabajando con IA, ML y desarrollo de software."},
+    "education": {
+      "title": "Trayectoria educativa",
+      "description": "Mi camino académico en Inteligencia Artificial, Ciencia de Datos y Procesamiento del Lenguaje Natural.",
+      "items": [
+        {"title": "Máster", "heading": "Máster en Procesamiento del Lenguaje Natural", "school": "Universidad de Trier", "period": "13 abr 2026 - presente (en curso)", "description": "Actualmente curso un máster en NLP. No se asumen detalles académicos adicionales."},
+        {"title": "Licenciatura", "heading": "Licenciatura en Inteligencia Artificial y Ciencia de Datos", "school": "Uka Tarsadia University", "period": "Sep 2021 - jul 2025 (finalizado)", "description": "Habilidades: reconocimiento de patrones, minería de datos, IA, Flask, estructuras de datos, PyTorch, Hadoop, SciPy, deep learning, Pandas, analítica de datos"},
+        {"title": "Grado XII", "heading": "Grado XII, Ciencias", "school": "Gyanjyot School", "period": "Física, Química, Matemáticas", "description": "Habilidades: probabilidad, liderazgo de equipo, gestión del tiempo, estadística"},
+        {"title": "Grado X", "heading": "Grado X", "school": "NILKANTH VIDYALAYA"}
+      ]
+    },
+    "buttons": {"menu": "Menú", "askAi": "Preguntar a la IA"},
+    "a11y": {"openMenu": "Abrir menú de navegación", "closeMenu": "Cerrar menú de navegación", "openChat": "Abrir asistente de chat de IA", "linkedin": "Abrir perfil de LinkedIn", "github": "Abrir perfil de GitHub", "email": "Enviar correo"},
+    "footer": {"description": "Ingeniero de IA/ML y desarrollador full-stack que crea productos útiles con IA moderna e ingeniería de software.", "aiPrompt": "¿Tienes dudas? Pregunta a un resumidor de IA", "rights": "Todos los derechos reservados.", "craftedBy": "Creado por {name}", "externalPrompt": "Actúa como asistente de Prashant. Analiza su portfolio en {url}. Responde preguntas sobre sus habilidades, proyectos, experiencia, educación y enlaces públicos usando el contenido del sitio."}
+  },
+  "Projects": {"title": "Proyectos destacados", "description": "Repositorios fijados y con más estrellas de mi perfil de GitHub y organizaciones.", "loading": "Cargando proyectos desde GitHub...", "viewProfile": "Ver perfil de GitHub", "moreTitle": "Más proyectos", "moreDescription": "Repositorios y contribuciones adicionales.", "noDescription": "No hay descripción disponible", "noShortDescription": "Sin descripción"},
+  "Skills": {"title": "Tecnologías y herramientas", "description": "Mi arsenal técnico para construir soluciones inteligentes."},
+  "Contact": {"title": "Ponte en contacto", "description": "¿Tienes una pregunta o quieres trabajar conmigo? Me encantará leerte y responderé lo antes posible.", "name": "Nombre", "email": "Correo", "subject": "Asunto", "message": "Mensaje", "subscribe": "Suscribirse al boletín", "send": "Enviar mensaje", "sending": "Enviando...", "success": "Mensaje enviado correctamente.", "error": "No se pudo enviar el mensaje. Inténtalo de nuevo.", "placeholders": {"name": "Juan Pérez", "email": "juan@example.com", "subject": "Consulta de proyecto", "message": "Tu mensaje..."}},
+  "Chat": {"title": "Generative Answers", "poweredBy": "Impulsado por {model}", "greeting": "¡Hola!", "emptyTitle": "Pregúntame sobre Prashant", "emptyDescription": "Puedo responder sobre sus proyectos, habilidades, experiencia, educación y enlaces públicos.", "thinking": "Pensando...", "reasoningDone": "Razonamiento completado", "inputPlaceholder": "Pregúntame cualquier cosa sobre Prashant...", "send": "Enviar mensaje", "close": "Cerrar chat", "modelMenu": "Elegir modelo de IA", "attach": "Adjuntar", "shortcuts": "Atajos", "errorPrefix": "Error", "fallbackError": "No pude completar la solicitud ahora. Inténtalo de nuevo.", "suggestions": {"projects": "Háblame de tus proyectos", "stack": "¿Cuál es tu stack tecnológico?", "experience": "¿Tu experiencia en IA?", "availability": "¿Estás disponible?", "education": "¿Qué estás estudiando ahora?", "studio": "¿Qué es MugShot Studio?"}},
+  "Blog": {"metadata": {"title": "Blog | Prashant Choudhary - Ingeniero de IA", "description": "Ideas, tutoriales y reflexiones sobre IA, machine learning, desarrollo web e ingeniería de software."}, "brand": "Captain’s Log", "loading": "Cargando Captain’s Log...", "toggleSearch": "Alternar búsqueda", "backHome": "Volver a la base", "searchPlaceholder": "Buscar logs por palabra clave o tema...", "filterLabel": "Filtrar por frecuencia", "allSignals": "Todas las señales", "logsFound": "{count} logs encontrados", "gridView": "Vista de cuadrícula", "listView": "Vista de lista", "filteringBy": "Filtrando por:", "noResults": "No se encontraron logs en este sector.", "clearFilters": "Borrar filtros", "readMore": "Leer más", "minRead": "{minutes} min de lectura", "minShort": "{minutes} min", "footer": "Transmitiendo desde la cubierta de mando · © {year} Captain Prashant", "post": {"back": "Volver a la cubierta de mando", "home": "Inicio", "writtenBy": "Escrito por", "authorRole": "Ingeniero de IA y desarrollador full-stack", "previous": "Anterior", "next": "Siguiente", "rights": "© {year} Prashant Choudhary. Todos los derechos reservados."}}
+}

@@ -3,6 +3,7 @@
 import { Sparkles } from "@/components/ui/sparkles";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 // Import assets directly
 import pythonIcon from "@/components/assets/python.svg";
@@ -35,16 +36,17 @@ const technologies = [
 
 export function TechnologiesSection() {
     const { theme } = useTheme();
+    const t = useTranslations("Skills");
 
     return (
         <div className="w-full overflow-hidden relative py-20 bg-background/50">
             <div className="mx-auto w-full max-w-6xl px-4 relative z-20">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-                        Technologies & Tools
+                        {t("title")}
                     </h2>
                     <p className="mt-4 text-muted-foreground text-lg">
-                        My technical arsenal for building intelligent solutions.
+                        {t("description")}
                     </p>
                 </div>
 

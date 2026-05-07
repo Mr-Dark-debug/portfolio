@@ -253,15 +253,15 @@ export const ClaudeChatInput: React.FC<ClaudeChatInputProps> = ({ onSendMessage 
     const [files, setFiles] = useState<AttachedFile[]>([]);
     const [pastedContent, setPastedContent] = useState<PastedItem[]>([]);
     const [isDragging, setIsDragging] = useState(false);
-    const [selectedModel, setSelectedModel] = useState("llama-3.3-70b-versatile");
+    const [selectedModel, setSelectedModel] = useState("openai/gpt-oss-120b");
     const [isThinkingEnabled, setIsThinkingEnabled] = useState(false);
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const models = [
-        { id: "llama-3.3-70b-versatile", name: "Llama 3.3 70B", description: "Fast & versatile (Default)" },
-        { id: "openai/gpt-oss-120b", name: "GPT OSS 120B", description: "High reasoning (Groq)", badge: "New" },
+        { id: "qwen/qwen3-32b", name: "Qwen 3 32B", description: "Fast & versatile" },
+        { id: "openai/gpt-oss-120b", name: "GPT OSS 120B", description: "High reasoning (Default)", badge: "New" },
         { id: "mixtral-8x7b-32768", name: "Mixtral 8x7B", description: "Balanced performance" },
     ];
 

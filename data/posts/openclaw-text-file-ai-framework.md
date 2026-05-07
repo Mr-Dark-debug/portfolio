@@ -41,7 +41,7 @@ You own the entire architecture with no cloud dependency. Unlike proprietary sys
 
 However, OpenClaw's simplicity comes with a significant cost. Users report it's a "token burning machine" because it feeds all that rich context back into the model constantly. The comprehensive memory system that makes it so effective also drives up API costs significantly.
 
-Unless you have a heavy-duty GPU (RTX 3060 or better) to run local models like Qwen or Llama, you'll likely face substantial API expenses. The model needs to process the entire `SOUL.md`, `MEMORY.md`, daily logs, and task plans with each interaction to maintain coherence.
+Unless you have a heavy-duty GPU (RTX 3060 or better) to run local models like Qwen 3 32B, you'll likely face substantial API expenses. The model needs to process the entire `SOUL.md`, `MEMORY.md`, daily logs, and task plans with each interaction to maintain coherence.
 
 ## The Verification Challenge
 

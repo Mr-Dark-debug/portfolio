@@ -4,9 +4,9 @@
         <description><![CDATA[Insights on AI, ML, Agentic Systems, and Full-stack Development]]></description>
         <link>https://prashant.sbs</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Fri, 27 Feb 2026 05:32:43 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 07 May 2026 10:34:37 GMT</lastBuildDate>
         <atom:link href="https://prashant.sbs/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Fri, 27 Feb 2026 05:32:43 GMT</pubDate>
+        <pubDate>Thu, 07 May 2026 10:34:37 GMT</pubDate>
         <copyright><![CDATA[All rights reserved 2026, Prashant Choudhary]]></copyright>
         <language><![CDATA[en]]></language>
         <ttl>60</ttl>
@@ -654,7 +654,7 @@ You own the entire architecture with no cloud dependency. Unlike proprietary sys
 
 However, OpenClaw&apos;s simplicity comes with a significant cost. Users report it&apos;s a &quot;token burning machine&quot; because it feeds all that rich context back into the model constantly. The comprehensive memory system that makes it so effective also drives up API costs significantly.
 
-Unless you have a heavy-duty GPU (RTX 3060 or better) to run local models like Qwen or Llama, you&apos;ll likely face substantial API expenses. The model needs to process the entire `SOUL.md`, `MEMORY.md`, daily logs, and task plans with each interaction to maintain coherence.
+Unless you have a heavy-duty GPU (RTX 3060 or better) to run local models like Qwen 3 32B, you&apos;ll likely face substantial API expenses. The model needs to process the entire `SOUL.md`, `MEMORY.md`, daily logs, and task plans with each interaction to maintain coherence.
 
 ## The Verification Challenge
 
@@ -1544,7 +1544,7 @@ export async function POST(req: Request) {
   const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
   
   const result = await streamText({
-    model: groq(&apos;llama-3.3-70b-versatile&apos;),
+    model: groq(&apos;qwen/qwen3-32b&apos;),
     messages,
     temperature: 0.7,
   });
@@ -1621,7 +1621,7 @@ Prompt engineering is the art and science of crafting inputs that guide AI model
 
 ## What is Prompt Engineering?
 
-Prompt engineering involves designing and optimizing the text prompts given to AI models to achieve specific outcomes. It&apos;s a critical skill for anyone working with large language models like GPT-4, Claude, or Llama.
+Prompt engineering involves designing and optimizing the text prompts given to AI models to achieve specific outcomes. It&apos;s a critical skill for anyone working with large language models like GPT-4, Claude, or Qwen 3 32B.
 
 ## Core Principles
 

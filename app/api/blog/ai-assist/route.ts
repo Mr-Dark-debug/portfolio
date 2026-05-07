@@ -93,7 +93,7 @@ export async function POST(req: Request) {
         const systemPrompt = AI_PROMPTS[action] || prompt || AI_PROMPTS.improve;
 
         const result = await streamText({
-            model: groq('llama-3.3-70b-versatile'),
+            model: groq('qwen/qwen3-32b'),
             system: 'You are a professional writing assistant. Be helpful, concise, and provide actionable improvements.',
             messages: [
                 {

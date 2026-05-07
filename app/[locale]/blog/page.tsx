@@ -2,22 +2,32 @@ import { Suspense } from "react";
 import { getAllPosts, getAllTags } from "@/lib/blog/utils";
 import BlogPageClient from "./BlogPageClient";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-    title: "Blog | Prashant Choudhary - AI Engineer",
-    description: "Insights, tutorials, and thoughts on AI, machine learning, web development, and software engineering.",
-    openGraph: {
-        title: "Blog | Prashant Choudhary",
-        description: "Insights, tutorials, and thoughts on AI, machine learning, web development, and software engineering.",
-        type: "website",
-        url: "/blog",
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Blog | Prashant Choudhary",
-        description: "Insights, tutorials, and thoughts on AI and software engineering.",
-    },
-};
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "Blog.metadata" });
+
+    return {
+        title: t("title"),
+        description: t("description"),
+        openGraph: {
+            title: t("title"),
+            description: t("description"),
+            type: "website",
+            url: `/${locale}/blog`,
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: t("title"),
+            description: t("description"),
+        },
+    };
+}
 
 async function BlogContent() {
     const posts = await getAllPosts();

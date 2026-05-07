@@ -3,15 +3,10 @@ import React from "react";
 import Link from "next/link";
 import {
     NotepadTextDashed,
-    Twitter,
-    Linkedin,
-    Github,
-    Mail,
-    Bot,
     Sparkles,
-    MessageSquare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface FooterLink {
     label: string;
@@ -60,11 +55,12 @@ export const Footer: React.FC<FooterProps> = ({
     brandIcon,
     className,
 }) => {
+    const t = useTranslations("HomePage.footer");
 
     const handleAIClick = (e: React.MouseEvent, tool: typeof AI_TOOLS[0]) => {
         e.preventDefault();
         const currentUrl = window.location.origin;
-        const prompt = `Act as an assistant for Prashant. Analyze his portfolio at ${currentUrl}. Answer questions about his skills, projects, and experience based on the website content.`;
+        const prompt = t("externalPrompt", { url: currentUrl });
         const encodedPrompt = encodeURIComponent(prompt);
 
         // Construct URL based on tool capabilities
@@ -130,7 +126,7 @@ export const Footer: React.FC<FooterProps> = ({
                             <div className="w-full max-w-4xl mx-auto my-8 flex flex-col items-center gap-4 text-center">
                                 <div className="flex items-center gap-2 text-foreground font-semibold">
                                     <Sparkles className="w-4 h-4 text-purple-500" />
-                                    <span>Have doubts? Ask AI Summarizer</span>
+                                    <span>{t("aiPrompt")}</span>
                                 </div>
 
                                 <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-2">
@@ -167,7 +163,7 @@ export const Footer: React.FC<FooterProps> = ({
 
                     <div className="mt-20 md:mt-24 flex flex-col gap-2 md:gap-1 items-center justify-center md:flex-row md:items-center md:justify-between px-4 md:px-0 z-20">
                         <p className="text-base text-muted-foreground text-center md:text-left">
-                            ©{new Date().getFullYear()} {brandName}. All rights reserved.
+                            ©{new Date().getFullYear()} {brandName}. {t("rights")}
                         </p>
                         {creatorName && creatorUrl && (
                             <nav className="flex gap-4">
@@ -176,7 +172,7 @@ export const Footer: React.FC<FooterProps> = ({
                                     target="_blank"
                                     className="text-base text-muted-foreground hover:text-foreground transition-colors duration-300 hover:font-medium"
                                 >
-                                    Crafted by {creatorName}
+                                    {t("craftedBy", { name: creatorName })}
                                 </Link>
                             </nav>
                         )}

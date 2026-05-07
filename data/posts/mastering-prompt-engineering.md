@@ -15,7 +15,7 @@ Prompt engineering is the art and science of crafting inputs that guide AI model
 
 ## What is Prompt Engineering?
 
-Prompt engineering involves designing and optimizing the text prompts given to AI models to achieve specific outcomes. It's a critical skill for anyone working with large language models like GPT-4, Claude, or Llama.
+Prompt engineering involves designing and optimizing the text prompts given to AI models to achieve specific outcomes. It's a critical skill for anyone working with large language models like GPT-4, Claude, or Qwen 3 32B.
 
 ## Core Principles
 

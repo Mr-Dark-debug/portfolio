@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Star, GitFork, ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface GitHubRepo {
     id: number;
@@ -80,6 +81,7 @@ export function GitHubProjects({
     showPinnedOnly = false,
     className,
 }: GitHubProjectsProps) {
+    const t = useTranslations("Projects");
     const [repos, setRepos] = useState<GitHubRepo[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -113,9 +115,9 @@ export function GitHubProjects({
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-                            Projects
+                            {t("title")}
                         </h2>
-                        <p className="text-muted-foreground">Loading projects from GitHub...</p>
+                        <p className="text-muted-foreground">{t("loading")}</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {[...Array(6)].map((_, i) => (
@@ -141,10 +143,10 @@ export function GitHubProjects({
                     <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                         <div className="space-y-4 max-w-2xl">
                             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-                                Featured Projects
+                                {t("title")}
                             </h2>
                             <p className="text-lg text-muted-foreground">
-                                Pinned and top-starred repositories from my GitHub profile and organizations.
+                                {t("description")}
                             </p>
                         </div>
                         <Link
@@ -152,13 +154,13 @@ export function GitHubProjects({
                             target="_blank"
                             className="text-sm font-medium text-muted-foreground hover:text-purple-500 inline-flex items-center gap-1 transition-colors"
                         >
-                            View GitHub Profile <ExternalLink className="w-3 h-3" />
+                            {t("viewProfile")} <ExternalLink className="w-3 h-3" />
                         </Link>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {featuredRepos.map((repo, index) => (
-                            <ProjectCard key={repo.id} repo={repo} index={index} featured />
+                            <ProjectCard key={repo.id} repo={repo} index={index} featured noDescription={t("noDescription")} />
                         ))}
                     </div>
                 </div>
@@ -170,16 +172,16 @@ export function GitHubProjects({
                     <div className="max-w-7xl mx-auto">
                         <div className="mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
-                                More Projects
+                                {t("moreTitle")}
                             </h2>
                             <p className="text-muted-foreground">
-                                Additional repositories and contributions.
+                                {t("moreDescription")}
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative z-10">
                             {moreRepos.map((repo, index) => (
-                                <ProjectFeatureCard key={repo.id} repo={repo} index={index} />
+                                <ProjectFeatureCard key={repo.id} repo={repo} index={index} noDescription={t("noShortDescription")} />
                             ))}
                         </div>
                     </div>
@@ -193,10 +195,12 @@ function ProjectCard({
     repo,
     index,
     featured = false,
+    noDescription,
 }: {
     repo: GitHubRepo;
     index: number;
     featured?: boolean;
+    noDescription: string;
 }) {
     const langColor = repo.language ? LANGUAGE_COLORS[repo.language] || "#888" : "#888";
 
@@ -232,7 +236,7 @@ function ProjectCard({
                     {repo.name}
                 </h3>
                 <p className="text-zinc-600 dark:text-zinc-400 text-sm line-clamp-2">
-                    {repo.description || "No description available"}
+                    {repo.description || noDescription}
                 </p>
             </div>
 
@@ -264,9 +268,11 @@ function ProjectCard({
 function ProjectFeatureCard({
     repo,
     index,
+    noDescription,
 }: {
     repo: GitHubRepo;
     index: number;
+    noDescription: string;
 }) {
     const langColor = repo.language ? LANGUAGE_COLORS[repo.language] || "#888" : "#888";
 
@@ -298,7 +304,7 @@ function ProjectFeatureCard({
             </div>
 
             <p className="text-sm text-neutral-600 dark:text-neutral-300 max-w-xs relative z-10 px-10 line-clamp-2">
-                {repo.description || "No description"}
+                {repo.description || noDescription}
             </p>
 
             <div className="flex items-center gap-4 text-xs text-muted-foreground mt-4 px-10 relative z-10">

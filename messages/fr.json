@@ -1,0 +1,38 @@
+{
+  "HomePage": {
+    "title": "PRASHANT CHOUDHARY",
+    "roles": {
+      "ai": "Ingénieur IA",
+      "ml": "Ingénieur ML",
+      "prompt": "Ingénieur de Prompts",
+      "fullstack": "Développeur Full Stack",
+      "backend": "Ingénieur Backend"
+    },
+    "nav": {
+      "home": "Accueil",
+      "experience": "Expérience",
+      "education": "Éducation",
+      "projects": "Projets",
+      "skills": "Compétences",
+      "blog": "Blog",
+      "contact": "Contact"
+    },
+    "hero": {
+      "iam": "Je suis un",
+      "available": "Disponible pour travailler",
+      "future": "Construire l'avenir avec l'IA"
+    },
+    "experience": {
+      "title": "Expérience Professionnelle",
+      "description": "Mon parcours dans l'industrie technologique, travaillant avec l'IA, le ML et le développement de logiciels."
+    },
+    "education": {
+      "title": "Parcours Éducatif",
+      "description": "Mon parcours académique en Intelligence Artificielle et Science des Données."
+    },
+    "buttons": {
+      "menu": "Menu",
+      "askAi": "Demander à l'IA"
+    }
+  }
+}
