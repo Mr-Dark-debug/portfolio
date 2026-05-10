@@ -38,7 +38,8 @@ const actions = [
 
 export function ChatExperience() {
   // Use @ai-sdk/react useChat hook
-  const { messages, append, isLoading, setMessages, reload } = useChat();
+  const { messages, sendMessage, status, setMessages, regenerate } = useChat();
+  const isLoading = status === "streaming" || status === "submitted";
 
   // Add initial welcome message if none exist
   React.useEffect(() => {
@@ -47,25 +48,25 @@ export function ChatExperience() {
         {
           id: 'welcome',
           role: 'assistant',
-          content: "Hi! I'm Prashant's AI assistant. Ask me anything about his projects, skills, experience, or how you can collaborate with him."
+          parts: [{ type: 'text', text: "Hi! I'm Prashant's AI assistant. Ask me anything about his projects, skills, experience, or how you can collaborate with him." }]
         }
       ])
     }
   }, [messages.length, setMessages])
 
   const handleSendMessage = async (data: { message: string; model: string }) => {
-    await append({
+    await sendMessage({
       role: 'user',
-      content: data.message,
+      parts: [{ type: 'text', text: data.message }],
     }, {
       body: { model: data.model }
     });
   };
 
   const handleSuggestionSelect = (suggestion: string) => {
-    append({
+    sendMessage({
       role: 'user',
-      content: suggestion
+      parts: [{ type: 'text', text: suggestion }]
     });
   };
 
@@ -84,7 +85,10 @@ export function ChatExperience() {
                   />
                   <div className="flex flex-col gap-2 w-full">
                     <MessageContent className={message.role === 'user' ? 'bg-bg-100' : ''}>
-                      {message.content}
+                      {message.parts?.map((part: any, i: number) => {
+                        if (part.type === 'text') return <span key={i}>{part.text}</span>;
+                        return null;
+                      })}
                     </MessageContent>
 
                     {message.role === "assistant" && (
@@ -94,7 +98,7 @@ export function ChatExperience() {
                             key={action.label}
                             label={action.label}
                             onClick={() => {
-                              if (action.label === 'Retry') reload();
+                              if (action.label === 'Retry') regenerate();
                               // Add other actions if needed
                             }}
                           >
@@ -166,3 +170,4 @@ export function ChatExperience() {
     </div>
   )
 }
+

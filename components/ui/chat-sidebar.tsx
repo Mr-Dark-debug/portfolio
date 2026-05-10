@@ -109,7 +109,7 @@ const ReasoningContent = ({
 export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
   const t = useTranslations("Chat");
   const locale = useLocale();
-  const { messages, append, reload, status, error } = useChat({ id: "portfolio-chat" });
+  const { messages, sendMessage, regenerate, status, error } = useChat({ id: "portfolio-chat" });
   const isLoading = status === "streaming" || status === "submitted";
   const [inputValue, setInputValue] = React.useState("");
   const [selectedModel, setSelectedModel] = React.useState("openai/gpt-oss-120b");
@@ -161,7 +161,7 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
           <Share2 className="h-3.5 w-3.5" />
         </button>
         <button
-          onClick={() => reload()}
+          onClick={() => regenerate()}
           className="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-500 dark:text-zinc-400 transition-colors"
           title="Retry"
         >
@@ -197,8 +197,8 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
     setInputValue("");
 
     try {
-      await append(
-        { role: "user", content: text },
+      await sendMessage(
+        { role: "user", parts: [{ type: 'text', text: text }] },
         { body: { model: selectedModel, locale } },
       );
     } catch (sendError) {
