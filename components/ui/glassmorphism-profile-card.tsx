@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,15 +31,22 @@ export default function GlassmorphismProfileCard({
     className,
 }: GlassmorphismProfileCardProps) {
     const [copied, setCopied] = useState(false);
+    const [timeText, setTimeText] = useState("");
 
-    // Derive a local clock text once per minute
-    const timeText = useMemo(() => {
-        const now = new Date();
-        const h = now.getHours();
-        const m = now.getMinutes().toString().padStart(2, "0");
-        const hour12 = ((h + 11) % 12) + 1;
-        const ampm = h >= 12 ? "PM" : "AM";
-        return `${hour12}:${m}${ampm}`;
+    // Derive a local clock text once per minute on the client
+    useEffect(() => {
+        const updateClock = () => {
+            const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes().toString().padStart(2, "0");
+            const hour12 = ((h + 11) % 12) + 1;
+            const ampm = h >= 12 ? "PM" : "AM";
+            setTimeText(`${hour12}:${m}${ampm}`);
+        };
+
+        updateClock();
+        const interval = setInterval(updateClock, 60000);
+        return () => clearInterval(interval);
     }, []);
 
     const handleCopy = async () => {

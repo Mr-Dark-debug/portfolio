@@ -133,7 +133,7 @@ export default function BlogPostClient({
                             </span>
                             <span className="flex items-center gap-2">
                                 <Calendar className="w-4 h-4" />
-                                <span className="truncate max-w-[150px] sm:max-w-none">
+                                <span className="truncate max-w-[150px] sm:max-w-none" suppressHydrationWarning>
                                     {new Date(post.date).toLocaleDateString(locale, {
                                         year: 'numeric',
                                         month: 'long',
@@ -271,7 +271,7 @@ export default function BlogPostClient({
             {/* Footer */}
             <footer className="border-t border-zinc-200 py-8">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-                    <p className="text-sm text-zinc-500">{t("rights", { year: new Date().getFullYear() })}</p>
+                    <p className="text-sm text-zinc-500" suppressHydrationWarning>{t("rights", { year: new Date().getFullYear() })}</p>
                 </div>
             </footer>
         </div>

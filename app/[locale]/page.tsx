@@ -12,6 +12,7 @@ import { Github, Linkedin, Mail, Menu, X, Sparkles, ExternalLink } from "lucide-
 import Link from "next/link";
 import { Timeline } from "@/components/ui/timeline";
 import { TechnologiesSection } from "@/components/ui/technologies-section";
+import OnboardingForm from "@/components/ui/onboarding-form";
 import { Dock, DockIcon } from "@/components/ui/dock";
 import { ChatSidebar } from "@/components/ui/chat-sidebar";
 import GlassmorphismProfileCard from "@/components/ui/glassmorphism-profile-card";
@@ -114,6 +115,7 @@ export default function HomePage() {
         <button
           type="button"
           onClick={() => setIsSidebarOpen((prev) => !prev)}
+          suppressHydrationWarning
           className="fixed left-4 top-4 z-[60] flex min-h-10 items-center gap-2 rounded-full border border-zinc-200 bg-white/90 px-4 py-2 text-sm font-semibold text-zinc-900 shadow-lg backdrop-blur transition hover:shadow-xl hover:text-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 dark:border-zinc-800 dark:bg-zinc-900/90 dark:text-zinc-50 dark:hover:text-purple-400"
           aria-expanded={isSidebarOpen}
           aria-controls="portfolio-sidebar"
@@ -131,6 +133,7 @@ export default function HomePage() {
             type="button"
             onClick={openGenerativeAnswers}
             aria-label={t("a11y.openChat")}
+            suppressHydrationWarning
             className="flex min-h-10 items-center gap-2 rounded-xl border border-purple-300/50 bg-gradient-to-r from-purple-600 to-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-500/25 backdrop-blur transition hover:from-purple-700 hover:to-violet-700 hover:shadow-xl hover:shadow-purple-500/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 sm:px-4 sm:py-2.5"
           >
             <Sparkles className="h-5 w-5" />
@@ -271,6 +274,14 @@ export default function HomePage() {
 
         <section id="skills" className="w-full">
           <TechnologiesSection />
+        </section>
+
+        <section id="onboarding" className="w-full bg-slate-50/50 dark:bg-slate-950/50 py-20 px-4">
+          <div className="max-w-4xl mx-auto text-center mb-10">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">Ready to Start Your Project?</h2>
+            <p className="text-muted-foreground text-lg">Fill out this quick onboarding form and let&apos;s build something amazing together.</p>
+          </div>
+          <OnboardingForm />
         </section>
 
         <Footer

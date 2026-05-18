@@ -134,6 +134,7 @@ export const Footer: React.FC<FooterProps> = ({
                                         <button
                                             key={tool.name}
                                             onClick={(e) => handleAIClick(e, tool)}
+                                            suppressHydrationWarning
                                             className={cn(
                                                 "text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
                                                 tool.color
@@ -162,7 +163,7 @@ export const Footer: React.FC<FooterProps> = ({
                     </div>
 
                     <div className="mt-20 md:mt-24 flex flex-col gap-2 md:gap-1 items-center justify-center md:flex-row md:items-center md:justify-between px-4 md:px-0 z-20">
-                        <p className="text-base text-muted-foreground text-center md:text-left">
+                        <p className="text-base text-muted-foreground text-center md:text-left" suppressHydrationWarning>
                             ©{new Date().getFullYear()} {brandName}. {t("rights")}
                         </p>
                         {creatorName && creatorUrl && (

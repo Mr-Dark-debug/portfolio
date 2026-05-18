@@ -6,6 +6,7 @@ import { Input } from "./input"
 import { Label } from "./label"
 import { Button } from "./button"
 import { Checkbox } from "./checkbox"
+import { Textarea } from "./textarea"
 import { useTranslations } from "next-intl"
 
 export function ContactForm() {
@@ -114,10 +115,10 @@ export function ContactForm() {
             <Label htmlFor="message" className="text-neutral-800 font-medium">
               {t("message")}
             </Label>
-            <textarea
+            <Textarea
               id="message"
               required
-              className="mt-2 flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[100px]"
+              className="mt-2"
               placeholder={t("placeholders.message")}
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
