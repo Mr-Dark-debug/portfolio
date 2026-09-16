@@ -1,7 +1,0 @@
-# Ignore specific files
-app/page.tsx
-components/ui/animated-background.tsx
-components/ui/animated-grid-pattern.tsx
-
-# Ignore an entire folder
-node_modules/

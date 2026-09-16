@@ -1,0 +1,4 @@
+import Link from 'next/link';
+export function PageShell({ locale, children }: { locale: string; children: React.ReactNode }) {
+ return <div className="night-shell min-h-screen"><header className="border-b border-white/10"><nav aria-label="Main navigation" className="mx-auto flex max-w-6xl flex-wrap items-center gap-5 px-6 py-6 text-sm"><Link className="mr-auto font-semibold text-white" href={`/${locale}`}>Prashant<span className="text-lime-300">.</span></Link><Link href={`/${locale}/projects`}>Projects</Link><Link href={`/${locale}/blog`}>Blog</Link><Link href={`/${locale}/resume`}>Résumé</Link><Link href={`/${locale}/#contact`}>Get in touch ↗</Link></nav></header><main className="mx-auto max-w-6xl px-6 py-16 md:py-24">{children}</main><footer className="mx-auto max-w-6xl border-t border-white/10 px-6 py-8 text-sm text-slate-400">Prashant Choudhary · Trier, Germany · Europe/Berlin <Link className="ml-4" href={`/${locale}/privacy`}>Privacy</Link></footer></div>;
+}

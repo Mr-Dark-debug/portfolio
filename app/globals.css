@@ -111,3 +111,37 @@ body {
     @apply bg-background text-foreground;
   }
 }
+/* Night meadow palette: shared across the existing portfolio components. */
+:root, .dark { --background: 231 52% 8%; --foreground: 220 40% 96%; --card: 231 40% 13%; --card-foreground: 220 40% 96%; --popover: 231 40% 13%; --popover-foreground: 220 40% 96%; --primary: 80 85% 75%; --primary-foreground: 231 52% 8%; --muted: 231 30% 18%; --muted-foreground: 223 21% 72%; --border: 231 26% 24%; --input: 231 26% 24%; --ring: 263 80% 80%; --accent: 231 30% 18%; }
+html { scroll-padding-top: 6rem; }
+:focus-visible { outline: 2px solid #c4b5fd; outline-offset: 4px; }
+::selection { background: #6d28d9; color: white; }
+.night-shell { background: #080c22; color: #c2cbe2; }
+.eyebrow { color: #c4b5fd; text-transform: uppercase; font-size: .7rem; font-weight: 650; letter-spacing: .18em; margin-bottom: 1rem; }
+.page-title { font-size: clamp(2.5rem,6vw,4.6rem); line-height: 1.08; letter-spacing: -.045em; font-weight: 600; color: #f6f5ff; }
+.meadow-button,.outline-button { display: inline-flex; align-items:center; justify-content:center; gap:.5rem; min-height: 48px; padding: .8rem 1.2rem; border-radius: .8rem; font-size: .875rem; font-weight:600; transition: background .2s,transform .2s; }
+.meadow-button { background:#d4f994; color:#14221a; }
+.meadow-button:hover { background:#e3ffb4; transform:translateY(-2px); }
+.outline-button { border:1px solid #bac3f044; color:#eef0ff; background:#10163377; }
+.outline-button:hover { background:#283157; }
+.social-link { width:44px; height:44px; display:flex; align-items:center; justify-content:center; border:1px solid #c4b5fd44; border-radius:50%; background:#0a103366; color:#e6e1ff; transition:background .2s; }
+.social-link:hover { background:#6d28d9; }
+.content-section { margin-top:3.5rem; }
+.content-section h2 { color:#f6f5ff; font-size:1.65rem; font-weight:600; margin-bottom:1.2rem; }
+.content-card { display:block; padding:1.7rem; border-radius:1.2rem; border:1px solid #a5b4fc25; background:linear-gradient(135deg,#111936,#141431); color:#b9c4df; line-height:1.8; margin-top:1rem; }
+.content-card h3 { font-size:1.25rem; color:#f0efff; font-weight:600; }
+.tag { display:inline-block; border:1px solid #c4b5fd33; border-radius:999px; padding:.3rem .8rem; color:#d9cffc; font-size:.8rem; }
+.portfolio-home :is(.bg-white,.dark\:bg-neutral-950,.dark\:bg-zinc-950) { background-color:#080c22; }
+.portfolio-home :is(.text-gray-900,.text-zinc-900,.text-neutral-900,.text-black) { color:#f4f2ff; }
+.portfolio-home :is(.text-gray-500,.text-gray-600,.text-neutral-500,.text-neutral-600,.text-neutral-700,.text-zinc-500) { color:#b6c0dd; }
+.portfolio-home .text-neutral-800 { color:#dbe1f5; }
+.portfolio-home #about { border-top:1px solid #ffffff10; }
+.blog-article { background:#080c22!important; color:#c2cbe2; }
+.blog-article .bg-white, .blog-article .bg-white\/80 { background:#101631eF!important; }
+.blog-article :is(.text-zinc-900,.text-zinc-800) { color:#f4f2ff!important; }
+.blog-article :is(.text-zinc-500,.text-zinc-600,.text-zinc-700) { color:#b6c0dd!important; }
+.blog-article .prose { --tw-prose-body:#c2cbe2; --tw-prose-headings:#f6f5ff; --tw-prose-links:#d4c0ff; --tw-prose-bold:#f6f5ff; --tw-prose-code:#d4f994; --tw-prose-quotes:#e1dcf5; --tw-prose-counters:#b7a9dd; --tw-prose-bullets:#b7a9dd; }
+.blog-article .prose a { text-underline-offset:4px; }
+.blog-article .prose pre { background:#05091c; overflow:auto; }
+.blog-article .prose img { border-radius:1rem; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important; } }

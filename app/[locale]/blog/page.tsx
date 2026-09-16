@@ -3,6 +3,7 @@ import { getAllPosts, getAllTags } from "@/lib/blog/utils";
 import BlogPageClient from "./BlogPageClient";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { SITE_URL } from "@/lib/site";
 
 export async function generateMetadata({
     params,
@@ -15,11 +16,14 @@ export async function generateMetadata({
     return {
         title: t("title"),
         description: t("description"),
+        alternates: {
+            canonical: `${SITE_URL}/${locale}/blog`,
+        },
         openGraph: {
             title: t("title"),
             description: t("description"),
             type: "website",
-            url: `/${locale}/blog`,
+            url: `${SITE_URL}/${locale}/blog`,
         },
         twitter: {
             card: "summary_large_image",

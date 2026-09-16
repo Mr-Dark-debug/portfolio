@@ -17,6 +17,7 @@ const languages = [
   { code: "de-CH", name: "Deutsch Schweiz", flag: "🇨🇭" },
   { code: "lb-LU", name: "Lëtzebuergesch", flag: "🇱🇺" },
   { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
   { code: "hi-IN", name: "हिन्दी", flag: "🇮🇳" },
 ];
 
@@ -38,7 +39,7 @@ export function LanguageSwitcher() {
           className="h-10 w-[170px] max-w-[45vw] rounded-full border-zinc-200 bg-white/90 shadow-sm backdrop-blur transition hover:shadow-md focus:ring-purple-500 dark:border-zinc-800 dark:bg-zinc-900/90"
         >
           <Globe className="mr-2 h-4 w-4 text-purple-600 dark:text-purple-400" />
-          <SelectValue placeholder={t("placeholder")} />
+          <SelectValue placeholder={t("placeholder")}>{languages.find(l=>l.code===locale)?.name}</SelectValue>
         </SelectTrigger>
         <SelectContent className="z-[100] rounded-xl border-zinc-200 bg-white/95 shadow-xl backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95">
           {languages.map((lang) => (

@@ -63,7 +63,7 @@ export const BackgroundBeams = React.memo(
       "M-37 -581C-37 -581 31 -176 495 -49C959 78 1027 483 1027 483",
     ]
     return (
-      <div
+      <div aria-hidden="true"
         className={cn(
           "absolute  h-full w-full inset-0  [mask-size:40px] [mask-repeat:no-repeat] flex items-center justify-center",
           className,
@@ -148,4 +148,4 @@ export const BackgroundBeams = React.memo(
   },
 )
 
-BackgroundBeams.displayName = "BackgroundBeams" 
+BackgroundBeams.displayName = "BackgroundBeams"

@@ -117,10 +117,7 @@ const OnboardingForm = () => {
   };
 
   const handleFinalSubmit = async () => {
-    const response = await handleSubmit(formData);
-    if (response && 'body' in response && response.body && !('errors' in response.body && response.body.errors)) {
-       toast.success("Form submitted successfully!");
-    }
+    await handleSubmit({ ...formData });
   };
 
   // Check if step is valid for next button

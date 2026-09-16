@@ -12,20 +12,8 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 async function AdminContent() {
-    try {
-        const posts = await getAllPostsWithDrafts();
-        return <AdminPageClient initialPosts={posts} />;
-    } catch (error) {
-        console.error('Error loading admin content:', error);
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-zinc-900 mb-2">Error Loading Captain's Cabin</h2>
-                    <p className="text-zinc-600">Failed to load blog posts. Please try again later.</p>
-                </div>
-            </div>
-        );
-    }
+    const posts = await getAllPostsWithDrafts();
+    return <AdminPageClient initialPosts={posts} />;
 }
 
 export default function CaptainsCabinPage() {

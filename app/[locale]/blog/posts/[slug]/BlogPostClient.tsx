@@ -14,6 +14,9 @@ import {
     Home
 } from "lucide-react";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
+import { PostEngagement } from "@/components/blog/post-engagement";
+import { TableOfContents } from "@/components/blog/ui/TableOfContents";
+import type { TableOfContentsItem } from "@/lib/blog/types";
 import { ReadingProgress } from "@/components/blog/ui/ReadingProgress";
 import { SocialShareButtons } from "@/components/blog/ui/SocialShareButtons";
 import { SaveBookmarkButton } from "@/components/blog/features/SaveBookmarkButton";
@@ -26,12 +29,14 @@ interface BlogPostClientProps {
     post: BlogPost;
     previousPost: BlogPostMeta | null;
     nextPost: BlogPostMeta | null;
+    relatedPosts: BlogPostMeta[];
+    toc: TableOfContentsItem[];
 }
 
 export default function BlogPostClient({
     post,
     previousPost,
-    nextPost
+    nextPost, relatedPosts, toc
 }: BlogPostClientProps) {
     const t = useTranslations("Blog.post");
     const commonT = useTranslations("Blog");
@@ -51,12 +56,16 @@ export default function BlogPostClient({
         };
 
         highlightCode();
+        const links: HTMLAnchorElement[] = [];
+        document.querySelectorAll('.prose :is(h2,h3,h4)[id]').forEach(heading=>{
+          const link=document.createElement('a'); link.href='#'+heading.id; link.textContent=' #'; link.setAttribute('aria-label','Link to '+heading.textContent); heading.appendChild(link); links.push(link);
+        });
         window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
+        return () => { window.removeEventListener("scroll", handleScroll); links.forEach(link=>link.remove()); };
     }, [post.slug, post.content]);
 
     return (
-        <div className="min-h-screen bg-white relative">
+        <div className="blog-article min-h-screen relative">
             <AnimatedGridPattern
                 className="fixed inset-0 z-0 text-zinc-200/50 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]"
                 numSquares={50}
@@ -77,7 +86,7 @@ export default function BlogPostClient({
                 <div className="max-w-4xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center justify-between h-14">
                         <Link
-                            href="/blog"
+                            href={`/${locale}/blog`}
                             className="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-purple-600 transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
@@ -87,7 +96,7 @@ export default function BlogPostClient({
                         <div className="flex items-center gap-4">
                             <SaveBookmarkButton slug={post.slug} size="sm" />
                             <Link
-                                href="/"
+                                href={`/${locale}`}
                                 className="p-2 text-zinc-600 hover:text-purple-600 transition-colors flex-shrink-0"
                                 aria-label={t("home")}
                             >
@@ -102,7 +111,7 @@ export default function BlogPostClient({
             <header className="relative py-16 sm:py-24">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={false}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
@@ -111,7 +120,7 @@ export default function BlogPostClient({
                             {post.tags.map((tag) => (
                                 <Link
                                     key={tag}
-                                    href={`/blog?tag=${tag}`}
+                                    href={`/${locale}/blog?tag=${encodeURIComponent(tag)}`}
                                     className="inline-flex items-center gap-1 px-3 py-1 text-sm font-medium bg-purple-100 text-purple-600 rounded-full hover:bg-purple-200 transition-colors"
                                 >
                                     <Tag className="w-3 h-3" />
@@ -149,7 +158,7 @@ export default function BlogPostClient({
 
                         {/* Social Share */}
                         <SocialShareButtons
-                            url={`/blog/posts/${post.slug}`}
+                            url={`/${locale}/blog/posts/${post.slug}`}
                             title={post.title}
                             description={post.excerpt}
                             content={post.content}
@@ -160,7 +169,7 @@ export default function BlogPostClient({
                 {/* Featured Image */}
                 {post.image && (
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={false}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
                         className="max-w-5xl mx-auto px-4 sm:px-6 mt-12"
@@ -170,6 +179,7 @@ export default function BlogPostClient({
                                 src={post.image}
                                 alt={post.title}
                                 fill
+                                sizes="(max-width: 1024px) 100vw, 1024px"
                                 className="object-cover"
                                 priority
                             />
@@ -178,10 +188,11 @@ export default function BlogPostClient({
                 )}
             </header>
 
+            <div className="mx-auto max-w-4xl px-6 py-6"><TableOfContents items={toc}/></div>
             {/* Article Content */}
             <article className="max-w-4xl mx-auto px-4 sm:px-6 pb-16">
                 <motion.div
-                    initial={{ opacity: 0 }}
+                    initial={false}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                     className={cn(
@@ -198,7 +209,7 @@ export default function BlogPostClient({
                         // Lists
                         "prose-li:marker:text-purple-500",
                         // Blockquotes
-                        "prose-blockquote:border-l-purple-500 prose-blockquote:bg-zinc-50 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:px-4",
+                        "prose-blockquote:border-l-purple-500 prose-blockquote:bg-[#111832] prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:px-4",
                         // Images
                         "prose-img:rounded-xl prose-img:shadow-lg",
                         // Paragraphs
@@ -208,9 +219,10 @@ export default function BlogPostClient({
                 />
             </article>
 
+            <section className="mx-auto max-w-4xl px-6 py-8"><PostEngagement slug={post.slug}/><h2 className="mt-12 text-2xl font-semibold text-white">Continue reading</h2><div className="mt-5 grid gap-4 sm:grid-cols-3">{relatedPosts.map(p=><Link className="content-card" key={p.slug} href={`/${locale}/blog/posts/${p.slug}`}><h3 className="!text-base">{p.title}</h3><p className="mt-3 text-sm">{p.readingTime} min read →</p></Link>)}</div></section>
             {/* Floating Share Button */}
             <SocialShareButtons
-                url={`/blog/posts/${post.slug}`}
+                url={`/${locale}/blog/posts/${post.slug}`}
                 title={post.title}
                 variant="floating"
                 content={post.content}
@@ -235,8 +247,8 @@ export default function BlogPostClient({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {previousPost && (
                         <Link
-                            href={`/blog/posts/${previousPost.slug}`}
-                            className="group p-6 rounded-2xl bg-zinc-50 border border-zinc-200 hover:border-purple-500 transition-colors"
+                            href={`/${locale}/blog/posts/${previousPost.slug}`}
+                            className="group p-6 rounded-2xl bg-[#111832] border border-zinc-200 hover:border-purple-500 transition-colors"
                         >
                             <p className="flex items-center gap-2 text-sm text-zinc-500 mb-2">
                                 <ArrowLeft className="w-4 h-4" />
@@ -250,9 +262,9 @@ export default function BlogPostClient({
 
                     {nextPost && (
                         <Link
-                            href={`/blog/posts/${nextPost.slug}`}
+                            href={`/${locale}/blog/posts/${nextPost.slug}`}
                             className={cn(
-                                "group p-6 rounded-2xl bg-zinc-50 border border-zinc-200 hover:border-purple-500 transition-colors text-right",
+                                "group p-6 rounded-2xl bg-[#111832] border border-zinc-200 hover:border-purple-500 transition-colors text-right",
                                 !previousPost && "sm:col-start-2"
                             )}
                         >

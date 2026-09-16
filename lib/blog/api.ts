@@ -116,9 +116,13 @@ export function copyToClipboard(text: string): Promise<boolean> {
 
 export async function aiAssist(action: string, content: string, context?: string): Promise<ReadableStream | null> {
     try {
+        const token = typeof window !== 'undefined' ? sessionStorage.getItem("admin-token") || "" : "";
         const response = await fetch('/api/blog/ai-assist', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { 'x-admin-token': token } : {}),
+            },
             body: JSON.stringify({ action, content, context }),
         });
 

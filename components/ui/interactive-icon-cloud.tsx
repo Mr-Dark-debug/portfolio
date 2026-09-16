@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import { useReducedMotion } from "framer-motion"
 import { useTheme } from "next-themes"
 import {
   Cloud,
@@ -64,6 +65,7 @@ export type DynamicCloudProps = {
 type IconData = Awaited<ReturnType<typeof fetchSimpleIcons>>
 
 export function IconCloud({ iconSlugs }: DynamicCloudProps) {
+  const reduceMotion = useReducedMotion()
   const [data, setData] = useState<IconData | null>(null)
   const { theme } = useTheme()
 
@@ -78,6 +80,8 @@ export function IconCloud({ iconSlugs }: DynamicCloudProps) {
       renderCustomIcon(icon, theme || "light"),
     )
   }, [data, theme])
+
+  if (reduceMotion) return <div className="flex flex-wrap justify-center gap-4">{renderedIcons}</div>
 
   return (
     // @ts-ignore

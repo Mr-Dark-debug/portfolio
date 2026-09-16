@@ -1,4 +1,6 @@
+import { resume } from '@/lib/resume';
 export const publicProfile = {
+  ...resume,
   name: "Prashant Choudhary",
   currentEducation: {
     degree: "Master's in Natural Language Processing",
@@ -7,11 +9,11 @@ export const publicProfile = {
     status: "ongoing",
   },
   publicLinks: {
-    website: "https://www.prashant.sbs/",
+    website: "https://prashant.sbs/",
     github: "https://github.com/Mr-Dark-debug",
     linkedin: "https://www.linkedin.com/in/mr-dark-debug",
     youtube: "https://youtube.com/@prashantelsewhere",
-    blog: "https://www.syntax-blogs.prashant.sbs/",
+    blog: "https://prashant.sbs/en/blog",
     x: "https://x.com/prashanttto",
   },
   verifiedFacts: [

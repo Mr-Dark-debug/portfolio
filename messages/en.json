@@ -50,7 +50,7 @@
           "year": "2026",
           "entries": [
             {
-              "title": "Developer & Founder - MugShot Studio",
+              "title": "Tell me about the SetFit reproduction project.",
               "period": "Dec 2025 - Present",
               "meta": "Self-employed"
             },
@@ -267,7 +267,7 @@
       "experience": "Your AI experience?",
       "availability": "Are you available?",
       "education": "What are you studying now?",
-      "studio": "What is MugShot Studio?"
+      "studio": "Tell me about the SetFit reproduction project."
     }
   },
   "Blog": {

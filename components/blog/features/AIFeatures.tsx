@@ -88,9 +88,13 @@ export function AIFeatures({ content, onResult, className }: AIFeaturesProps) {
         setResult("");
 
         try {
+            const adminToken = typeof window !== 'undefined' ? sessionStorage.getItem("admin-token") || "" : "";
             const response = await fetch("/api/blog/ai-assist", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(adminToken ? { "x-admin-token": adminToken } : {}),
+                },
                 body: JSON.stringify({
                     action: action.type,
                     content,

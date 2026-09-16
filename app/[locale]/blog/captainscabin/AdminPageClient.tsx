@@ -22,6 +22,7 @@ import {
     RefreshCw
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getAdminClientHeaders } from "@/lib/admin-client";
 import type { BlogPostMeta } from "@/lib/blog/types";
 
 interface AdminPageClientProps {
@@ -59,7 +60,17 @@ export default function AdminPageClient({ initialPosts }: AdminPageClientProps) 
     const refreshPosts = async () => {
         setIsRefreshing(true);
         try {
-            const res = await fetch('/api/blog/captainscabin/posts');
+            const res = await fetch('/api/blog/captainscabin/posts', {
+                headers: getAdminClientHeaders(),
+            });
+            if (res.status === 401) {
+                const token = window.prompt("Enter admin token (ADMIN_TOKEN):");
+                if (token) {
+                    sessionStorage.setItem("admin-token", token);
+                    return refreshPosts();
+                }
+                return;
+            }
             if (res.ok) {
                 const data = await res.json();
                 setPosts(Array.isArray(data) ? data : []);
@@ -78,7 +89,18 @@ export default function AdminPageClient({ initialPosts }: AdminPageClientProps) 
         try {
             const response = await fetch(`/api/blog/captainscabin/posts/${slug}`, {
                 method: "DELETE",
+                headers: getAdminClientHeaders(),
             });
+
+            if (response.status === 401) {
+                const token = window.prompt("Enter admin token (ADMIN_TOKEN):");
+                if (token) {
+                    sessionStorage.setItem("admin-token", token);
+                    setIsDeleting(false);
+                    return handleDelete(slug);
+                }
+                throw new Error('Unauthorized');
+            }
 
             if (response.ok) {
                 setPosts(prev => prev.filter(p => p.slug !== slug));

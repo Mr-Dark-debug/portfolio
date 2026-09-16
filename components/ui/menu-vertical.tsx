@@ -26,7 +26,7 @@ export const MenuVertical = ({
   onItemClick,
 }: MenuVerticalProps) => {
   return (
-    <div className="flex w-fit flex-col gap-4 px-10">
+    <nav aria-label="Portfolio sections" className="flex w-full flex-col gap-1 px-6">
       {menuItems.map((item, index) => (
         <motion.div
           key={`${item.href}-${index}`}
@@ -36,30 +36,30 @@ export const MenuVertical = ({
         >
           <motion.div
             variants={{
-              initial: { x: "-100%", color: "inherit", opacity: 0 },
+              initial: { x: -16, color: "inherit", opacity: 0 },
               hover: { x: 0, color, opacity: 1 },
             }}
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="z-0"
             role="presentation"
           >
-            <ArrowRight strokeWidth={3} className="size-10" />
+            <ArrowRight strokeWidth={3} className="size-4" />
           </motion.div>
 
           <MotionLink
             href={item.href}
             onClick={() => onItemClick?.(item, index)}
             variants={{
-              initial: { x: -40, color: "inherit" },
+              initial: { x: -16, color: "inherit" },
               hover: { x: 0, color, skewX: skew },
             }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="text-4xl font-semibold no-underline"
+            className="w-full rounded-xl px-3 py-2 text-lg font-medium no-underline hover:bg-white/5"
           >
             {item.label}
           </MotionLink>
         </motion.div>
       ))}
-    </div>
+    </nav>
   );
 };

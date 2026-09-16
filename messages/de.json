@@ -5,12 +5,36 @@
       "description": "KI/ML-Ingenieur und Full-Stack-Entwickler, der praktische KI-Produkte, Entwicklerbildung und produktionsreife Software baut."
     }
   },
-  "LanguageSwitcher": {"label": "Sprache wählen", "placeholder": "Sprache"},
+  "LanguageSwitcher": {
+    "label": "Sprache wählen",
+    "placeholder": "Sprache"
+  },
   "HomePage": {
     "title": "PRASHANT CHOUDHARY",
-    "roles": {"ai": "KI-Ingenieur", "ml": "ML-Ingenieur", "prompt": "Prompt Engineer", "fullstack": "Full-Stack-Entwickler", "backend": "Backend-Entwickler"},
-    "nav": {"home": "Start", "about": "Über mich", "experience": "Erfahrung", "education": "Ausbildung", "projects": "Projekte", "skills": "Skills", "blog": "Blog", "contact": "Kontakt"},
-    "hero": {"iam": "Ich bin", "available": "Verfügbar für Arbeit", "future": "Die Zukunft mit KI bauen", "profileRole": "KI-Ingenieur & Full-Stack-Entwickler", "profileAlt": "Porträt von Prashant Choudhary"},
+    "roles": {
+      "ai": "KI-Ingenieur",
+      "ml": "ML-Ingenieur",
+      "prompt": "Prompt Engineer",
+      "fullstack": "Full-Stack-Entwickler",
+      "backend": "Backend-Entwickler"
+    },
+    "nav": {
+      "home": "Start",
+      "about": "Über mich",
+      "experience": "Erfahrung",
+      "education": "Ausbildung",
+      "projects": "Projekte",
+      "skills": "Skills",
+      "blog": "Blog",
+      "contact": "Kontakt"
+    },
+    "hero": {
+      "iam": "Ich bin",
+      "available": "Verfügbar für Arbeit",
+      "future": "Die Zukunft mit KI bauen",
+      "profileRole": "KI-Ingenieur & Full-Stack-Entwickler",
+      "profileAlt": "Porträt von Prashant Choudhary"
+    },
     "about": {
       "eyebrow": "Über mich",
       "title": "KI-Entwickler mit Fokus auf nützliche, mehrsprachige Produkte.",
@@ -22,46 +46,260 @@
       "title": "Berufserfahrung",
       "description": "Mein Weg in der Tech-Branche mit KI, ML und Softwareentwicklung.",
       "items": [
-        {"year": "2026", "entries": [
-          {"title": "Developer & Founder - MugShot Studio", "period": "Dez. 2025 - heute", "meta": "Selbstständig"},
-          {"title": "Founder & Developer - Syntax & Sips", "period": "Okt. 2025 - heute", "meta": "Indien", "description": "Aufbau einer Content-Plattform für ML, Data Science und Entwicklerbildung mit wöchentlichen Playbooks und Tutorials."},
-          {"title": "Software Testing as User - Nothing", "period": "Feb. 2023 - heute", "meta": "Standort: Indien (Remote)", "description": "Skills: Testing, Kommunikation, manuelles Testen"}
-        ]},
-        {"year": "2025", "entries": [
-          {"title": "Junior AI/ML Backend Engineer - EnactOn Technologies", "period": "Juli 2025 - Nov. 2025", "meta": "Standort: Surat, Gujarat, Indien (vor Ort)", "description": "Vollzeit"},
-          {"title": "Jr. AI/ML Engineer - Proposal.biz", "period": "Juli 2025 - Nov. 2025", "meta": "Standort: Surat, Gujarat, Indien (Hybrid)"},
-          {"title": "AI Prompt Engineer Intern - EnactOn Technologies", "period": "Dez. 2024 - Juli 2025", "meta": "Standort: Indien (vor Ort)", "description": "Skills: Künstliche Intelligenz, Generative AI Studio, Machine-Learning-Algorithmen"},
-          {"title": "Community Member - Generation Nothing", "period": "Juni 2023 - Okt. 2025", "meta": "Standort: Indien (Remote)", "description": "Skills: Kommunikation"}
-        ]},
-        {"year": "2024", "entries": [
-          {"title": "Amalthea 2024 Hackathon (IIT Gandhinagar)", "period": "Dez. 2024", "meta": "Standort: Gandhinagar, Gujarat, Indien (vor Ort)", "description": "KI-Ingenieur | Top 7/50 Teams. Entwicklung einer mehrsprachigen Healthcare-App mit KI-gestütztem IVR.", "extra": "Tech Stack: Python, FastAPI, Dialogflow, Twilio, Gemini, PyTorch"},
-          {"title": "AI/ML Intern - JBcodeapp", "period": "Mai 2024 - Juni 2024", "meta": "Standort: Greater Surat Area (vor Ort)", "bullets": ["Bildbasierte Gesichtserkennung mit der face_recognition-Bibliothek", "Echtzeit-Gesichtserkennung in Videos mit OpenCV", "KI/ML-Techniken zur Erweiterung von Web-Funktionalität angewendet"]}
-        ]},
-        {"year": "2023", "entries": [
-          {"title": "AI/ML Engineer Intern - ALGOBRAIN AI", "period": "Sep. 2023 - Jan. 2024", "meta": "Standort: Surat, Gujarat, Indien (vor Ort)", "description": "Skills: Rasa, Dialogflow, TensorFlow, Kommunikation"},
-          {"title": "Moderator - Google Developer Students Club", "period": "Juni 2022 - Sep. 2023", "meta": "Standort: Surat, Gujarat, Indien", "description": "Skills: Kommunikation, Zeitmanagement, Teammanagement"}
-        ]},
-        {"year": "2022", "entries": [{"title": "Moderator - Google Developer Students Club", "period": "Juni 2022 - Sep. 2023", "meta": "Standort: Surat, Gujarat, Indien", "description": "Beginn der Rolle als Moderator."}]},
-        {"year": "2021", "entries": [{"title": "Freelance Editor - Fiverr", "period": "Feb. 2021 - Juli 2023", "description": "Skills: Adobe Premiere Pro, Blender, Lightroom, After Effects, Photoshop"}]}
+        {
+          "year": "2026",
+          "entries": [
+            {
+              "title": "Tell me about the SetFit reproduction project.",
+              "period": "Dez. 2025 - heute",
+              "meta": "Selbstständig"
+            },
+            {
+              "title": "Founder & Developer - Syntax & Sips",
+              "period": "Okt. 2025 - heute",
+              "meta": "Indien",
+              "description": "Aufbau einer Content-Plattform für ML, Data Science und Entwicklerbildung mit wöchentlichen Playbooks und Tutorials."
+            },
+            {
+              "title": "Software Testing as User - Nothing",
+              "period": "Feb. 2023 - heute",
+              "meta": "Standort: Indien (Remote)",
+              "description": "Skills: Testing, Kommunikation, manuelles Testen"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "entries": [
+            {
+              "title": "Junior AI/ML Backend Engineer - EnactOn Technologies",
+              "period": "Juli 2025 - Nov. 2025",
+              "meta": "Standort: Surat, Gujarat, Indien (vor Ort)",
+              "description": "Vollzeit"
+            },
+            {
+              "title": "Jr. AI/ML Engineer - Proposal.biz",
+              "period": "Juli 2025 - Nov. 2025",
+              "meta": "Standort: Surat, Gujarat, Indien (Hybrid)"
+            },
+            {
+              "title": "AI Prompt Engineer Intern - EnactOn Technologies",
+              "period": "Dez. 2024 - Juli 2025",
+              "meta": "Standort: Indien (vor Ort)",
+              "description": "Skills: Künstliche Intelligenz, Generative AI Studio, Machine-Learning-Algorithmen"
+            },
+            {
+              "title": "Community Member - Generation Nothing",
+              "period": "Juni 2023 - Okt. 2025",
+              "meta": "Standort: Indien (Remote)",
+              "description": "Skills: Kommunikation"
+            }
+          ]
+        },
+        {
+          "year": "2024",
+          "entries": [
+            {
+              "title": "Amalthea 2024 Hackathon (IIT Gandhinagar)",
+              "period": "Dez. 2024",
+              "meta": "Standort: Gandhinagar, Gujarat, Indien (vor Ort)",
+              "description": "KI-Ingenieur | Top 7/50 Teams. Entwicklung einer mehrsprachigen Healthcare-App mit KI-gestütztem IVR.",
+              "extra": "Tech Stack: Python, FastAPI, Dialogflow, Twilio, Gemini, PyTorch"
+            },
+            {
+              "title": "AI/ML Intern - JBcodeapp",
+              "period": "Mai 2024 - Juni 2024",
+              "meta": "Standort: Greater Surat Area (vor Ort)",
+              "bullets": [
+                "Bildbasierte Gesichtserkennung mit der face_recognition-Bibliothek",
+                "Echtzeit-Gesichtserkennung in Videos mit OpenCV",
+                "KI/ML-Techniken zur Erweiterung von Web-Funktionalität angewendet"
+              ]
+            }
+          ]
+        },
+        {
+          "year": "2023",
+          "entries": [
+            {
+              "title": "AI/ML Engineer Intern - ALGOBRAIN AI",
+              "period": "Sep. 2023 - Jan. 2024",
+              "meta": "Standort: Surat, Gujarat, Indien (vor Ort)",
+              "description": "Skills: Rasa, Dialogflow, TensorFlow, Kommunikation"
+            },
+            {
+              "title": "Moderator - Google Developer Students Club",
+              "period": "Juni 2022 - Sep. 2023",
+              "meta": "Standort: Surat, Gujarat, Indien",
+              "description": "Skills: Kommunikation, Zeitmanagement, Teammanagement"
+            }
+          ]
+        },
+        {
+          "year": "2022",
+          "entries": [
+            {
+              "title": "Moderator - Google Developer Students Club",
+              "period": "Juni 2022 - Sep. 2023",
+              "meta": "Standort: Surat, Gujarat, Indien",
+              "description": "Beginn der Rolle als Moderator."
+            }
+          ]
+        },
+        {
+          "year": "2021",
+          "entries": [
+            {
+              "title": "Freelance Editor - Fiverr",
+              "period": "Feb. 2021 - Juli 2023",
+              "description": "Skills: Adobe Premiere Pro, Blender, Lightroom, After Effects, Photoshop"
+            }
+          ]
+        }
       ]
     },
     "education": {
       "title": "Bildungsweg",
       "description": "Mein akademischer Weg in Künstlicher Intelligenz, Data Science und Natural Language Processing.",
       "items": [
-        {"title": "Masterstudium", "heading": "Master in Natural Language Processing", "school": "Universität Trier", "period": "13. Apr. 2026 - heute (laufend)", "description": "Derzeit absolviere ich einen Master in NLP. Weitere akademische Details werden nicht angenommen."},
-        {"title": "Bachelorstudium", "heading": "Bachelor in Artificial Intelligence and Data Science", "school": "Uka Tarsadia University", "period": "Sep. 2021 - Juli 2025 (abgeschlossen)", "description": "Skills: Pattern Recognition, Data Mining, KI, Flask, Data Structures, PyTorch, Hadoop, SciPy, Deep Learning, Pandas, Data Analytics"},
-        {"title": "Klasse XII", "heading": "Klasse XII, Naturwissenschaften", "school": "Gyanjyot School", "period": "Physik, Chemie, Mathematik", "description": "Skills: Wahrscheinlichkeit, Teamführung, Zeitmanagement, Statistik"},
-        {"title": "Klasse X", "heading": "Klasse X", "school": "NILKANTH VIDYALAYA"}
+        {
+          "title": "Masterstudium",
+          "heading": "Master in Natural Language Processing",
+          "school": "Universität Trier",
+          "period": "13. Apr. 2026 - heute (laufend)",
+          "description": "Derzeit absolviere ich einen Master in NLP. Weitere akademische Details werden nicht angenommen."
+        },
+        {
+          "title": "Bachelorstudium",
+          "heading": "Bachelor in Artificial Intelligence and Data Science",
+          "school": "Uka Tarsadia University",
+          "period": "Sep. 2021 - Juli 2025 (abgeschlossen)",
+          "description": "Skills: Pattern Recognition, Data Mining, KI, Flask, Data Structures, PyTorch, Hadoop, SciPy, Deep Learning, Pandas, Data Analytics"
+        },
+        {
+          "title": "Klasse XII",
+          "heading": "Klasse XII, Naturwissenschaften",
+          "school": "Gyanjyot School",
+          "period": "Physik, Chemie, Mathematik",
+          "description": "Skills: Wahrscheinlichkeit, Teamführung, Zeitmanagement, Statistik"
+        },
+        {
+          "title": "Klasse X",
+          "heading": "Klasse X",
+          "school": "NILKANTH VIDYALAYA"
+        }
       ]
     },
-    "buttons": {"menu": "Menü", "askAi": "KI fragen"},
-    "a11y": {"openMenu": "Navigationsmenü öffnen", "closeMenu": "Navigationsmenü schließen", "openChat": "KI-Chat-Assistent öffnen", "linkedin": "LinkedIn-Profil öffnen", "github": "GitHub-Profil öffnen", "email": "E-Mail senden"},
-    "footer": {"description": "KI/ML-Ingenieur & Full-Stack-Entwickler, der nützliche Produkte mit moderner KI und Softwareentwicklung baut.", "aiPrompt": "Fragen? KI-Zusammenfassung öffnen", "rights": "Alle Rechte vorbehalten.", "craftedBy": "Erstellt von {name}", "externalPrompt": "Handle als Assistent für Prashant. Analysiere sein Portfolio unter {url}. Beantworte Fragen zu Skills, Projekten, Erfahrung, Ausbildung und öffentlichen Profil-Links anhand der Website-Inhalte."}
+    "buttons": {
+      "menu": "Menü",
+      "askAi": "KI fragen"
+    },
+    "a11y": {
+      "openMenu": "Navigationsmenü öffnen",
+      "closeMenu": "Navigationsmenü schließen",
+      "openChat": "KI-Chat-Assistent öffnen",
+      "linkedin": "LinkedIn-Profil öffnen",
+      "github": "GitHub-Profil öffnen",
+      "email": "E-Mail senden"
+    },
+    "footer": {
+      "description": "KI/ML-Ingenieur & Full-Stack-Entwickler, der nützliche Produkte mit moderner KI und Softwareentwicklung baut.",
+      "aiPrompt": "Fragen? KI-Zusammenfassung öffnen",
+      "rights": "Alle Rechte vorbehalten.",
+      "craftedBy": "Erstellt von {name}",
+      "externalPrompt": "Handle als Assistent für Prashant. Analysiere sein Portfolio unter {url}. Beantworte Fragen zu Skills, Projekten, Erfahrung, Ausbildung und öffentlichen Profil-Links anhand der Website-Inhalte."
+    }
   },
-  "Projects": {"title": "Ausgewählte Projekte", "description": "Gepinnte und meistbewertete Repositories aus meinem GitHub-Profil und Organisationen.", "loading": "Projekte werden von GitHub geladen...", "viewProfile": "GitHub-Profil ansehen", "moreTitle": "Weitere Projekte", "moreDescription": "Weitere Repositories und Beiträge.", "noDescription": "Keine Beschreibung verfügbar", "noShortDescription": "Keine Beschreibung"},
-  "Skills": {"title": "Technologien & Tools", "description": "Mein technisches Werkzeugset für intelligente Lösungen."},
-  "Contact": {"title": "Kontakt aufnehmen", "description": "Hast du eine Frage oder möchtest du zusammenarbeiten? Ich freue mich auf deine Nachricht und antworte so schnell wie möglich.", "name": "Name", "email": "E-Mail", "subject": "Betreff", "message": "Nachricht", "subscribe": "Newsletter abonnieren", "send": "Nachricht senden", "sending": "Wird gesendet...", "success": "Nachricht erfolgreich gesendet!", "error": "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.", "placeholders": {"name": "Max Mustermann", "email": "max@example.com", "subject": "Projektanfrage", "message": "Deine Nachricht..."}},
-  "Chat": {"title": "Generative Answers", "poweredBy": "Bereitgestellt von {model}", "greeting": "Hallo!", "emptyTitle": "Frag mich etwas über Prashant", "emptyDescription": "Ich kann Fragen zu Projekten, Skills, Erfahrung, Ausbildung und öffentlichen Profil-Links beantworten.", "thinking": "Denke nach...", "reasoning": "Überlegung...", "reasoningDone": "Überlegung abgeschlossen", "usingTool": "Verwende {tool}...", "inputPlaceholder": "Frag mich etwas über Prashant...", "send": "Nachricht senden", "close": "Chat schließen", "modelMenu": "KI-Modell wählen", "attach": "Anhängen", "shortcuts": "Kurzbefehle", "errorPrefix": "Fehler", "fallbackError": "Ich konnte diese Anfrage gerade nicht abschließen. Bitte versuche es erneut.", "suggestions": {"projects": "Erzähl mir von deinen Projekten", "stack": "Welchen Tech-Stack nutzt du?", "experience": "Deine KI-Erfahrung?", "availability": "Bist du verfügbar?", "education": "Was studierst du aktuell?", "studio": "Was ist MugShot Studio?"}},
-  "Blog": {"metadata": {"title": "Blog | Prashant Choudhary - KI-Ingenieur", "description": "Einblicke, Tutorials und Gedanken zu KI, Machine Learning, Webentwicklung und Software Engineering."}, "brand": "Captain’s Log", "loading": "Captain’s Log wird geladen...", "toggleSearch": "Suche umschalten", "backHome": "Zurück zur Basis", "searchPlaceholder": "Logs nach Schlüsselwort oder Thema suchen...", "filterLabel": "Nach Frequenz filtern", "allSignals": "Alle Signale", "logsFound": "{count} Logs gefunden", "gridView": "Rasteransicht", "listView": "Listenansicht", "filteringBy": "Gefiltert nach:", "noResults": "Keine Logs in diesem Bereich gefunden.", "clearFilters": "Alle Filter löschen", "readMore": "Weiterlesen", "minRead": "{minutes} Min. Lesezeit", "minShort": "{minutes} Min.", "footer": "Übertragung vom Kommandodeck · © {year} Captain Prashant", "post": {"back": "Zurück zum Kommandodeck", "home": "Start", "writtenBy": "Geschrieben von", "authorRole": "KI-Ingenieur & Full-Stack-Entwickler", "previous": "Zurück", "next": "Weiter", "rights": "© {year} Prashant Choudhary. Alle Rechte vorbehalten."}}
+  "Projects": {
+    "title": "Ausgewählte Projekte",
+    "description": "Gepinnte und meistbewertete Repositories aus meinem GitHub-Profil und Organisationen.",
+    "loading": "Projekte werden von GitHub geladen...",
+    "viewProfile": "GitHub-Profil ansehen",
+    "moreTitle": "Weitere Projekte",
+    "moreDescription": "Weitere Repositories und Beiträge.",
+    "noDescription": "Keine Beschreibung verfügbar",
+    "noShortDescription": "Keine Beschreibung"
+  },
+  "Skills": {
+    "title": "Technologien & Tools",
+    "description": "Mein technisches Werkzeugset für intelligente Lösungen."
+  },
+  "Contact": {
+    "title": "Kontakt aufnehmen",
+    "description": "Hast du eine Frage oder möchtest du zusammenarbeiten? Ich freue mich auf deine Nachricht und antworte so schnell wie möglich.",
+    "name": "Name",
+    "email": "E-Mail",
+    "subject": "Betreff",
+    "message": "Nachricht",
+    "subscribe": "Newsletter abonnieren",
+    "send": "Nachricht senden",
+    "sending": "Wird gesendet...",
+    "success": "Nachricht erfolgreich gesendet!",
+    "error": "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.",
+    "placeholders": {
+      "name": "Max Mustermann",
+      "email": "max@example.com",
+      "subject": "Projektanfrage",
+      "message": "Deine Nachricht..."
+    }
+  },
+  "Chat": {
+    "title": "Generative Answers",
+    "poweredBy": "Bereitgestellt von {model}",
+    "greeting": "Hallo!",
+    "emptyTitle": "Frag mich etwas über Prashant",
+    "emptyDescription": "Ich kann Fragen zu Projekten, Skills, Erfahrung, Ausbildung und öffentlichen Profil-Links beantworten.",
+    "thinking": "Denke nach...",
+    "reasoning": "Überlegung...",
+    "reasoningDone": "Überlegung abgeschlossen",
+    "usingTool": "Verwende {tool}...",
+    "inputPlaceholder": "Frag mich etwas über Prashant...",
+    "send": "Nachricht senden",
+    "close": "Chat schließen",
+    "modelMenu": "KI-Modell wählen",
+    "attach": "Anhängen",
+    "shortcuts": "Kurzbefehle",
+    "errorPrefix": "Fehler",
+    "fallbackError": "Ich konnte diese Anfrage gerade nicht abschließen. Bitte versuche es erneut.",
+    "suggestions": {
+      "projects": "Erzähl mir von deinen Projekten",
+      "stack": "Welchen Tech-Stack nutzt du?",
+      "experience": "Deine KI-Erfahrung?",
+      "availability": "Bist du verfügbar?",
+      "education": "Was studierst du aktuell?",
+      "studio": "Tell me about the SetFit reproduction project."
+    }
+  },
+  "Blog": {
+    "metadata": {
+      "title": "Blog | Prashant Choudhary - KI-Ingenieur",
+      "description": "Einblicke, Tutorials und Gedanken zu KI, Machine Learning, Webentwicklung und Software Engineering."
+    },
+    "brand": "Captain’s Log",
+    "loading": "Captain’s Log wird geladen...",
+    "toggleSearch": "Suche umschalten",
+    "backHome": "Zurück zur Basis",
+    "searchPlaceholder": "Logs nach Schlüsselwort oder Thema suchen...",
+    "filterLabel": "Nach Frequenz filtern",
+    "allSignals": "Alle Signale",
+    "logsFound": "{count} Logs gefunden",
+    "gridView": "Rasteransicht",
+    "listView": "Listenansicht",
+    "filteringBy": "Gefiltert nach:",
+    "noResults": "Keine Logs in diesem Bereich gefunden.",
+    "clearFilters": "Alle Filter löschen",
+    "readMore": "Weiterlesen",
+    "minRead": "{minutes} Min. Lesezeit",
+    "minShort": "{minutes} Min.",
+    "footer": "Übertragung vom Kommandodeck · © {year} Captain Prashant",
+    "post": {
+      "back": "Zurück zum Kommandodeck",
+      "home": "Start",
+      "writtenBy": "Geschrieben von",
+      "authorRole": "KI-Ingenieur & Full-Stack-Entwickler",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "rights": "© {year} Prashant Choudhary. Alle Rechte vorbehalten."
+    }
+  }
 }

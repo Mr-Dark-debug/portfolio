@@ -37,7 +37,7 @@ export default function GlassmorphismProfileCard({
     useEffect(() => {
         const updateClock = () => {
             const now = new Date();
-            const h = now.getHours();
+            const h = Number(new Intl.DateTimeFormat("en-GB", {timeZone:"Europe/Berlin",hour:"2-digit",hourCycle:"h23"}).format(now));
             const m = now.getMinutes().toString().padStart(2, "0");
             const hour12 = ((h + 11) % 12) + 1;
             const ampm = h >= 12 ? "PM" : "AM";
@@ -59,7 +59,7 @@ export default function GlassmorphismProfileCard({
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
             className={cn("relative w-full max-w-sm", className)}
@@ -69,7 +69,7 @@ export default function GlassmorphismProfileCard({
 
             {/* Glow text */}
             <div className="absolute inset-x-0 -bottom-10 mx-auto w-full z-0">
-                <div className="flex items-center justify-center gap-2 bg-transparent py-3 text-center text-sm font-medium text-black dark:text-white">
+                <div className="flex items-center justify-center gap-2 bg-transparent py-3 text-center text-sm font-medium text-white">
                     <Zap className="h-4 w-4" /> {glowText}
                 </div>
             </div>
@@ -77,13 +77,13 @@ export default function GlassmorphismProfileCard({
             <Card
                 className={cn(
                     "relative z-10 mx-auto w-full max-w-3xl overflow-visible rounded-[20px]",
-                    "bg-white/10 dark:bg-white/5 backdrop-blur-xl",
+                    "bg-[#101538]/80 dark:bg-[#101538]/80 backdrop-blur-xl",
                     "border border-black/20 dark:border-white/10",
                     "shadow-lg shadow-black/20 hover:shadow-black/10"
                 )}
             >
                 <CardContent className="p-6 sm:p-8">
-                    <div className="mb-6 flex items-center justify-between text-sm text-neutral-500">
+                    <div className="mb-6 flex items-center justify-between text-sm text-slate-300">
                         <div className="flex items-center gap-2">
                             <span
                                 className={cn(
@@ -95,7 +95,7 @@ export default function GlassmorphismProfileCard({
                         </div>
                         <div className="flex items-center gap-2 opacity-80">
                             <Clock className="h-4 w-4" />
-                            <span className="tabular-nums">{timeText}</span>
+                            <span title="Europe/Berlin" className="tabular-nums">{timeText}</span>
                         </div>
                     </div>
 
@@ -111,10 +111,10 @@ export default function GlassmorphismProfileCard({
                             />
                         </div>
                         <div className="min-w-0 text-center">
-                            <h3 className="truncate text-xl font-semibold tracking-tight sm:text-3xl text-gray-900 dark:text-white">
+                            <h3 className="truncate text-xl font-semibold tracking-tight sm:text-3xl text-white">
                                 {name}
                             </h3>
-                            <p className="mt-0.5 text-sm text-neutral-500 dark:text-neutral-400">
+                            <p className="mt-0.5 text-sm text-slate-300 dark:text-slate-300">
                                 {role}
                             </p>
                         </div>
@@ -125,7 +125,7 @@ export default function GlassmorphismProfileCard({
                         <Button
                             variant="outline"
                             asChild
-                            className="h-12 justify-center gap-3 rounded-2xl bg-white/50 dark:bg-white/10 hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:border-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
+                            className="h-12 justify-center gap-3 rounded-2xl bg-white/10 dark:bg-white/10 hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:border-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
                         >
                             <a href={`mailto:${email}?subject=Hiring Inquiry - Let's Work Together&body=Hi Prashant,%0D%0A%0D%0AI came across your portfolio and I'm interested in discussing a potential opportunity with you.%0D%0A%0D%0AProject/Role: [Please describe]%0D%0ATimeline: [Expected timeline]%0D%0ABudget/Compensation: [If applicable]%0D%0A%0D%0ALooking forward to hearing from you!%0D%0A%0D%0ABest regards,%0D%0A[Your Name]`}>
                                 <Plus className="h-4 w-4" /> Hire Me
@@ -135,7 +135,7 @@ export default function GlassmorphismProfileCard({
                         <Button
                             variant="outline"
                             onClick={handleCopy}
-                            className="h-12 justify-center gap-3 rounded-2xl bg-white/50 dark:bg-white/10 hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:border-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
+                            className="h-12 justify-center gap-3 rounded-2xl bg-white/10 dark:bg-white/10 hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:border-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
                         >
                             <Copy className="h-4 w-4" /> {copied ? "Copied" : "Copy Email"}
                         </Button>

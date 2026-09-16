@@ -1,5 +1,7 @@
+import { rateLimit } from '@/lib/rate-limit';
 import { streamText } from 'ai';
 import { createGroq } from '@ai-sdk/groq';
+import { isAdminAuthorized } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
 
@@ -71,12 +73,22 @@ Content:`,
 };
 
 export async function POST(req: Request) {
+    const limited=await rateLimit(req,'ai-assist',8,600);if(limited)return limited;
     try {
         const { action, content, prompt } = await req.json();
 
-        if (!content) {
+        const PUBLIC_ACTIONS = new Set(["twitter", "linkedin", "facebook", "hashtags"]);
+        const isPublicAction = PUBLIC_ACTIONS.has(action);
+        if (!isPublicAction && !isAdminAuthorized(req)) {
             return new Response(
-                JSON.stringify({ error: 'Content is required' }),
+                JSON.stringify({ error: 'Unauthorized' }),
+                { status: 401, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        if (!content || typeof content !== 'string' || content.length > 20000) {
+            return new Response(
+                JSON.stringify({ error: 'Content is required (max 20k chars)' }),
                 { status: 400, headers: { 'Content-Type': 'application/json' } }
             );
         }

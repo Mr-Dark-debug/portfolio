@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useId, useState } from "react"
+import { useReducedMotion } from "framer-motion"
 import Particles, { initParticlesEngine } from "@tsparticles/react"
 import { loadSlim } from "@tsparticles/slim"
 
@@ -31,15 +32,17 @@ export function Sparkles({
     background?: string
     options?: any
 }) {
+    const reduceMotion = useReducedMotion()
     const [isReady, setIsReady] = useState(false)
 
     useEffect(() => {
+        if (reduceMotion) return;
         initParticlesEngine(async (engine) => {
             await loadSlim(engine)
         }).then(() => {
             setIsReady(true)
         })
-    }, [])
+    }, [reduceMotion])
 
     const id = useId()
 
@@ -91,5 +94,5 @@ export function Sparkles({
         detectRetina: true,
     }
 
-    return isReady && <Particles id={id} options={{ ...defaultOptions, ...options }} className={className} />
+    return !reduceMotion && isReady && <Particles id={id} options={{ ...defaultOptions, ...options }} className={className} />
 }

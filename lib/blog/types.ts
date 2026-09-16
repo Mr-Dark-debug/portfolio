@@ -9,6 +9,7 @@ export interface BlogPost {
     tags: string[];
     published: boolean;
     image?: string;
+    updatedAt?: string;
     readingTime: number;
     content: string;
 }
@@ -22,6 +23,7 @@ export interface BlogPostMeta {
     tags: string[];
     published: boolean;
     image?: string;
+    updatedAt?: string;
     readingTime: number;
 }
 
@@ -33,6 +35,7 @@ export interface BlogFrontmatter {
     tags: string[];
     published: boolean;
     image?: string;
+    updatedAt?: string;
     readingTime?: number;
 }
 

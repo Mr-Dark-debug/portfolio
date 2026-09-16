@@ -172,7 +172,6 @@ export function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
   };
 
   const models = [
-    { id: "qwen/qwen3-32b", name: "Qwen 3 32B" },
     { id: "openai/gpt-oss-120b", name: "GPT OSS 120B" },
   ];
 

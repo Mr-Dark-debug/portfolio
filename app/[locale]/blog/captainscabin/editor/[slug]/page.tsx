@@ -22,7 +22,7 @@ export default async function EditPostPage({ params }: Props) {
     }
 
     // Try to get the post content
-    const content = getRawPostContent(slug) || getRawPostContent(slug, true);
+    const content = (await getRawPostContent(slug)) || (await getRawPostContent(slug, true));
 
     if (!content) {
         notFound();

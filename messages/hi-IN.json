@@ -5,21 +5,169 @@
       "description": "AI/ML इंजीनियर और फुल-स्टैक डेवलपर जो उपयोगी AI प्रोडक्ट, डेवलपर एजुकेशन और प्रोडक्शन-रेडी सॉफ्टवेयर बनाते हैं।"
     }
   },
-  "LanguageSwitcher": {"label": "भाषा चुनें", "placeholder": "भाषा"},
-  "HomePage": {
-    "roles": {"ai": "AI इंजीनियर", "ml": "ML इंजीनियर", "prompt": "प्रॉम्प्ट इंजीनियर", "fullstack": "फुल-स्टैक डेवलपर", "backend": "बैकएंड इंजीनियर"},
-    "nav": {"home": "होम", "about": "परिचय", "experience": "अनुभव", "education": "शिक्षा", "projects": "प्रोजेक्ट", "skills": "स्किल्स", "blog": "ब्लॉग", "contact": "संपर्क"},
-    "hero": {"iam": "मैं हूँ", "available": "काम के लिए उपलब्ध", "future": "AI के साथ भविष्य बना रहा हूँ", "profileRole": "AI इंजीनियर और फुल-स्टैक डेवलपर", "profileAlt": "प्रशांत चौधरी का पोर्ट्रेट"},
-    "about": {"eyebrow": "परिचय", "title": "उपयोगी और बहुभाषी AI प्रोडक्ट बनाने वाला इंजीनियर।", "description": "मैं AI, ML और फुल-स्टैक सिस्टम बनाता हूँ जो विचारों को व्यावहारिक सॉफ्टवेयर में बदलते हैं।", "masters": "मैं वर्तमान में University of Trier में NLP में मास्टर कर रहा हूँ। यह 13 अप्रैल 2026 को शुरू हुआ और जारी है।", "linksLabel": "सार्वजनिक प्रोफाइल लिंक"},
-    "experience": {"title": "पेशेवर अनुभव", "description": "AI, ML और सॉफ्टवेयर डेवलपमेंट में मेरी टेक यात्रा।"},
-    "education": {"title": "शैक्षिक यात्रा", "description": "AI, Data Science और Natural Language Processing में मेरा अकादमिक मार्ग।", "items": [{"title": "मास्टर डिग्री", "heading": "Natural Language Processing में मास्टर", "school": "University of Trier", "period": "13 अप्रैल 2026 - वर्तमान (जारी)", "description": "मैं वर्तमान में NLP में मास्टर कर रहा हूँ। कोई अतिरिक्त अकादमिक विवरण नहीं माना गया है।"}]},
-    "buttons": {"menu": "मेनू", "askAi": "AI से पूछें"},
-    "a11y": {"openMenu": "नेविगेशन मेनू खोलें", "closeMenu": "नेविगेशन मेनू बंद करें", "openChat": "AI चैट असिस्टेंट खोलें", "linkedin": "LinkedIn प्रोफाइल खोलें", "github": "GitHub प्रोफाइल खोलें", "email": "ईमेल भेजें"},
-    "footer": {"description": "AI/ML इंजीनियर और फुल-स्टैक डेवलपर, जो आधुनिक AI और सॉफ्टवेयर इंजीनियरिंग से उपयोगी प्रोडक्ट बनाते हैं।", "aiPrompt": "सवाल हैं? AI summarizer से पूछें", "rights": "सर्वाधिकार सुरक्षित।", "craftedBy": "{name} द्वारा बनाया गया", "externalPrompt": "Prashant के assistant की तरह काम करें। {url} पर उनके portfolio को analyze करें। Website content के आधार पर skills, projects, experience, education और public profile links पर सवालों के जवाब दें।"}
+  "LanguageSwitcher": {
+    "label": "भाषा चुनें",
+    "placeholder": "भाषा"
   },
-  "Projects": {"title": "चयनित प्रोजेक्ट", "description": "मेरे GitHub profile और organizations से pinned और top-starred repositories.", "loading": "GitHub से प्रोजेक्ट लोड हो रहे हैं...", "viewProfile": "GitHub profile देखें", "moreTitle": "और प्रोजेक्ट", "moreDescription": "अतिरिक्त repositories और contributions.", "noDescription": "कोई description उपलब्ध नहीं", "noShortDescription": "कोई description नहीं"},
-  "Skills": {"title": "Technologies और Tools", "description": "Intelligent solutions बनाने के लिए मेरा technical toolkit."},
-  "Contact": {"title": "संपर्क करें", "description": "कोई सवाल है या साथ काम करना चाहते हैं? मुझे आपका संदेश पढ़कर खुशी होगी।", "name": "नाम", "email": "ईमेल", "subject": "विषय", "message": "संदेश", "subscribe": "Newsletter subscribe करें", "send": "संदेश भेजें", "sending": "भेजा जा रहा है...", "success": "संदेश सफलतापूर्वक भेजा गया।", "error": "संदेश भेजा नहीं जा सका। कृपया फिर कोशिश करें।", "placeholders": {"name": "Rahul Sharma", "email": "rahul@example.com", "subject": "Project Inquiry", "message": "आपका संदेश..."}},
-  "Chat": {"title": "Generative Answers", "poweredBy": "{model} द्वारा powered", "greeting": "नमस्ते!", "emptyTitle": "Prashant के बारे में कुछ भी पूछें", "emptyDescription": "मैं उनके projects, skills, experience, education और public profile links के बारे में जवाब दे सकता हूँ।", "thinking": "सोच रहा हूँ...", "reasoning": "विचार कर रहा हूँ...", "reasoningDone": "विचार पूर्ण हुआ", "usingTool": "{tool} का उपयोग कर रहा हूँ...", "inputPlaceholder": "Prashant के बारे में पूछें...", "send": "संदेश भेजें", "close": "Chat बंद करें", "modelMenu": "AI model चुनें", "attach": "Attach", "shortcuts": "Shortcuts", "errorPrefix": "Error", "fallbackError": "मैं अभी यह request पूरी नहीं कर पाया। कृपया फिर कोशिश करें।", "suggestions": {"projects": "अपने projects के बारे में बताओ", "stack": "आपका tech stack क्या है?", "experience": "आपका AI experience?", "availability": "क्या आप available हैं?", "education": "आप अभी क्या पढ़ रहे हैं?", "studio": "MugShot Studio क्या है?"}},
-  "Blog": {"metadata": {"title": "Blog | Prashant Choudhary - AI Engineer", "description": "AI, machine learning, web development और software engineering पर insights, tutorials और thoughts."}, "brand": "Captain’s Log", "loading": "Captain’s Log लोड हो रहा है...", "toggleSearch": "Search toggle करें", "backHome": "Base पर वापस", "searchPlaceholder": "Keyword या topic से logs खोजें...", "filterLabel": "Frequency से filter करें", "allSignals": "सभी signals", "logsFound": "{count} logs मिले", "gridView": "Grid view", "listView": "List view", "filteringBy": "Filter:", "noResults": "इस sector में कोई logs नहीं मिले।", "clearFilters": "Filters हटाएँ", "readMore": "और पढ़ें", "minRead": "{minutes} मिनट पढ़ें", "minShort": "{minutes} मिनट", "footer": "Command deck से transmission · © {year} Captain Prashant", "post": {"back": "Command deck पर वापस", "home": "Home", "writtenBy": "लेखक", "authorRole": "AI Engineer और Full Stack Developer", "previous": "पिछला", "next": "अगला", "rights": "© {year} Prashant Choudhary. सर्वाधिकार सुरक्षित।"}}
+  "HomePage": {
+    "roles": {
+      "ai": "AI इंजीनियर",
+      "ml": "ML इंजीनियर",
+      "prompt": "प्रॉम्प्ट इंजीनियर",
+      "fullstack": "फुल-स्टैक डेवलपर",
+      "backend": "बैकएंड इंजीनियर"
+    },
+    "nav": {
+      "home": "होम",
+      "about": "परिचय",
+      "experience": "अनुभव",
+      "education": "शिक्षा",
+      "projects": "प्रोजेक्ट",
+      "skills": "स्किल्स",
+      "blog": "ब्लॉग",
+      "contact": "संपर्क"
+    },
+    "hero": {
+      "iam": "मैं हूँ",
+      "available": "काम के लिए उपलब्ध",
+      "future": "AI के साथ भविष्य बना रहा हूँ",
+      "profileRole": "AI इंजीनियर और फुल-स्टैक डेवलपर",
+      "profileAlt": "प्रशांत चौधरी का पोर्ट्रेट"
+    },
+    "about": {
+      "eyebrow": "परिचय",
+      "title": "उपयोगी और बहुभाषी AI प्रोडक्ट बनाने वाला इंजीनियर।",
+      "description": "मैं AI, ML और फुल-स्टैक सिस्टम बनाता हूँ जो विचारों को व्यावहारिक सॉफ्टवेयर में बदलते हैं।",
+      "masters": "मैं वर्तमान में University of Trier में NLP में मास्टर कर रहा हूँ। यह 13 अप्रैल 2026 को शुरू हुआ और जारी है।",
+      "linksLabel": "सार्वजनिक प्रोफाइल लिंक"
+    },
+    "experience": {
+      "title": "पेशेवर अनुभव",
+      "description": "AI, ML और सॉफ्टवेयर डेवलपमेंट में मेरी टेक यात्रा।"
+    },
+    "education": {
+      "title": "शैक्षिक यात्रा",
+      "description": "AI, Data Science और Natural Language Processing में मेरा अकादमिक मार्ग।",
+      "items": [
+        {
+          "title": "मास्टर डिग्री",
+          "heading": "Natural Language Processing में मास्टर",
+          "school": "University of Trier",
+          "period": "13 अप्रैल 2026 - वर्तमान (जारी)",
+          "description": "मैं वर्तमान में NLP में मास्टर कर रहा हूँ। कोई अतिरिक्त अकादमिक विवरण नहीं माना गया है।"
+        }
+      ]
+    },
+    "buttons": {
+      "menu": "मेनू",
+      "askAi": "AI से पूछें"
+    },
+    "a11y": {
+      "openMenu": "नेविगेशन मेनू खोलें",
+      "closeMenu": "नेविगेशन मेनू बंद करें",
+      "openChat": "AI चैट असिस्टेंट खोलें",
+      "linkedin": "LinkedIn प्रोफाइल खोलें",
+      "github": "GitHub प्रोफाइल खोलें",
+      "email": "ईमेल भेजें"
+    },
+    "footer": {
+      "description": "AI/ML इंजीनियर और फुल-स्टैक डेवलपर, जो आधुनिक AI और सॉफ्टवेयर इंजीनियरिंग से उपयोगी प्रोडक्ट बनाते हैं।",
+      "aiPrompt": "सवाल हैं? AI summarizer से पूछें",
+      "rights": "सर्वाधिकार सुरक्षित।",
+      "craftedBy": "{name} द्वारा बनाया गया",
+      "externalPrompt": "Prashant के assistant की तरह काम करें। {url} पर उनके portfolio को analyze करें। Website content के आधार पर skills, projects, experience, education और public profile links पर सवालों के जवाब दें।"
+    }
+  },
+  "Projects": {
+    "title": "चयनित प्रोजेक्ट",
+    "description": "मेरे GitHub profile और organizations से pinned और top-starred repositories.",
+    "loading": "GitHub से प्रोजेक्ट लोड हो रहे हैं...",
+    "viewProfile": "GitHub profile देखें",
+    "moreTitle": "और प्रोजेक्ट",
+    "moreDescription": "अतिरिक्त repositories और contributions.",
+    "noDescription": "कोई description उपलब्ध नहीं",
+    "noShortDescription": "कोई description नहीं"
+  },
+  "Skills": {
+    "title": "Technologies और Tools",
+    "description": "Intelligent solutions बनाने के लिए मेरा technical toolkit."
+  },
+  "Contact": {
+    "title": "संपर्क करें",
+    "description": "कोई सवाल है या साथ काम करना चाहते हैं? मुझे आपका संदेश पढ़कर खुशी होगी।",
+    "name": "नाम",
+    "email": "ईमेल",
+    "subject": "विषय",
+    "message": "संदेश",
+    "subscribe": "Newsletter subscribe करें",
+    "send": "संदेश भेजें",
+    "sending": "भेजा जा रहा है...",
+    "success": "संदेश सफलतापूर्वक भेजा गया।",
+    "error": "संदेश भेजा नहीं जा सका। कृपया फिर कोशिश करें।",
+    "placeholders": {
+      "name": "Rahul Sharma",
+      "email": "rahul@example.com",
+      "subject": "Project Inquiry",
+      "message": "आपका संदेश..."
+    }
+  },
+  "Chat": {
+    "title": "Generative Answers",
+    "poweredBy": "{model} द्वारा powered",
+    "greeting": "नमस्ते!",
+    "emptyTitle": "Prashant के बारे में कुछ भी पूछें",
+    "emptyDescription": "मैं उनके projects, skills, experience, education और public profile links के बारे में जवाब दे सकता हूँ।",
+    "thinking": "सोच रहा हूँ...",
+    "reasoning": "विचार कर रहा हूँ...",
+    "reasoningDone": "विचार पूर्ण हुआ",
+    "usingTool": "{tool} का उपयोग कर रहा हूँ...",
+    "inputPlaceholder": "Prashant के बारे में पूछें...",
+    "send": "संदेश भेजें",
+    "close": "Chat बंद करें",
+    "modelMenu": "AI model चुनें",
+    "attach": "Attach",
+    "shortcuts": "Shortcuts",
+    "errorPrefix": "Error",
+    "fallbackError": "मैं अभी यह request पूरी नहीं कर पाया। कृपया फिर कोशिश करें।",
+    "suggestions": {
+      "projects": "अपने projects के बारे में बताओ",
+      "stack": "आपका tech stack क्या है?",
+      "experience": "आपका AI experience?",
+      "availability": "क्या आप available हैं?",
+      "education": "आप अभी क्या पढ़ रहे हैं?",
+      "studio": "Tell me about the SetFit reproduction project."
+    }
+  },
+  "Blog": {
+    "metadata": {
+      "title": "Blog | Prashant Choudhary - AI Engineer",
+      "description": "AI, machine learning, web development और software engineering पर insights, tutorials और thoughts."
+    },
+    "brand": "Captain’s Log",
+    "loading": "Captain’s Log लोड हो रहा है...",
+    "toggleSearch": "Search toggle करें",
+    "backHome": "Base पर वापस",
+    "searchPlaceholder": "Keyword या topic से logs खोजें...",
+    "filterLabel": "Frequency से filter करें",
+    "allSignals": "सभी signals",
+    "logsFound": "{count} logs मिले",
+    "gridView": "Grid view",
+    "listView": "List view",
+    "filteringBy": "Filter:",
+    "noResults": "इस sector में कोई logs नहीं मिले।",
+    "clearFilters": "Filters हटाएँ",
+    "readMore": "और पढ़ें",
+    "minRead": "{minutes} मिनट पढ़ें",
+    "minShort": "{minutes} मिनट",
+    "footer": "Command deck से transmission · © {year} Captain Prashant",
+    "post": {
+      "back": "Command deck पर वापस",
+      "home": "Home",
+      "writtenBy": "लेखक",
+      "authorRole": "AI Engineer और Full Stack Developer",
+      "previous": "पिछला",
+      "next": "अगला",
+      "rights": "© {year} Prashant Choudhary. सर्वाधिकार सुरक्षित।"
+    }
+  }
 }

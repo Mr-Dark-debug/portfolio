@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import { track } from "@vercel/analytics"
 import { BackgroundBeams } from "./background-beams"
 import { Input } from "./input"
 import { Label } from "./label"
@@ -17,8 +18,10 @@ export function ContactForm() {
     subject: "",
     message: "",
     subscribe: false,
+    website: "",
   })
 
+  const [newsletterStatus, setNewsletterStatus] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
 
@@ -40,6 +43,9 @@ export function ContactForm() {
         throw new Error("Failed to send message")
       }
 
+      const result = await response.json();
+      setNewsletterStatus(result.newsletter === 'unavailable' ? 'Your message was sent. Newsletter signup is unavailable; please use the blog RSS feed.' : result.newsletter === 'confirmation_sent' ? 'Check your inbox to confirm the newsletter subscription.' : '');
+      track('contact_submit');
       setSubmitStatus("success")
       setFormData({
         name: "",
@@ -47,6 +53,7 @@ export function ContactForm() {
         subject: "",
         message: "",
         subscribe: false,
+    website: "",
       })
     } catch (error) {
       setSubmitStatus("error")
@@ -56,16 +63,18 @@ export function ContactForm() {
   }
 
   return (
-    <div className="h-[40rem] w-full rounded-md bg-background relative flex flex-col items-center justify-center antialiased">
+    <div className="min-h-[40rem] py-8 w-full rounded-md bg-background relative flex flex-col items-center justify-center antialiased">
       <div className="max-w-2xl mx-auto p-4 relative z-10">
-        <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-900 to-neutral-600">
+        <h2 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-900 to-neutral-600">
           {t("title")}
-        </h1>
+        </h2>
         <p className="mt-4 font-normal text-base text-neutral-600 max-w-lg text-center mx-auto">
           {t("description")}
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          <input name="website" aria-hidden="true" className="hidden" tabIndex={-1} autoComplete="off" value={formData.website} onChange={e=>setFormData({...formData,website:e.target.value})}/>
+          {newsletterStatus && <p role="status">{newsletterStatus}</p>}
           <div>
             <Label htmlFor="name" className="text-neutral-800 font-medium">
               {t("name")}
@@ -117,6 +126,7 @@ export function ContactForm() {
             </Label>
             <Textarea
               id="message"
+              minLength={10} maxLength={5000}
               required
               className="mt-2"
               placeholder={t("placeholders.message")}

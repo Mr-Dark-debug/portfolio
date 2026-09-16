@@ -20,7 +20,9 @@ import {
     FileText
 } from "lucide-react";
 import { AIFeatures } from "@/components/blog/features/AIFeatures";
+import { parseMarkdown } from "@/components/blog/parse-markdown";
 import { cn } from "@/lib/utils";
+import { getAdminClientHeaders } from "@/lib/admin-client";
 
 interface EditorPageClientProps {
     isNew?: boolean;
@@ -48,6 +50,8 @@ export default function EditorPageClient({
     const [showPreview, setShowPreview] = useState(false);
     const [tagInput, setTagInput] = useState("");
     const [aiResult, setAiResult] = useState("");
+    const [previewHtml, setPreviewHtml] = useState("");
+    const [previewLoading, setPreviewLoading] = useState(false);
 
     const [postData, setPostData] = useState<PostData>({
         title: "",
@@ -59,34 +63,34 @@ export default function EditorPageClient({
         content: "",
     });
 
-    // Parse initial content if editing
     useEffect(() => {
-        if (initialContent) {
-            const frontmatterMatch = initialContent.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-            if (frontmatterMatch) {
-                const frontmatter = frontmatterMatch[1];
-                const content = frontmatterMatch[2];
-
-                // Parse frontmatter
-                const titleMatch = frontmatter.match(/title:\s*"(.+?)"/);
-                const excerptMatch = frontmatter.match(/excerpt:\s*"(.+?)"/);
-                const tagsMatch = frontmatter.match(/tags:\s*\[(.+?)\]/);
-                const publishedMatch = frontmatter.match(/published:\s*(true|false)/);
-                const imageMatch = frontmatter.match(/image:\s*"(.+?)"/);
-                const dateMatch = frontmatter.match(/date:\s*"(.+?)"/);
-
-                setPostData({
-                    title: titleMatch ? titleMatch[1] : "",
-                    excerpt: excerptMatch ? excerptMatch[1] : "",
-                    tags: tagsMatch ? tagsMatch[1].split(",").map(t => t.trim().replace(/"/g, "")) : [],
-                    published: publishedMatch ? publishedMatch[1] === "true" : false,
-                    image: imageMatch ? imageMatch[1] : "",
-                    date: dateMatch ? dateMatch[1] : new Date().toISOString().split("T")[0],
-                    content: content.trim(),
-                });
-            }
-        }
+      if (!initialContent) return;
+      try { const parsed=parseMarkdown(initialContent); if(parsed)setPostData(parsed); }
+      catch { window.alert('This post has invalid frontmatter. Check the source markdown.'); }
     }, [initialContent]);
+
+    // Server-rendered markdown preview (same pipeline as published posts)
+    useEffect(() => {
+      if (!showPreview) return;
+      setPreviewLoading(true);
+      const timer = setTimeout(async () => {
+        try {
+          const res = await fetch("/api/blog/preview", {
+            method: "POST",
+            headers: getAdminClientHeaders(),
+            body: JSON.stringify({ markdown: postData.content }),
+          });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          setPreviewHtml(data.html || "");
+        } catch {
+          setPreviewHtml("<p>Preview unavailable. Check your admin token and try again.</p>");
+        } finally {
+          setPreviewLoading(false);
+        }
+      }, 400);
+      return () => clearTimeout(timer);
+    }, [showPreview, postData.content]);
 
     const handleAddTag = useCallback(() => {
         const tag = tagInput.trim().toLowerCase();
@@ -103,18 +107,18 @@ export default function EditorPageClient({
         }));
     }, []);
 
-    const generateMarkdown = useCallback(() => {
-        const tagsString = postData.tags.map(t => `"${t}"`).join(", ");
+    const generateMarkdown = useCallback((published = postData.published) => {
+        const tagsString = postData.tags.map(t => JSON.stringify(t)).join(", ");
         const readingTime = Math.ceil(postData.content.split(/\s+/).length / 200);
 
         return `---
-title: "${postData.title}"
+title: ${JSON.stringify(postData.title)}
 date: "${postData.date}"
 author: "Prashant Choudhary"
-excerpt: "${postData.excerpt}"
+excerpt: ${JSON.stringify(postData.excerpt)}
 tags: [${tagsString}]
-published: ${postData.published}
-image: "${postData.image}"
+published: ${published}
+image: ${JSON.stringify(postData.image)}
 readingTime: ${readingTime}
 ---
 
@@ -133,7 +137,7 @@ ${postData.content}`;
             const dataToSave = { ...postData, published: publish };
             setPostData(dataToSave);
 
-            const markdown = generateMarkdown();
+            const markdown = generateMarkdown(publish);
             const postSlug = slug || postData.title
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, "-")
@@ -141,7 +145,7 @@ ${postData.content}`;
 
             const res = await fetch('/api/blog/captainscabin/posts', {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: getAdminClientHeaders(),
                 body: JSON.stringify({
                     slug: postSlug,
                     content: markdown,
@@ -149,14 +153,16 @@ ${postData.content}`;
                 }),
             });
 
+            if (res.status === 401) throw new Error('Your admin session expired. Reload and sign in again.');
+
             if (res.ok) {
                 router.push("/blog/captainscabin");
             } else {
-                throw new Error("Failed to save post");
+                const result=await res.json(); throw new Error(result.error || "Failed to save post");
             }
         } catch (error) {
             console.error("Save error:", error);
-            alert("Failed to save post. Please try again.");
+            alert(error instanceof Error ? error.message : "Failed to save post. Please try again.");
         } finally {
             setSaving(false);
         }
@@ -256,10 +262,14 @@ ${postData.content}`;
                             {/* Content Editor / Preview */}
                             <div className="p-6">
                                 {showPreview ? (
-                                    <div
-                                        className="prose prose-lg max-w-none min-h-[400px]"
-                                        dangerouslySetInnerHTML={{ __html: postData.content.replace(/\n/g, '<br>') }}
-                                    />
+                                    previewLoading && !previewHtml ? (
+                                        <p className="text-sm text-zinc-500">Rendering preview…</p>
+                                    ) : (
+                                        <div
+                                            className="prose prose-lg max-w-none min-h-[400px]"
+                                            dangerouslySetInnerHTML={{ __html: previewHtml }}
+                                        />
+                                    )
                                 ) : (
                                     <textarea
                                         placeholder="Write your post content in Markdown..."
@@ -346,6 +356,7 @@ ${postData.content}`;
                                 />
                             </div>
 
+                            <div className="mb-4"><label className="block text-sm" htmlFor="image-upload">Upload a featured image (up to 4 MB)</label><input id="image-upload" type="file" accept="image/png,image/jpeg,image/webp,image/avif" onChange={async e=>{const file=e.target.files?.[0];if(!file)return;const data=new FormData();data.set('file',file);try{const response=await fetch('/api/blog/captainscabin/upload',{method:'POST',body:data});const result=await response.json();if(!response.ok)throw new Error(result.error);setPostData(prev=>({...prev,image:result.url}));}catch(error){window.alert(error instanceof Error?error.message:'Upload failed');}}}/></div>
                             {/* Featured Image */}
                             <div className="mb-4">
                                 <label className="flex items-center gap-2 text-sm font-medium text-zinc-700 mb-2">

@@ -21,6 +21,7 @@ async function fetchWithTimeout(url: string, timeoutMs = 6000) {
   try {
     return await fetch(url, {
       signal: controller.signal,
+      redirect: "error",
       headers: {
         "User-Agent": "PrashantPortfolioBot/1.0",
         Accept: "text/html,application/json,text/plain",
@@ -65,7 +66,7 @@ export async function searchWeb(input: { query: string }) {
       : [];
 
     return {
-      ok: true,
+      ok: Boolean(data.AbstractText || related.length),
       query: input.query,
       abstract: data.AbstractText || null,
       source: data.AbstractSource || "DuckDuckGo",
@@ -88,7 +89,7 @@ export async function searchWeb(input: { query: string }) {
 export async function fetchPublicProfilePage(input: { url: string }) {
   try {
     const url = new URL(input.url);
-    if (!allowedProfileHosts.has(url.hostname)) {
+    if (url.protocol !== "https:" || url.port || url.username || url.password || !allowedProfileHosts.has(url.hostname)) {
       return {
         ok: false,
         reason: "URL is not an approved public profile source.",
@@ -117,40 +118,6 @@ export async function fetchPublicProfilePage(input: { url: string }) {
 }
 
 export async function readLocalPortfolioContent(input: { query: string }) {
-  try {
-    const postsDir = path.join(process.cwd(), "data", "posts");
-    const files = await fs.readdir(postsDir);
-    const markdownFiles = files.filter((file) => file.endsWith(".md")).slice(0, 25);
-    const query = input.query.toLowerCase();
-
-    const matches = await Promise.all(
-      markdownFiles.map(async (file) => {
-        const fullPath = path.join(postsDir, file);
-        const content = await fs.readFile(fullPath, "utf8");
-        const normalized = content.toLowerCase();
-
-        return {
-          file,
-          score: normalized.includes(query) ? 2 : file.toLowerCase().includes(query) ? 1 : 0,
-          excerpt: compactText(content).slice(0, 900),
-        };
-      }),
-    );
-
-    return {
-      ok: true,
-      query: input.query,
-      matches: matches
-        .filter((match) => match.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 5),
-      availableFiles: markdownFiles,
-    };
-  } catch (error) {
-    return {
-      ok: false,
-      query: input.query,
-      reason: error instanceof Error ? error.message : "Local content read failed.",
-    };
-  }
+ try { const { searchKnowledge } = await import('./knowledge'); return { ok:true, matches:await searchKnowledge(input.query) }; }
+ catch { return { ok:false, reason:'Portfolio search is temporarily unavailable.' }; }
 }
