@@ -267,9 +267,9 @@ const OnboardingForm = () => {
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <motion.div variants={fadeInUp} className="space-y-2">
-                        <Label htmlFor="name">Full Name</Label>
+                        <Label htmlFor="onboarding-name">Full Name</Label>
                         <Input
-                          id="name"
+                          id="onboarding-name"
                           name="name"
                           placeholder="John Doe"
                           value={formData.name}
@@ -281,9 +281,9 @@ const OnboardingForm = () => {
                         <ValidationError prefix="Name" field="name" errors={state.errors} />
                       </motion.div>
                       <motion.div variants={fadeInUp} className="space-y-2">
-                        <Label htmlFor="email">Email Address</Label>
+                        <Label htmlFor="onboarding-email">Email Address</Label>
                         <Input
-                          id="email"
+                          id="onboarding-email"
                           name="email"
                           type="email"
                           placeholder="john@example.com"
@@ -296,11 +296,11 @@ const OnboardingForm = () => {
                         <ValidationError prefix="Email" field="email" errors={state.errors} />
                       </motion.div>
                       <motion.div variants={fadeInUp} className="space-y-2">
-                        <Label htmlFor="company">
+                        <Label htmlFor="onboarding-company">
                           Company/Organization (Optional)
                         </Label>
                         <Input
-                          id="company"
+                          id="onboarding-company"
                           name="company"
                           placeholder="Your Company"
                           value={formData.company}
@@ -325,11 +325,11 @@ const OnboardingForm = () => {
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <motion.div variants={fadeInUp} className="space-y-2">
-                        <Label htmlFor="profession">
+                        <Label htmlFor="onboarding-profession">
                           What&apos;s your profession?
                         </Label>
                         <Input
-                          id="profession"
+                          id="onboarding-profession"
                           name="profession"
                           placeholder="e.g. Designer, Developer, Marketer"
                           value={formData.profession}
@@ -340,7 +340,7 @@ const OnboardingForm = () => {
                         />
                       </motion.div>
                       <motion.div variants={fadeInUp} className="space-y-2">
-                        <Label htmlFor="industry">
+                        <Label htmlFor="onboarding-industry">
                           What industry do you work in?
                         </Label>
                         <Select
@@ -350,7 +350,7 @@ const OnboardingForm = () => {
                           }
                         >
                           <SelectTrigger
-                            id="industry"
+                            id="onboarding-industry"
                             className="transition-all duration-300 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                           >
                             <SelectValue placeholder="Select an industry" />
@@ -444,11 +444,11 @@ const OnboardingForm = () => {
                         </RadioGroup>
                       </motion.div>
                       <motion.div variants={fadeInUp} className="space-y-2">
-                        <Label htmlFor="targetAudience">
+                        <Label htmlFor="onboarding-targetAudience">
                           Who is your target audience?
                         </Label>
                         <Textarea
-                          id="targetAudience"
+                          id="onboarding-targetAudience"
                           name="targetAudience"
                           placeholder="Describe your ideal visitors/customers"
                           value={formData.targetAudience}
@@ -523,11 +523,11 @@ const OnboardingForm = () => {
                         </RadioGroup>
                       </motion.div>
                       <motion.div variants={fadeInUp} className="space-y-2">
-                        <Label htmlFor="inspirations">
+                        <Label htmlFor="onboarding-inspirations">
                           Any websites you like for inspiration?
                         </Label>
                         <Textarea
-                          id="inspirations"
+                          id="onboarding-inspirations"
                           name="inspirations"
                           placeholder="List websites you admire or want to emulate"
                           value={formData.inspirations}
@@ -552,7 +552,7 @@ const OnboardingForm = () => {
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <motion.div variants={fadeInUp} className="space-y-2">
-                        <Label htmlFor="budget">
+                        <Label htmlFor="onboarding-budget">
                           What&apos;s your budget range? (USD)
                         </Label>
                         <Select
@@ -562,7 +562,7 @@ const OnboardingForm = () => {
                           }
                         >
                           <SelectTrigger
-                            id="budget"
+                            id="onboarding-budget"
                             className="transition-all duration-300 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                           >
                             <SelectValue placeholder="Select your budget" />
@@ -697,11 +697,11 @@ const OnboardingForm = () => {
                         </div>
                       </motion.div>
                       <motion.div variants={fadeInUp} className="space-y-2">
-                        <Label htmlFor="additionalInfo">
+                        <Label htmlFor="onboarding-additionalInfo">
                           Anything else we should know?
                         </Label>
                         <Textarea
-                          id="additionalInfo"
+                          id="onboarding-additionalInfo"
                           name="additionalInfo"
                           placeholder="Any additional requirements or information"
                           value={formData.additionalInfo}

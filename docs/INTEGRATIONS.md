@@ -28,7 +28,21 @@ With Postgres configured, abuse limits are atomic across instances. Without it, 
 
 The two supplied PDFs are copied unchanged. Experience, education, certifications and the four case studies use the supplied English CV. Its adoption and research metrics are explicitly labeled as CV statements. Live GitHub verification on 2026-09-14 found 67 stars and 11 forks on PocketLLM, but the site does not hardcode those as live counts. Public repositories for SetFit and AetherMind were independently verified. No testimonials, placement rates or unpublished benchmarks were invented.
 
-## Primary implementation references
+## Project overviews and September 20 refinement
+
+Every project-page visit requests a fresh Groq overview. The app supplies source links independently of the generated text. GitHub repository metadata, language proportions and six recent commits are fetched separately and cached for five minutes; a failed generation does not hide those facts or the written case study. Only the portfolio owner's listed GitHub accounts and organizations are accepted, and private repositories are rejected before reading contents. Public GitHub reads work without a token; an optional least-privilege `GITHUB_READ_TOKEN` raises the provider's rate allowance. README and commit text are treated as untrusted evidence, not instructions. AI summaries describe documentation and are not independent verification of implemented features.
+
+Experience and education use semantic editorial rows, selected projects have distinct illustrative previews, and the quick contact form and project brief share one responsive background. The blog archive now uses compact rows. Explicit locale resolution fixes production rendering for statically generated detail pages. The original hero background, profile card and both supplied résumé PDFs are retained.
+
+The canonical domain is `https://prashant.sbs`; Vercel's former apex-to-www redirect was removed and www now redirects to the apex. Provider configuration listed above is still required for hosted CMS writes, newsletter delivery, uploaded images, monitoring and embedded Giscus.
+
+### References for the refinement
+
+- [GitHub repository API](https://docs.github.com/en/rest/repos/repos)
+- [Groq structured output](https://console.groq.com/docs/structured-outputs)
+- [Vercel project domain configuration](https://vercel.com/docs/rest-api/projects/update-a-project-domain)
+
+### Foundation references
 
 - [Next.js metadata](https://nextjs.org/docs/app/getting-started/metadata-and-og-images)
 - [Next.js Proxy](https://nextjs.org/docs/app/getting-started/proxy)

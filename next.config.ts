@@ -4,6 +4,7 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
+  experimental: { globalNotFound: true },
   allowedDevOrigins: ['127.0.0.1'],
   poweredByHeader: false,
   compress: true,

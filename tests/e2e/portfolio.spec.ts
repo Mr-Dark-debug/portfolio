@@ -4,7 +4,7 @@ test('home keeps the card, renders one heading, and navigates to resume',async({
  await page.goto('/en');await expect(page.locator('h1')).toHaveCount(1);await expect(page.locator('h1')).toContainText('Prashant');
  await expect(page.getByRole('button',{name:'Copy Email',exact:true})).toBeVisible();
  await page.screenshot({path:'test-results/home-desktop.png'});
- await page.getByRole('link',{name:'View résumé'}).click();await expect(page.locator('h1')).toHaveText('Prashant Choudhary');
+ await page.getByRole('link',{name:'View résumé ↓',exact:true}).click();await expect(page.locator('h1')).toHaveText('Prashant Choudhary');
  for(const lang of ['EN','DE']){const response=await page.request.get(`/resume/Prashant_Choudhary_CV_${lang}.pdf`);expect(response.ok()).toBe(true);expect(response.headers()['content-type']).toContain('application/pdf');}
  expect(errors).toEqual([]);
 });
@@ -13,7 +13,7 @@ test('mobile menu, case study, and contact fields work',async({page})=>{
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
  await page.getByRole('button',{name:'Open navigation menu',exact:true}).click();await expect(page.getByRole('navigation',{name:'Portfolio sections'})).toBeVisible();
  await page.keyboard.press('Escape');await expect(page.getByRole('navigation',{name:'Portfolio sections'})).not.toBeVisible();
- await page.getByRole('link',{name:'Explore my work'}).click();await page.getByRole('link').filter({hasText:'PocketLLM ecosystem'}).click();await expect(page.getByRole('heading',{name:'Challenge',exact:true})).toBeVisible();
+ await page.getByRole('link',{name:'Explore my work'}).click();await page.getByRole('link').filter({hasText:'PocketLLM ecosystem'}).click();await expect(page.getByRole('heading',{name:/^challenge$/i})).toBeVisible();
  await page.goto('/en/#contact');await page.getByLabel('Name',{exact:true}).fill('Browser Test');await page.getByLabel('Email',{exact:true}).first().fill('reader@example.com');
  await expect(page.locator('#message')).toHaveAttribute('minlength','10');
 });

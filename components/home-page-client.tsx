@@ -10,7 +10,9 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { Github, Linkedin, Mail, Menu, X, Sparkles, ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { Timeline } from "@/components/ui/timeline";
+import { CareerSections } from "@/components/career-sections";
+import { SelectedWork } from "@/components/selected-work";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import { TechnologiesSection } from "@/components/ui/technologies-section";
 import OnboardingForm from "@/components/ui/onboarding-form";
 import { Dock, DockIcon } from "@/components/ui/dock";
@@ -22,7 +24,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useLocale } from "next-intl";
-import { caseStudies } from "@/lib/case-studies";
 import { resume } from "@/lib/resume";
 import { ContactForm } from "@/components/ui/contact-form";
 import { useTranslations } from "next-intl";
@@ -54,7 +55,7 @@ export default function HomePage({ hero }: { hero: React.ReactNode }) {
     { label: t("nav.about"), href: "#about" },
     { label: t("nav.experience"), href: "#experience" },
     { label: t("nav.education"), href: "#education" },
-    { label: t("nav.projects"), href: "#projects" },
+    { label: t("nav.projects"), href: "#selected-work" },
     { label: t("nav.skills"), href: "#skills" },
     { label: t("nav.blog"), href: `/${locale}/blog` },
     { label: "Résumé", href: `/${locale}/resume` },
@@ -80,32 +81,6 @@ export default function HomePage({ hero }: { hero: React.ReactNode }) {
     setIsSidebarOpen(false);
     setIsChatOpen(true);
   };
-
-  const renderEntries = (entries: any[]) => (
-    <div className="space-y-8 rounded-lg bg-white p-6 shadow-sm">
-      {entries.map((entry, index) => (
-        <div key={`${entry.title}-${index}`}>
-          <h3 className="text-xl font-semibold text-gray-900">{entry.title}</h3>
-          {entry.period && <p className="mb-4 text-gray-600">{entry.period}</p>}
-          <div className="text-gray-600">
-            {entry.meta && <p className="mb-2">{entry.meta}</p>}
-            {entry.description && <p className="text-gray-500">{entry.description}</p>}
-            {entry.extra && <p className="mt-1 text-sm text-gray-500">{entry.extra}</p>}
-            {entry.bullets && (
-              <ul className="list-inside list-disc space-y-2 text-sm text-gray-500">
-                {entry.bullets.map((bullet: string) => (
-                  <li key={bullet}>{bullet}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
-  const experienceData = resume.experience.map(item => ({title:item.period,content:<div className="content-card"><h3>{item.title}</h3><p className="text-violet-200">{item.organization}</p><p className="mt-3">{item.detail}</p></div>}));
-  const educationData = resume.education.map(item => ({title:item.period,content:<div className="content-card"><h3>{item.title}</h3><p>{item.organization}</p></div>}));
 
   return (
     <>
@@ -193,63 +168,21 @@ export default function HomePage({ hero }: { hero: React.ReactNode }) {
         </section>
 
         <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-5 border-b border-white/10 px-6 py-8 text-sm"><span className="text-lime-200">Open to Werkstudent opportunities</span><span>Trier, Germany · Europe/Berlin</span><a href="/resume/Prashant_Choudhary_CV_EN.pdf" download>CV · EN ↓</a><a href="/resume/Prashant_Choudhary_CV_DE.pdf" download>Lebenslauf · DE ↓</a></div>
-        <section id="about" className="px-4 py-16 sm:px-6 sm:py-20">
-          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_0.8fr] lg:items-center">
-            <div>
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-purple-600">{t("about.eyebrow")}</p>
-              <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-4xl">{t("about.title")}</h2>
-              <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-300">{resume.summary}</p>
-              <p className="mt-5 rounded-xl border border-purple-200 bg-purple-50 p-4 text-sm font-medium text-purple-900 dark:border-purple-800 dark:bg-purple-950/30 dark:text-purple-100">
-                {resume.approach}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900/70">
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.15em] text-zinc-500">{t("about.linksLabel")}</h3>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {profileLinks.map((link) => {
-                  const href = link.href === "__BLOG__" ? `/${locale}/blog` : link.href;
-                  const external = href.startsWith("http");
-                  return (
-                  <Link
-                    key={link.label}
-                    href={href}
-                    target={external ? "_blank" : undefined}
-                    rel={external ? "noopener noreferrer" : undefined}
-                    className="inline-flex min-h-11 items-center justify-between rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition hover:border-purple-300 hover:text-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200"
-                  >
-                    {link.label}
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </section>
+        <section id="about" className="editorial-section about-editorial"><header className="editorial-heading"><div><p className="eyebrow">A little about me</p><h2>The person<br/>behind the work<span>.</span></h2></div></header><div className="about-note"><div className="about-note-copy"><p className="about-hello">Hello, I’m Prashant.</p><p>{resume.summary}</p><p>{resume.approach}</p><p>I’m currently looking for student-compatible opportunities in AI/ML, Python backend development and NLP.</p><div className="mt-8 flex flex-wrap gap-3"><a href="#contact" className="meadow-button">Let’s talk ↗</a><Link href={`/${locale}/resume`} className="outline-button">View résumé</Link></div><div className="about-socials">{profileLinks.filter(l=>['GitHub','LinkedIn','Blog'].includes(l.label)).map(link=><Link key={link.label} href={link.href==='__BLOG__'?`/${locale}/blog`:link.href}>{link.label} ↗</Link>)}</div></div><div className="about-portrait"><Image src="/professional.png" alt="Prashant Choudhary" fill sizes="(max-width: 768px) 80vw, 420px" className="object-cover object-top"/><div className="portrait-caption"><span className="status-dot"/> Based in Trier. Building everywhere.</div></div></div></section>
 
-        <section id="experience" className="px-4 py-16 sm:px-6 sm:py-20">
-          <Timeline data={experienceData} title={t("experience.title")} description={t("experience.description")} progressBarColors={{ from: "indigo-500", via: "violet-500" }} />
-        </section>
-
-        <section id="education" className="px-4 py-16 sm:px-6 sm:py-20">
-          <Timeline data={educationData} title={t("education.title")} description={t("education.description")} progressBarColors={{ from: "emerald-500", via: "teal-500" }} />
-        </section>
-
-        <section id="selected-work" className="mx-auto max-w-6xl px-6 py-16"><p className="eyebrow">Selected work</p><div className="flex flex-wrap items-end justify-between gap-4"><h2 className="text-3xl font-semibold text-white sm:text-4xl">A closer look at the work.</h2><Link href={`/${locale}/projects`} className="text-lime-200">All case studies ↗</Link></div><div className="mt-8 grid gap-5 md:grid-cols-2">{caseStudies.map(project=><Link href={`/${locale}/projects/${project.slug}`} key={project.slug} className="content-card"><p className="eyebrow">{project.category}</p><h3>{project.title} ↗</h3><p className="mt-3">{project.summary}</p></Link>)}</div></section>
+        <CareerSections />
+        <SelectedWork locale={locale}/>
         <GitHubProjects username="Mr-Dark-debug" organizations={["PocketLLM", "syntaxandsips", "codex-clone"]} maxProjects={6} />
 
         <section id="skills" className="w-full">
           <TechnologiesSection />
         </section>
 
-        <section id="contact" className="mx-auto max-w-4xl px-6 py-20"><ContactForm /></section>
-
-        <section id="onboarding" className="w-full bg-slate-50/50 dark:bg-slate-950/50 py-20 px-4">
-          <div className="max-w-4xl mx-auto text-center mb-10">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">Ready to Start Your Project?</h2>
-            <p className="text-muted-foreground text-lg">Fill out this quick onboarding form and let&apos;s build something amazing together.</p>
-          </div>
-          <OnboardingForm />
+        <section id="contact" className="contact-work-section">
+          <BackgroundBeams />
+          <div className="contact-work-inner"><div className="contact-work-intro"><p className="eyebrow">04 / Let’s make something useful</p><h2>A conversation is<br/>a good place to start<span>.</span></h2><p>Have a role in mind, a technical question or a product you want to build? Choose the detail that suits your idea.</p></div>
+          <div className="contact-work-grid"><div className="contact-column"><p className="form-eyebrow">A quick hello</p><ContactForm compact/></div><div id="onboarding" className="onboarding-column"><p className="form-eyebrow">A little more detail</p><h3>Ready to start your project?</h3><p className="form-intro">Share the goals, scope and timeline. We’ll start with what matters most.</p><OnboardingForm /></div></div>
+          <div className="contact-work-foot"><a href="mailto:prashantc592114@gmail.com">prashantc592114@gmail.com ↗</a><span>Trier, Germany · Europe/Berlin</span></div></div>
         </section>
 
         <Footer

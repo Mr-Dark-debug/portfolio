@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { Plus, ChevronDown, ArrowUp, X, FileText, Loader2, Check, Archive, MessageSquare } from "lucide-react";
 
 /* --- ICONS --- */
@@ -62,7 +63,7 @@ const FilePreviewCard: React.FC<FilePreviewCardProps> = ({ file, onRemove }) => 
         <div className={`relative group flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden border border-bg-300 bg-bg-200 animate-fade-in transition-all hover:border-text-400`}>
             {isImage ? (
                 <div className="w-full h-full relative">
-                    <img src={file.preview!} alt={file.file.name} className="w-full h-full object-cover" />
+                    <Image src={file.preview!} alt={file.file.name} fill sizes="96px" unoptimized className="object-cover" />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
                 </div>
             ) : (

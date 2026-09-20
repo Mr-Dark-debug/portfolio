@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Star, GitFork, ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface GitHubRepo {
     id: number;
@@ -74,9 +74,11 @@ async function fetchOrgRepos(org: string): Promise<GitHubRepo[]> {
     }
 }
 
+const DEFAULT_ORGANIZATIONS = ["PocketLLM", "syntaxandsips", "codex-clone"];
+
 export function GitHubProjects({
     username = "Mr-Dark-Debug",
-    organizations = ["PocketLLM", "syntaxandsips", "codex-clone"],
+    organizations = DEFAULT_ORGANIZATIONS,
     maxProjects = 30,
     showPinnedOnly = false,
     className,
@@ -202,12 +204,12 @@ function ProjectCard({
     featured?: boolean;
     noDescription: string;
 }) {
+    const locale = useLocale();
     const langColor = repo.language ? LANGUAGE_COLORS[repo.language] || "#888" : "#888";
 
     return (
         <Link
-            href={repo.html_url}
-            target="_blank"
+            href={`/${locale}/projects/repository/${repo.full_name}`}
             className={cn(
                 "group relative border border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl p-6 bg-zinc-50 dark:bg-zinc-900/50",
                 "flex flex-col justify-between min-h-[220px] overflow-hidden",
@@ -274,12 +276,12 @@ function ProjectFeatureCard({
     index: number;
     noDescription: string;
 }) {
+    const locale = useLocale();
     const langColor = repo.language ? LANGUAGE_COLORS[repo.language] || "#888" : "#888";
 
     return (
         <Link
-            href={repo.html_url}
-            target="_blank"
+            href={`/${locale}/projects/repository/${repo.full_name}`}
             className={cn(
                 "flex flex-col lg:border-r py-10 relative group/feature dark:border-neutral-800",
                 (index === 0 || index % 4 === 0) && "lg:border-l dark:border-neutral-800",

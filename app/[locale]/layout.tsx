@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
+import "../editorial.css";
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales } from '@/navigation';
@@ -111,7 +112,8 @@ export default async function RootLayout({
 
   // Providing all messages to the client
   // side is the easiest way to get started
-  const messages = await getMessages();
+  setRequestLocale(locale);
+  const messages = await getMessages({locale});
 
   const personJsonLd = {
     "@context": "https://schema.org",
@@ -158,7 +160,7 @@ export default async function RootLayout({
           Skip to content
         </a>
         <Providers>
-          <NextIntlClientProvider messages={messages}>
+          <NextIntlClientProvider locale={locale} timeZone="Europe/Berlin" messages={messages}>
             <div id="main-content">
               {children}
             </div>
