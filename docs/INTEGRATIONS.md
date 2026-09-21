@@ -36,6 +36,8 @@ Experience and education use semantic editorial rows, selected projects have dis
 
 The canonical domain is `https://prashant.sbs`; Vercel's former apex-to-www redirect was removed and www now redirects to the apex. Provider configuration listed above is still required for hosted CMS writes, newsletter delivery, uploaded images, monitoring and embedded Giscus.
 
+The follow-up pre-renders the four published articles and four case studies across all seven locales (56 detail pages). The shared social image uses an explicit `/opengraph-image` handler excluded from locale redirects. Validation covers its actual PNG response, not only the URL status. Local verification passed the production build, lint, 34 unit tests and eight browser tests.
+
 ### References for the refinement
 
 - [GitHub repository API](https://docs.github.com/en/rest/repos/repos)

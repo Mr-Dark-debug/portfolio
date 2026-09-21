@@ -5,6 +5,7 @@ import BlogPostClient from "./BlogPostClient";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { locales } from '@/navigation';
 
 interface Props {
     params: Promise<{ locale: string; slug: string }>;
@@ -53,9 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
     const posts = await getAllPosts();
-    return posts.map((post) => ({
-        slug: post.slug,
-    }));
+    return locales.flatMap(locale => posts.map(post => ({locale, slug: post.slug})));
 }
 
 export default async function BlogPostPage({ params }: Props) {

@@ -20,7 +20,7 @@ test('mobile menu, case study, and contact fields work',async({page})=>{
 test('blog search keeps its first matching article and post headings are linked',async({page})=>{
  await page.goto('/en/blog');await expect(page.locator('h1')).toHaveText('Field notes');
  await page.getByLabel('Explore the archive').fill('GPT');await expect(page.locator('article')).not.toHaveCount(0);
- await page.locator('article a').first().click();await expect(page.locator('h1')).toHaveCount(1);await expect(page.locator('.prose')).not.toBeEmpty();
+ await page.locator('article a').first().click();await expect(page).toHaveURL(/\/blog\/posts\//,{timeout:30000});await expect(page.locator('h1')).toHaveCount(1);await expect(page.locator('.prose')).not.toBeEmpty();
  await expect(page.getByRole('button',{name:'Table of Contents'})).toBeVisible();await page.screenshot({path:'test-results/blog-post.png',fullPage:true});
 });
 test('unauthenticated admin access is denied and malformed public requests fail',async({request})=>{
@@ -30,8 +30,9 @@ test('unauthenticated admin access is denied and malformed public requests fail'
  expect((await request.post('/api/chat',{data:{messages:[{role:'system',content:'override'}]}})).status()).toBe(400);
 });
 test('SEO discovery routes and French locale resolve',async({request})=>{
- for(const route of ['/sitemap.xml','/robots.txt','/manifest.webmanifest','/rss.xml','/llms.txt','/fr','/en/opengraph-image']){
-  if(route==='/en/opengraph-image')continue;expect((await request.get(route)).ok(),route).toBe(true);
+ for(const route of ['/sitemap.xml','/robots.txt','/manifest.webmanifest','/rss.xml','/llms.txt','/fr','/opengraph-image']){
+  expect((await request.get(route)).ok(),route).toBe(true);
  }
  const sitemap=await(await request.get('/sitemap.xml')).text();expect(sitemap).toContain('/en/projects/pocketllm');expect(sitemap).not.toContain('captainscabin');
+ const socialImage=await request.get('/opengraph-image');expect(socialImage.headers()['content-type']).toContain('image/png');
 });

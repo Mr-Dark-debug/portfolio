@@ -6,9 +6,10 @@ import { PageShell } from "@/components/page-shell";
 import { caseStudies } from "@/lib/case-studies";
 import { pageMetadata, jsonLd } from "@/lib/metadata";
 import { SITE_URL } from "@/lib/site";
+import { locales } from "@/navigation";
 type Props = { params: Promise<{ locale: string; slug: string }> };
 export function generateStaticParams() {
-  return caseStudies.map((p) => ({ slug: p.slug }));
+  return locales.flatMap(locale => caseStudies.map(p => ({locale, slug: p.slug})));
 }
 export async function generateMetadata({ params }: Props) {
   const { locale, slug } = await params;

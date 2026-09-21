@@ -1,6 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "nodejs";
 export const alt = "Prashant Choudhary - AI/ML Engineer & Full-Stack Developer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

@@ -12,4 +12,4 @@ export default async function proxy(req: NextRequest) {
   }
   return intl(req);
 }
-export const config = { matcher: ['/', '/((?!api|_next|_vercel|.*\\..*).*)'] };
+export const config = { matcher: ['/', '/((?!api|_next|_vercel|opengraph-image|.*\\..*).*)'] };
