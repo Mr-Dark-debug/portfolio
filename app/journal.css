@@ -471,7 +471,8 @@
   color: #d0d9e9;
 }
 .reader-prose :is(h2, h3, h4) {
-  scroll-margin-top: 115px;
+  /* The root already reserves 6rem for navigation. */
+  scroll-margin-top: 20px;
   letter-spacing: -0.035em;
   line-height: 1.35;
   font-weight: 500;
