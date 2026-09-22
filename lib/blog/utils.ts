@@ -4,13 +4,14 @@ import path from 'node:path';
 import { remark } from 'remark';
 import html from 'remark-html';
 import remarkGfm from 'remark-gfm';
+import { readingStructure } from './reading-structure';
 import { storedPosts, persistPost, removePost, validSlug, type StoredPost } from './storage';
 import type { BlogPost, BlogPostMeta, TableOfContentsItem } from './types';
 export { validSlug } from './storage';
 export const isPublished = (post: { published: boolean; date: string }) => post.published === true && Number.isFinite(Date.parse(post.date)) && Date.parse(post.date) <= Date.now();
 async function parse(row: StoredPost): Promise<BlogPost> {
  const { data, content } = matter(row.markdown);
- const rendered = String(await remark().use(remarkGfm).use(html, { sanitize: true }).process(content)).replace(/<h1>/g, "<h2>").replace(/<\/h1>/g, "</h2>");
+ const rendered = String(await remark().use(remarkGfm).use(readingStructure, { title: String(data.title || row.slug) }).use(html, { sanitize: true }).process(content)).replace(/<h1>/g, "<h2>").replace(/<\/h1>/g, "</h2>");
  const seen = new Map<string, number>();
  const withIds = rendered.replace(/<h([1-6])>([\s\S]*?)<\/h[1-6]>/g, (_, level, text) => {
   const base = generateSlug(text.replace(/<[^>]+>/g, '')) || 'section';

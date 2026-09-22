@@ -18,7 +18,7 @@ test('mobile menu, case study, and contact fields work',async({page})=>{
  await expect(page.locator('#message')).toHaveAttribute('minlength','10');
 });
 test('blog search keeps its first matching article and post headings are linked',async({page})=>{
- await page.goto('/en/blog');await expect(page.locator('h1')).toHaveText('Field notes');
+ await page.goto('/en/blog');await expect(page.locator('h1')).toHaveText('Field notes.');
  await page.getByLabel('Explore the archive').fill('GPT');await expect(page.locator('article')).not.toHaveCount(0);
  await page.locator('article a').first().click();await expect(page).toHaveURL(/\/blog\/posts\//,{timeout:30000});await expect(page.locator('h1')).toHaveCount(1);await expect(page.locator('.prose')).not.toBeEmpty();
  await expect(page.getByRole('button',{name:'Table of Contents'})).toBeVisible();await page.screenshot({path:'test-results/blog-post.png',fullPage:true});

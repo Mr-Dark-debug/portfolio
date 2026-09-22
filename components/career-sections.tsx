@@ -1,5 +1,6 @@
 import { resume } from "@/lib/resume";
-import { ArrowUpRight, GraduationCap } from "lucide-react";
+import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 
 const careerDetails = [
   {
@@ -7,24 +8,28 @@ const careerDetails = [
     focus: "AI products & backend systems",
     url: "https://proposal.biz",
     label: "Proposal.biz",
+    logo: "/organizations/enacton.webp",
   },
   {
     location: "Surat, India",
     focus: "Retrieval & agentic workflows",
     url: "https://enacton.com",
     label: "EnactOn",
+    logo: "/organizations/enacton.webp",
   },
   {
     location: "Remote · India",
     focus: "Conversational AI",
     url: null,
     label: null,
+    logo: null,
   },
   {
     location: "Remote",
     focus: "Product quality & user testing",
     url: "https://nothing.tech",
     label: "Nothing",
+    logo: "/organizations/nothing.svg",
   },
 ];
 
@@ -55,6 +60,16 @@ export function CareerSections() {
               <li className="career-row" key={entry.title}>
                 <div className="career-identity">
                   <span className="career-index">0{index + 1}</span>
+                  {details.logo && (
+                    <div className="organization-logo">
+                      <Image
+                        src={details.logo}
+                        width={136}
+                        height={56}
+                        alt={index < 2 ? "EnactOn logo" : "Nothing logo"}
+                      />
+                    </div>
+                  )}
                   <h3>{entry.organization}</h3>
                   <p>{entry.period}</p>
                   {details.url && (
@@ -114,8 +129,18 @@ export function CareerSections() {
         <ol className="education-list">
           {resume.education.map((entry, index) => (
             <li className="education-row" key={entry.title}>
-              <div className="education-mark" aria-hidden="true">
-                <GraduationCap size={27} />
+              <div className="organization-logo">
+                <Image
+                  src={
+                    index === 0
+                      ? "/organizations/trier.svg"
+                      : "/organizations/utu.png"
+                  }
+                  width={136}
+                  height={76}
+                  alt={`${entry.organization} logo`}
+                  unoptimized
+                />
               </div>
               <div>
                 <p className="eyebrow">

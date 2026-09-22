@@ -1,291 +1,234 @@
 "use client";
-
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import {
-    Calendar,
-    Clock,
-    ArrowLeft,
-    ArrowRight,
-    Tag,
-    User,
-    Home
-} from "lucide-react";
-import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
-import { PostEngagement } from "@/components/blog/post-engagement";
+  JournalDate,
+  JournalFooter,
+  JournalNav,
+} from "@/components/blog/journal-shell";
 import { TableOfContents } from "@/components/blog/ui/TableOfContents";
-import type { TableOfContentsItem } from "@/lib/blog/types";
 import { ReadingProgress } from "@/components/blog/ui/ReadingProgress";
 import { SocialShareButtons } from "@/components/blog/ui/SocialShareButtons";
 import { SaveBookmarkButton } from "@/components/blog/features/SaveBookmarkButton";
+import { PostEngagement } from "@/components/blog/post-engagement";
 import { updateReadingProgress } from "@/lib/blog/api";
-import { cn } from "@/lib/utils";
-import type { BlogPost, BlogPostMeta } from "@/lib/blog/types";
-import { useLocale, useTranslations } from "next-intl";
+import type {
+  BlogPost,
+  BlogPostMeta,
+  TableOfContentsItem,
+} from "@/lib/blog/types";
 
-interface BlogPostClientProps {
-    post: BlogPost;
-    previousPost: BlogPostMeta | null;
-    nextPost: BlogPostMeta | null;
-    relatedPosts: BlogPostMeta[];
-    toc: TableOfContentsItem[];
+interface Props {
+  post: BlogPost;
+  previousPost: BlogPostMeta | null;
+  nextPost: BlogPostMeta | null;
+  relatedPosts: BlogPostMeta[];
+  toc: TableOfContentsItem[];
 }
-
 export default function BlogPostClient({
-    post,
-    previousPost,
-    nextPost, relatedPosts, toc
-}: BlogPostClientProps) {
-    const t = useTranslations("Blog.post");
-    const commonT = useTranslations("Blog");
-    const locale = useLocale();
-    // Track reading progress & highlight code
-    useEffect(() => {
-        const handleScroll = () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-            updateReadingProgress(post.slug, progress);
-        };
-
-        const highlightCode = async () => {
-            const hljs = (await import('highlight.js')).default;
-            hljs.highlightAll();
-        };
-
-        highlightCode();
-        const links: HTMLAnchorElement[] = [];
-        document.querySelectorAll('.prose :is(h2,h3,h4)[id]').forEach(heading=>{
-          const link=document.createElement('a'); link.href='#'+heading.id; link.textContent=' #'; link.setAttribute('aria-label','Link to '+heading.textContent); heading.appendChild(link); links.push(link);
-        });
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => { window.removeEventListener("scroll", handleScroll); links.forEach(link=>link.remove()); };
-    }, [post.slug, post.content]);
-
-    return (
-        <div className="blog-article min-h-screen relative">
-            <AnimatedGridPattern
-                className="fixed inset-0 z-0 text-zinc-200/50 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]"
-                numSquares={50}
-                maxOpacity={0.5}
-                duration={5}
-            />
-            <style jsx global>{`
-                /* Highlight.js Theme Overrides */
-                .hljs {
-                    background: transparent !important;
-                    padding: 0 !important;
-                }
-            `}</style>
-            <ReadingProgress />
-
-            {/* Navigation */}
-            <nav className="sticky top-1 z-40 bg-white/80 backdrop-blur-lg border-b border-zinc-200/50">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6">
-                    <div className="flex items-center justify-between h-14">
-                        <Link
-                            href={`/${locale}/blog`}
-                            className="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-purple-600 transition-colors"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span className="hidden sm:inline">{t("back")}</span>
-                        </Link>
-
-                        <div className="flex items-center gap-4">
-                            <SaveBookmarkButton slug={post.slug} size="sm" />
-                            <Link
-                                href={`/${locale}`}
-                                className="p-2 text-zinc-600 hover:text-purple-600 transition-colors flex-shrink-0"
-                                aria-label={t("home")}
-                            >
-                                <Home className="w-5 h-5" />
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            {/* Hero / Header */}
-            <header className="relative py-16 sm:py-24">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6">
-                    <motion.div
-                        initial={false}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2 mb-6">
-                            {post.tags.map((tag) => (
-                                <Link
-                                    key={tag}
-                                    href={`/${locale}/blog?tag=${encodeURIComponent(tag)}`}
-                                    className="inline-flex items-center gap-1 px-3 py-1 text-sm font-medium bg-purple-100 text-purple-600 rounded-full hover:bg-purple-200 transition-colors"
-                                >
-                                    <Tag className="w-3 h-3" />
-                                    {tag}
-                                </Link>
-                            ))}
-                        </div>
-
-                        {/* Title */}
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-900 mb-6 leading-tight">
-                            {post.title}
-                        </h1>
-
-                        {/* Meta info */}
-                        <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-2 sm:gap-6 text-sm text-zinc-500 mb-8">
-                            <span className="flex items-center gap-2">
-                                <User className="w-4 h-4" />
-                                <span className="truncate max-w-[120px] sm:max-w-none">{post.author}</span>
-                            </span>
-                            <span className="flex items-center gap-2">
-                                <Calendar className="w-4 h-4" />
-                                <span className="truncate max-w-[150px] sm:max-w-none" suppressHydrationWarning>
-                                    {new Date(post.date).toLocaleDateString(locale, {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric'
-                                    })}
-                                </span>
-                            </span>
-                            <span className="flex items-center gap-2">
-                                <Clock className="w-4 h-4" />
-                                {commonT("minRead", { minutes: post.readingTime })}
-                            </span>
-                        </div>
-
-                        {/* Social Share */}
-                        <SocialShareButtons
-                            url={`/${locale}/blog/posts/${post.slug}`}
-                            title={post.title}
-                            description={post.excerpt}
-                            content={post.content}
-                        />
-                    </motion.div>
-                </div>
-
-                {/* Featured Image */}
-                {post.image && (
-                    <motion.div
-                        initial={false}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                        className="max-w-5xl mx-auto px-4 sm:px-6 mt-12"
-                    >
-                        <div className="relative aspect-video rounded-2xl overflow-hidden bg-zinc-100">
-                            <Image
-                                src={post.image}
-                                alt={post.title}
-                                fill
-                                sizes="(max-width: 1024px) 100vw, 1024px"
-                                className="object-cover"
-                                priority
-                            />
-                        </div>
-                    </motion.div>
-                )}
-            </header>
-
-            <div className="mx-auto max-w-4xl px-6 py-6"><TableOfContents items={toc}/></div>
-            {/* Article Content */}
-            <article className="max-w-4xl mx-auto px-4 sm:px-6 pb-16">
-                <motion.div
-                    initial={false}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    className={cn(
-                        "prose prose-lg max-w-none",
-                        // Headings
-                        "prose-headings:font-bold prose-headings:text-zinc-900",
-                        "prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl",
-                        "prose-h2:mt-12 prose-h2:mb-6 prose-h3:mt-8 prose-h3:mb-4",
-                        // Links
-                        "prose-a:text-purple-600 prose-a:no-underline hover:prose-a:underline",
-                        // Code blocks
-                        "prose-pre:bg-zinc-900 prose-pre:rounded-xl prose-pre:shadow-lg",
-                        "prose-code:text-sm prose-code:font-mono", // let highlight.js handle colors, just set font
-                        // Lists
-                        "prose-li:marker:text-purple-500",
-                        // Blockquotes
-                        "prose-blockquote:border-l-purple-500 prose-blockquote:bg-[#111832] prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:px-4",
-                        // Images
-                        "prose-img:rounded-xl prose-img:shadow-lg",
-                        // Paragraphs
-                        "prose-p:text-zinc-600 prose-p:leading-relaxed"
-                    )}
-                    dangerouslySetInnerHTML={{ __html: post.content }}
+  post,
+  previousPost,
+  nextPost,
+  relatedPosts,
+  toc,
+}: Props) {
+  const locale = useLocale();
+  const t = useTranslations("Blog.post");
+  useEffect(() => {
+    let cancelled = false;
+    const article = document.getElementById("article-body");
+    const handleScroll = () => {
+      if (!article) return;
+      const top = article.getBoundingClientRect().top + window.scrollY;
+      const distance = Math.max(
+        1,
+        article.offsetHeight - window.innerHeight + 100,
+      );
+      updateReadingProgress(
+        post.slug,
+        Math.min(
+          100,
+          Math.max(0, ((window.scrollY - top + 100) / distance) * 100),
+        ),
+      );
+    };
+    void import("highlight.js").then(({ default: hljs }) => {
+      if (!cancelled)
+        article
+          ?.querySelectorAll<HTMLElement>("pre code:not([data-highlighted])")
+          .forEach((code) => hljs.highlightElement(code));
+    });
+    const links: HTMLAnchorElement[] = [];
+    article?.querySelectorAll("h2[id],h3[id],h4[id]").forEach((heading) => {
+      const link = document.createElement("a");
+      link.href = `#${heading.id}`;
+      link.textContent = " #";
+      link.className = "heading-anchor";
+      link.setAttribute("aria-label", `Link to ${heading.textContent}`);
+      heading.appendChild(link);
+      links.push(link);
+    });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener("scroll", handleScroll);
+      links.forEach((link) => link.remove());
+    };
+  }, [post.slug, post.content]);
+  return (
+    <div className="journal-page journal-reader">
+      <ReadingProgress />
+      <JournalNav locale={locale} article>
+        <SaveBookmarkButton slug={post.slug} size="sm" />
+      </JournalNav>
+      <header className="journal-container reader-header">
+        <nav aria-label="Breadcrumb" className="reader-breadcrumb">
+          <Link href={`/${locale}`}>Home</Link>
+          <span>/</span>
+          <Link href={`/${locale}/blog`}>Field notes</Link>
+          {post.tags[0] && (
+            <>
+              <span>/</span>
+              <Link
+                href={`/${locale}/blog?tag=${encodeURIComponent(post.tags[0])}`}
+              >
+                {post.tags[0]}
+              </Link>
+            </>
+          )}
+        </nav>
+        <div className="reader-title-grid">
+          <div>
+            <div className="reader-tags">
+              {post.tags.map((tag) => (
+                <Link
+                  key={tag}
+                  href={`/${locale}/blog?tag=${encodeURIComponent(tag)}`}
+                >
+                  {tag}
+                </Link>
+              ))}
+            </div>
+            <h1>{post.title}</h1>
+            <p className="reader-deck">{post.excerpt}</p>
+          </div>
+          <dl className="reader-metadata">
+            <div>
+              <dt>Written by</dt>
+              <dd>{post.author}</dd>
+            </div>
+            <div>
+              <dt>Published</dt>
+              <dd>
+                <JournalDate date={post.date} locale={locale} />
+              </dd>
+            </div>
+            {post.updatedAt && post.updatedAt !== post.date && (
+              <div>
+                <dt>Updated</dt>
+                <dd>
+                  <JournalDate date={post.updatedAt} locale={locale} />
+                </dd>
+              </div>
+            )}
+            <div>
+              <dt>Reading time</dt>
+              <dd>{post.readingTime} minutes</dd>
+            </div>
+          </dl>
+        </div>
+      </header>
+      <div className="reader-surface">
+        <div
+          className={`journal-container reader-grid${toc.length ? "" : " reader-grid-no-toc"}`}
+        >
+          {toc.length > 0 && (
+            <aside className="reader-contents">
+              <TableOfContents items={toc} />
+            </aside>
+          )}
+          <div className="reader-column">
+            {post.image && (
+              <figure className="reader-cover">
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  width={1200}
+                  height={675}
+                  sizes="(max-width: 800px) 100vw, 760px"
+                  preload
                 />
-            </article>
-
-            <section className="mx-auto max-w-4xl px-6 py-8"><PostEngagement slug={post.slug}/><h2 className="mt-12 text-2xl font-semibold text-white">Continue reading</h2><div className="mt-5 grid gap-4 sm:grid-cols-3">{relatedPosts.map(p=><Link className="content-card" key={p.slug} href={`/${locale}/blog/posts/${p.slug}`}><h3 className="!text-base">{p.title}</h3><p className="mt-3 text-sm">{p.readingTime} min read →</p></Link>)}</div></section>
-            {/* Floating Share Button */}
-            <SocialShareButtons
+              </figure>
+            )}
+            <article
+              id="article-body"
+              aria-label={post.title}
+              className="prose reader-prose"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+            <div className="reader-author">
+              <span className="reader-author-initial" aria-hidden="true">
+                {post.author.charAt(0)}
+              </span>
+              <div>
+                <p>{t("writtenBy")}</p>
+                <strong>{post.author}</strong>
+                <p>{t("authorRole")}</p>
+              </div>
+            </div>
+            <section className="reader-share" aria-label="Share this article">
+              <p className="journal-kicker">Share this note</p>
+              <SocialShareButtons
                 url={`/${locale}/blog/posts/${post.slug}`}
                 title={post.title}
-                variant="floating"
-                content={post.content}
-            />
-
-            {/* Author Section */}
-            <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12 border-t border-zinc-200">
-                <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white text-2xl font-bold">
-                        {post.author.charAt(0)}
-                    </div>
+                description={post.excerpt}
+              />
+            </section>
+            <PostEngagement slug={post.slug} />
+            {relatedPosts.length > 0 && (
+              <section className="reader-related">
+                <p className="journal-kicker">Stay curious</p>
+                <h2>Continue reading</h2>
+                {relatedPosts.map((p) => (
+                  <Link key={p.slug} href={`/${locale}/blog/posts/${p.slug}`}>
                     <div>
-                        <p className="text-sm text-zinc-500">{t("writtenBy")}</p>
-                        <p className="text-lg font-semibold text-zinc-900">{post.author}</p>
-                        <p className="text-sm text-zinc-500">{t("authorRole")}</p>
+                      <span>
+                        {p.tags[0] || "Field notes"} · {p.readingTime} min read
+                      </span>
+                      <h3>{p.title}</h3>
                     </div>
-                </div>
-            </section>
-
-            {/* Navigation to other posts */}
-            <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12 border-t border-zinc-200">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {previousPost && (
-                        <Link
-                            href={`/${locale}/blog/posts/${previousPost.slug}`}
-                            className="group p-6 rounded-2xl bg-[#111832] border border-zinc-200 hover:border-purple-500 transition-colors"
-                        >
-                            <p className="flex items-center gap-2 text-sm text-zinc-500 mb-2">
-                                <ArrowLeft className="w-4 h-4" />
-                                {t("previous")}
-                            </p>
-                            <p className="font-semibold text-zinc-900 group-hover:text-purple-600 transition-colors line-clamp-2">
-                                {previousPost.title}
-                            </p>
-                        </Link>
-                    )}
-
-                    {nextPost && (
-                        <Link
-                            href={`/${locale}/blog/posts/${nextPost.slug}`}
-                            className={cn(
-                                "group p-6 rounded-2xl bg-[#111832] border border-zinc-200 hover:border-purple-500 transition-colors text-right",
-                                !previousPost && "sm:col-start-2"
-                            )}
-                        >
-                            <p className="flex items-center justify-end gap-2 text-sm text-zinc-500 mb-2">
-                                {t("next")}
-                                <ArrowRight className="w-4 h-4" />
-                            </p>
-                            <p className="font-semibold text-zinc-900 group-hover:text-purple-600 transition-colors line-clamp-2">
-                                {nextPost.title}
-                            </p>
-                        </Link>
-                    )}
-                </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="border-t border-zinc-200 py-8">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-                    <p className="text-sm text-zinc-500" suppressHydrationWarning>{t("rights", { year: new Date().getFullYear() })}</p>
-                </div>
-            </footer>
+                    <ArrowRight size={20} aria-hidden="true" />
+                  </Link>
+                ))}
+              </section>
+            )}
+            <nav className="reader-adjacent" aria-label="Adjacent articles">
+              {previousPost && (
+                <Link href={`/${locale}/blog/posts/${previousPost.slug}`}>
+                  <span>
+                    <ArrowLeft size={14} aria-hidden="true" />
+                    {t("previous")}
+                  </span>
+                  <strong>{previousPost.title}</strong>
+                </Link>
+              )}
+              {nextPost && (
+                <Link href={`/${locale}/blog/posts/${nextPost.slug}`}>
+                  <span>
+                    {t("next")}
+                    <ArrowRight size={14} aria-hidden="true" />
+                  </span>
+                  <strong>{nextPost.title}</strong>
+                </Link>
+              )}
+            </nav>
+          </div>
         </div>
-    );
+      </div>
+      <JournalFooter locale={locale} />
+    </div>
+  );
 }
