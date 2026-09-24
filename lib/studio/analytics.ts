@@ -95,3 +95,13 @@ export async function getAnalyticsSnapshot(options: { days?: number; path?: stri
     eventsError: events ? undefined : "Custom events are unavailable for this Vercel plan or query.",
   };
 }
+
+export async function getAnalyticsOverviewCounts(): Promise<{ today?: { pageviews: number; visitors: number }; week?: { pageviews: number; visitors: number } }> {
+  if (!credentials()) return {};
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+  const [todayResult, weekResult] = await Promise.all([
+    query("visits/count", { since: today, until: today }, 1),
+    query("visits/count", {}, 7),
+  ]);
+  return { today: countFields(todayResult), week: countFields(weekResult) };
+}
