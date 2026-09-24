@@ -4,6 +4,7 @@ import { articleMutationSchema } from "@/lib/studio/schema";
 import { getManagedArticle, removeManagedArticle, renameManagedArticle, saveManagedArticle } from "@/lib/studio/content";
 import { createPreviewToken } from "@/lib/studio/auth";
 import { guardStudio, errorResponse } from "@/lib/studio/api";
+import { requestContentDeployment } from "@/lib/studio/deployment";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -37,7 +38,8 @@ async function update(request: Request, context: Context) {
     if (current.sha ? input.expectedSha !== current.sha : input.expectedSha) return NextResponse.json({ error: "This article changed in GitHub. Reload before saving." }, { status: 409 });
     if (input.action === "schedule" && (!input.frontmatter.scheduledAt || Date.parse(input.frontmatter.scheduledAt) <= Date.now())) return NextResponse.json({ error: "Choose a future date and time before scheduling." }, { status: 400 });
     const article = input.action === "rename" ? await renameManagedArticle(slug, input.newSlug || input.frontmatter.slug, { frontmatter: input.frontmatter, body: input.body }, input.expectedSha) : await saveManagedArticle({ frontmatter: input.frontmatter, body: input.body }, input.action, input.expectedSha);
-    return NextResponse.json({ ok: true, article, previewToken: await createPreviewToken(article.slug) }, { headers: { "Cache-Control": "no-store" } });
+    const deployment = article.source === "github" ? await requestContentDeployment() : "local";
+    return NextResponse.json({ ok: true, article, deployment, previewToken: await createPreviewToken(article.slug) }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof z.ZodError) return NextResponse.json({ error: error.issues[0]?.message || "Article metadata is invalid." }, { status: 400 });
     return errorResponse(error, "Could not update the article.");
@@ -52,8 +54,10 @@ export async function DELETE(request: Request, { params }: Context) {
   if (denied) return denied;
   const { slug } = await params;
   try {
+    const article = await getManagedArticle(slug);
     await removeManagedArticle(slug);
-    return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
+    const deployment = article?.source === "github" ? await requestContentDeployment() : "local";
+    return NextResponse.json({ ok: true, deployment }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return errorResponse(error, "Could not delete the article.");
   }

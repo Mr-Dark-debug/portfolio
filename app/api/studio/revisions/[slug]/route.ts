@@ -4,6 +4,7 @@ import { articleRevisions, getManagedArticle, saveManagedArticle } from "@/lib/s
 import { getTextFileAtRef } from "@/lib/studio/github";
 import { parseArticleMarkdown } from "@/lib/studio/markdown";
 import { guardStudio, errorResponse } from "@/lib/studio/api";
+import { requestContentDeployment } from "@/lib/studio/deployment";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -44,7 +45,8 @@ export async function POST(request: Request, { params }: Context) {
     if (!file) return NextResponse.json({ error: "Revision not found." }, { status: 404 });
     const document = parseArticleMarkdown(file.content, current.slug);
     const restored = await saveManagedArticle(document, document.frontmatter.status === "published" ? "publish" : "save", current.sha);
-    return NextResponse.json({ ok: true, article: restored }, { headers: { "Cache-Control": "no-store" } });
+    const deployment = restored.source === "github" ? await requestContentDeployment() : "local";
+    return NextResponse.json({ ok: true, article: restored, deployment }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof z.ZodError) return NextResponse.json({ error: "Revision restore input is invalid." }, { status: 400 });
     return errorResponse(error, "Could not restore the revision.");

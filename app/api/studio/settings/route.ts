@@ -3,6 +3,8 @@ import { z } from "zod";
 import { getSettings, saveSettings } from "@/lib/studio/content";
 import { guardStudio, errorResponse } from "@/lib/studio/api";
 import { socialSettingsSchema } from "@/lib/studio/schema";
+import { isGithubConfigured } from "@/lib/studio/github";
+import { requestContentDeployment } from "@/lib/studio/deployment";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,7 +21,8 @@ export async function PUT(request: Request) {
   if (denied) return denied;
   try {
     const settings = socialSettingsSchema.parse(await request.json());
-    return NextResponse.json({ settings: await saveSettings(settings) }, { headers: { "Cache-Control": "no-store" } });
+    const saved = await saveSettings(settings);
+    return NextResponse.json({ settings: saved, deployment: isGithubConfigured() ? await requestContentDeployment() : "local" }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof z.ZodError) return NextResponse.json({ error: error.issues[0]?.message || "Studio settings are invalid." }, { status: 400 });
     return errorResponse(error, "Could not save Studio settings.");

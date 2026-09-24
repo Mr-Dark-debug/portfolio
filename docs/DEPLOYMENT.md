@@ -12,6 +12,7 @@ GITHUB_CONTENT_TOKEN=github-fine-grained-token
 GITHUB_CONTENT_OWNER=repository-owner
 GITHUB_CONTENT_REPO=repository-name
 GITHUB_CONTENT_BRANCH=main
+VERCEL_DEPLOY_HOOK_URL=https://api.vercel.com/v1/integrations/deploy/your-project-id/your-hook-id
 NEXT_PUBLIC_SITE_URL=https://prashant.sbs
 ```
 
@@ -33,13 +34,15 @@ The adapter requests the current file SHA before updates. A GitHub 409 becomes a
 1. Import the repository into Vercel or keep the existing `prashant-project/prashant-portfolio` project.
 2. Use Node 20.18.1 or newer.
 3. Keep the default Next.js build command and `npm` install command.
-4. Add the Studio variables above to Production and Preview.
+4. Add the Studio variables above to Production. Create the deploy hook in Project Settings → Git for the `main` branch and store its URL as a secret. Use a separate hook for Preview if editing against a preview branch.
 5. Enable Web Analytics and Speed Insights in the Vercel project.
 6. Create a Vercel access token with Web Analytics read access and set `VERCEL_ANALYTICS_TOKEN`, `VERCEL_PROJECT_ID`, and, for a team project, `VERCEL_TEAM_ID`.
 7. Verify the canonical domain is `prashant.sbs`; keep the locale routes and apex/www behavior unchanged.
 8. Confirm `/studio`, `/api/studio`, and preview responses are not indexed. The app also sends `X-Robots-Tag` for those paths.
 
-GitHub commits are persistent content changes. A production deployment or revalidation must run after a commit for the public filesystem bundle to include the new Markdown/media.
+GitHub commits are persistent content changes. Studio requests a production deployment after an article, media, settings, or social content commit. The API reports whether the build was queued; a queued build is not proof that the new content is live. Check the production deployment and URL before announcing publication. If the hook is absent or fails, the Git commit is retained and Studio reports the deployment gap.
+
+Scheduled Markdown is included by the build requested when it is scheduled. The public article and listing revalidate on a short interval after the due time; feeds and discovery files have longer cache windows. Vercel Hobby cron cannot run more than once per day and has hour-level timing, so it cannot guarantee an exact schedule-time deployment.
 
 ## Media
 

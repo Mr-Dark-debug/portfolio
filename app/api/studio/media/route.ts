@@ -5,6 +5,7 @@ import { getManagedArticles } from "@/lib/studio/content";
 import { guardStudio, errorResponse } from "@/lib/studio/api";
 import { MAX_UPLOAD_BYTES } from "@/lib/studio/images";
 import { slugSchema } from "@/lib/studio/schema";
+import { requestContentDeployment } from "@/lib/studio/deployment";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,7 +41,8 @@ export async function POST(request: Request) {
     if (!(file instanceof File)) return NextResponse.json({ error: "Choose an image to upload." }, { status: 400 });
     if (file.size > MAX_UPLOAD_BYTES) return NextResponse.json({ error: "Image is larger than the 10 MB limit." }, { status: 413 });
     const assets = await uploadMedia({ data: Buffer.from(await file.arrayBuffer()), filename: file.name, declaredType: file.type, slug });
-    return NextResponse.json({ assets }, { status: 201, headers: { "Cache-Control": "no-store" } });
+    const deployment = assets.some((asset) => asset.storage === "github") ? await requestContentDeployment() : "local";
+    return NextResponse.json({ assets, deployment }, { status: 201, headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof z.ZodError) return NextResponse.json({ error: "The media folder slug is invalid." }, { status: 400 });
     return errorResponse(error, "Image upload failed.");
@@ -54,7 +56,8 @@ export async function DELETE(request: Request) {
     const input = z.object({ path: z.string().min(1).max(500), url: z.string().url().optional(), storage: z.enum(["blob", "github", "local"]) }).parse(await request.json());
     const asset: MediaAsset = { path: input.path, url: input.url || input.path, filename: input.path.split("/").pop() || input.path, contentType: "image/jpeg", size: 0, uploadedAt: new Date().toISOString(), storage: input.storage };
     await deleteMedia(asset);
-    return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
+    const deployment = asset.storage === "github" ? await requestContentDeployment() : "local";
+    return NextResponse.json({ ok: true, deployment }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof z.ZodError) return NextResponse.json({ error: "Media deletion input is invalid." }, { status: 400 });
     return errorResponse(error, "Media deletion failed.");

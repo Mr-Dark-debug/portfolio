@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Archive, BarChart3, CalendarClock, Copy, Edit3, Eye, EyeOff, FilePlus2, Filter, MoreHorizontal, Search, Send, Trash2, UploadCloud } from "lucide-react";
 import type { ArticleFrontmatter } from "@/lib/studio/schema";
-import { studioFetch, formatDateTime } from "./studio-api";
+import { studioFetch, formatDateTime, deploymentMessage, type DeploymentRequest } from "./studio-api";
 
 export interface StudioArticleRow { slug: string; path: string; sha?: string; frontmatter: ArticleFrontmatter; invalid?: string; }
 
@@ -38,9 +38,9 @@ export default function PostsTable({ initialArticles, viewsBySlug }: { initialAr
     try {
       const result = await load(slug);
       const frontmatter = { ...result.article.frontmatter, ...(scheduledAt ? { scheduledAt, status: "scheduled" as const } : {}) };
-      await studioFetch(`/api/studio/posts/${slug}`, { method: "PATCH", body: JSON.stringify({ slug, frontmatter, body: result.article.body, action, expectedSha: result.article.sha }) });
+      const saved = await studioFetch<{ deployment: DeploymentRequest }>(`/api/studio/posts/${slug}`, { method: "PATCH", body: JSON.stringify({ slug, frontmatter, body: result.article.body, action, expectedSha: result.article.sha }) });
       await refresh();
-      setMessage(action === "publish" ? "Post published." : action === "schedule" ? "Post scheduled." : action === "archive" ? "Post archived." : action === "unpublish" ? "Post moved to draft." : "Post saved.");
+      setMessage((action === "publish" ? "Publication committed." : action === "schedule" ? "Schedule committed." : action === "archive" ? "Post archived in the content store." : action === "unpublish" ? "Post moved to draft in the content store." : "Post saved.") + deploymentMessage(saved.deployment));
     } catch (error) { setMessage(error instanceof Error ? error.message : "The post could not be updated."); }
     finally { setBusy(null); }
   };

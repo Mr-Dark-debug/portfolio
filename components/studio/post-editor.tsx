@@ -8,7 +8,7 @@ import type { ManagedArticle } from "@/lib/studio/content";
 import { calculateReadingTime, countCharacters, countWords } from "@/lib/studio/markdown";
 import DiscoveryFields from "./discovery-fields";
 import { clientQualityChecks } from "./quality-checks";
-import { formatDateTime, studioFetch } from "./studio-api";
+import { deploymentMessage, formatDateTime, studioFetch, type DeploymentRequest } from "./studio-api";
 
 type SaveAction = "save" | "publish" | "schedule" | "unpublish" | "archive";
 type SeoSuggestions = {
@@ -192,14 +192,14 @@ export default function PostEditor({ article }: EditorProps) {
     try {
       const payload = { slug, frontmatter: nextFrontmatter, body, action, expectedSha: sha };
       const result = article
-        ? await studioFetch<{ article: ManagedArticle }>(`/api/studio/posts/${article.slug}`, { method: "PATCH", body: JSON.stringify(payload) })
-        : await studioFetch<{ article: ManagedArticle }>("/api/studio/posts", { method: "POST", body: JSON.stringify(payload) });
+        ? await studioFetch<{ article: ManagedArticle; deployment: DeploymentRequest }>(`/api/studio/posts/${article.slug}`, { method: "PATCH", body: JSON.stringify(payload) })
+        : await studioFetch<{ article: ManagedArticle; deployment: DeploymentRequest }>("/api/studio/posts", { method: "POST", body: JSON.stringify(payload) });
       setSha(result.article.sha);
       setFrontmatter(result.article.frontmatter);
       setLastSavedAt(result.article.frontmatter.updatedAt || new Date().toISOString());
       setDirty(false);
       localStorage.removeItem(storageKey);
-      setMessage(action === "publish" ? "Published." : action === "schedule" ? "Scheduled." : action === "unpublish" ? "Moved to draft." : action === "archive" ? "Archived." : "Saved to the content store.");
+      setMessage((action === "publish" ? "Publication committed." : action === "schedule" ? "Schedule committed." : action === "unpublish" ? "Moved to draft in the content store." : action === "archive" ? "Archived in the content store." : "Saved to the content store.") + deploymentMessage(result.deployment));
       if (!article) router.replace(`/studio/posts/${result.article.slug}`);
       router.refresh();
     } catch (error) {

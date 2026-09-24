@@ -8,6 +8,8 @@ import { SITE_URL, SITE_NAME } from "@/lib/site";
 import { youtubeVideoId } from "@/lib/studio/embeds";
 import { locales } from '@/navigation';
 
+export const revalidate = 60;
+
 interface Props {
     params: Promise<{ locale: string; slug: string }>;
 }
