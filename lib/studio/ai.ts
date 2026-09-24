@@ -49,7 +49,7 @@ export function aiAvailability() {
   return config ? { available: true as const, provider: config.provider, model: config.model } : { available: false as const, message: "AI API not configured" };
 }
 
-async function complete(prompt: string, format: "text" | "json" = "json"): Promise<string> {
+async function complete(prompt: string, format: "text" | "json" | "json-prompt" = "json"): Promise<string> {
   const config = providerConfig();
   if (!config) throw new Error("AI API not configured");
   const controller = new AbortController();
@@ -68,7 +68,8 @@ async function complete(prompt: string, format: "text" | "json" = "json"): Promi
       return body.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n") || "";
     }
     const baseUrl = process.env.AI_API_URL || (config.provider === "groq" ? "https://api.groq.com/openai/v1/chat/completions" : "https://api.openai.com/v1/chat/completions");
-    const response = await fetch(baseUrl, { method: "POST", signal: controller.signal, headers: { "Content-Type": "application/json", Authorization: `Bearer ${config.apiKey}` }, body: JSON.stringify({ model: config.model, temperature: 0.3, max_tokens: 1400, ...(format === "json" ? { response_format: { type: "json_object" } } : {}), messages: [{ role: "system", content: format === "json" ? "Return only valid JSON. Never invent facts that are not supported by the supplied article." : "Return plain text. Never invent facts that are not supported by the supplied article." }, { role: "user", content: prompt }] }) });
+    const response = await fetch(baseUrl, { method: "POST", signal: controller.signal, headers: { "Content-Type": "application/json", Authorization: `Bearer ${config.apiKey}` }, body: JSON.stringify({ model: config.model, temperature: 0.3, max_tokens: 1400, ...(format === "json" ? { response_format: { type: "json_object" } } : {}), messages: [{ role: "system", content: format === "text" ? "Return plain text. Never invent facts that are not supported by the supplied article." : "Return only valid JSON. Never invent facts that are not supported by the supplied article." }, { role: "user", content: prompt }] }) });
+    if (!response.ok && config.provider === "groq" && format === "json" && response.status === 400) return complete(prompt, "json-prompt");
     if (!response.ok) throw new Error(`AI provider returned ${response.status}`);
     const body = (await response.json()) as { choices?: { message?: { content?: string } }[] };
     return body.choices?.[0]?.message?.content || "";
@@ -84,20 +85,42 @@ export async function generateTldr(title: string, body: string, style = "concise
 
 export async function generateSeoSuggestions(title: string, excerpt: string, body: string, existingTags: string[] = []): Promise<SeoSuggestions> {
   const prompt = `Analyze this article for classic SEO and answer-engine discovery. Return JSON with these optional keys: metaTitle, metaDescription, excerpt, slug, topic, tags, entities, headings, internalLinks, faq, tldr, ogTitle, ogDescription, socialCaption, searchIntent, primaryTopic, secondaryTopics, contentGaps. Suggestions only; do not rewrite the article. Keep claims grounded in the supplied text. Existing tags: ${existingTags.join(", ")}.\n\nTitle: ${title}\nExcerpt: ${excerpt}\n\nArticle:\n${body.slice(0, 50000)}`;
-  const result = await complete(prompt);
-  const jsonMatch = result.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("AI returned an invalid suggestion format");
-  const parsed = seoSuggestionSchema.safeParse(JSON.parse(jsonMatch[0]));
-  if (!parsed.success) throw new Error("AI returned incomplete SEO suggestions");
-  return parsed.data;
+  const parse = (result: string): SeoSuggestions | null => {
+    const jsonMatch = result.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return null;
+    try {
+      const source: unknown = JSON.parse(jsonMatch[0]);
+      if (!source || typeof source !== "object" || Array.isArray(source)) return null;
+      const valid: Record<string, unknown> = {};
+      for (const [key, schema] of Object.entries(seoSuggestionSchema.shape)) {
+        const value = (source as Record<string, unknown>)[key];
+        const field = schema.safeParse(value);
+        if (field.success && field.data !== undefined) valid[key] = field.data;
+      }
+      const parsed = seoSuggestionSchema.safeParse(valid);
+      return parsed.success && Object.keys(parsed.data).length ? parsed.data : null;
+    } catch { return null; }
+  };
+  const first = parse(await complete(prompt));
+  if (first) return first;
+  const second = parse(await complete(prompt, "json-prompt"));
+  if (second) return second;
+  throw new Error("AI returned no usable SEO suggestions");
 }
 
 export async function generateRepurposingDrafts(title: string, excerpt: string, body: string): Promise<RepurposingDrafts> {
   const prompt = `Turn the article below into editable drafts, never publish automatically. Return JSON with linkedin, xThread (array of posts), instagram, youtubeDescription, youtubeOutline (array), shortFormHooks (array), newsletter, and githubAnnouncement. Keep the author's voice and factual claims. Do not invent metrics.\n\nTitle: ${title}\nExcerpt: ${excerpt}\n\nArticle:\n${body.slice(0, 50000)}`;
-  const result = await complete(prompt);
-  const jsonMatch = result.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("AI returned an invalid repurposing format");
-  const parsed = repurposingSchema.safeParse(JSON.parse(jsonMatch[0]));
-  if (!parsed.success) throw new Error("AI returned incomplete repurposing drafts");
-  return parsed.data;
+  const parse = (result: string): RepurposingDrafts | null => {
+    const jsonMatch = result.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return null;
+    try {
+      const parsed = repurposingSchema.safeParse(JSON.parse(jsonMatch[0]));
+      return parsed.success ? parsed.data : null;
+    } catch { return null; }
+  };
+  const first = parse(await complete(prompt));
+  if (first) return first;
+  const second = parse(await complete(prompt, "json-prompt"));
+  if (second) return second;
+  throw new Error("AI returned incomplete repurposing drafts");
 }
