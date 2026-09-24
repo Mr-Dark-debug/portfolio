@@ -1,12 +1,7 @@
-import EditorPageClient from "../EditorPageClient";
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-    title: "New Post | Blog Admin",
-    description: "Create a new blog post",
-    robots: "noindex, nofollow",
-};
+export const metadata = { robots: { index: false, follow: false } };
 
 export default function NewPostPage() {
-    return <EditorPageClient isNew />;
+  redirect("/studio/posts/new");
 }

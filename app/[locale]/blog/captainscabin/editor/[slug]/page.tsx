@@ -1,38 +1,8 @@
-import { getRawPostContent } from "@/lib/blog/utils";
-import { notFound } from "next/navigation";
-import EditorPageClient from "../EditorPageClient";
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-interface Props {
-    params: Promise<{ slug: string }>;
-}
+export const metadata = { robots: { index: false, follow: false } };
 
-export const metadata: Metadata = {
-    title: "Edit Post | Blog Admin",
-    description: "Edit an existing blog post",
-    robots: "noindex, nofollow",
-};
-
-export default async function EditPostPage({ params }: Props) {
-    const { slug } = await params;
-
-    // Handle "new" route separately
-    if (slug === "new") {
-        return <EditorPageClient isNew />;
-    }
-
-    // Try to get the post content
-    const content = (await getRawPostContent(slug)) || (await getRawPostContent(slug, true));
-
-    if (!content) {
-        notFound();
-    }
-
-    return (
-        <EditorPageClient
-            isNew={false}
-            initialContent={content}
-            slug={slug}
-        />
-    );
+export default async function EditPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  redirect(slug === "new" ? "/studio/posts/new" : `/studio/posts/${encodeURIComponent(slug)}`);
 }

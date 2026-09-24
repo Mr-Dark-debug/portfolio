@@ -51,19 +51,19 @@ export default function BlogPageClient({
       posts.filter(
         (post) =>
           (!tag || post.tags.includes(tag)) &&
-          `${post.title} ${post.excerpt} ${post.tags.join(" ")}`
+          `${post.title} ${post.subtitle || ""} ${post.excerpt} ${post.tags.join(" ")} ${post.topics.join(" ")} ${post.searchText || ""}`
             .toLowerCase()
             .includes(query.trim().toLowerCase()),
       ),
     [posts, query, tag],
   );
-  const featured = !query.trim() && !tag ? posts[0] : undefined;
+  const featured = !query.trim() && !tag ? posts.find((post) => post.featured) || posts[0] : undefined;
   const clear = () => {
     setQuery("");
     setTag(null);
   };
   return (
-    <div className="journal-page">
+    <main className="journal-page">
       <JournalNav locale={locale} />
       <header className="journal-container journal-intro">
         <div>
@@ -210,6 +210,6 @@ export default function BlogPageClient({
         <Newsletter />
       </section>
       <JournalFooter locale={locale} />
-    </div>
+    </main>
   );
 }

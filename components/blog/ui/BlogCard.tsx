@@ -75,7 +75,8 @@ export function BlogCard({ post, index = 0, featured = false }: BlogCardProps) {
                             {new Date(post.date).toLocaleDateString(locale, {
                                 month: 'short',
                                 day: 'numeric',
-                                year: 'numeric'
+                                year: 'numeric',
+                                timeZone: 'Europe/Berlin'
                             })}
                         </span>
                         <span className="flex items-center gap-1.5">

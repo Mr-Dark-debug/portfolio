@@ -79,7 +79,7 @@ export default async function ProjectPage({ params }: Props) {
         {p.repo && (
           <a
             className="meadow-button"
-            data-track="repo_click"
+             data-track="project_github_click"
             href={p.repo}
             target="_blank"
             rel="noopener noreferrer"

@@ -114,8 +114,9 @@ export function SelectedWork({ locale }: { locale: string }) {
         {caseStudies.map((project) => (
           <article className="selected-project" key={project.slug}>
             <Link
-              href={`/${locale}/projects/${project.slug}`}
-              aria-label={`Explore ${project.title}`}
+               href={`/${locale}/projects/${project.slug}`}
+               data-track="project_open"
+               aria-label={`Explore ${project.title}`}
             >
               <ProjectVisual slug={project.slug} />
               <div className="selected-project-copy">

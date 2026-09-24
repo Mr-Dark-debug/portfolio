@@ -14,6 +14,8 @@ import { ReadingProgress } from "@/components/blog/ui/ReadingProgress";
 import { SocialShareButtons } from "@/components/blog/ui/SocialShareButtons";
 import { SaveBookmarkButton } from "@/components/blog/features/SaveBookmarkButton";
 import { PostEngagement } from "@/components/blog/post-engagement";
+import { ConsentAwareEmbed, MediaPreferencesLink } from "@/components/blog/consent-aware-embed";
+import { track } from "@vercel/analytics/react";
 import { updateReadingProgress } from "@/lib/blog/api";
 import type {
   BlogPost,
@@ -39,27 +41,45 @@ export default function BlogPostClient({
   const t = useTranslations("Blog.post");
   useEffect(() => {
     let cancelled = false;
+    let lastDepth = 0;
     const article = document.getElementById("article-body");
+    track("article_open", { slug: post.slug });
     const handleScroll = () => {
       if (!article) return;
       const top = article.getBoundingClientRect().top + window.scrollY;
-      const distance = Math.max(
-        1,
-        article.offsetHeight - window.innerHeight + 100,
-      );
-      updateReadingProgress(
-        post.slug,
-        Math.min(
-          100,
-          Math.max(0, ((window.scrollY - top + 100) / distance) * 100),
-        ),
-      );
+      const distance = Math.max(1, article.offsetHeight - window.innerHeight + 100);
+      const progress = Math.min(100, Math.max(0, ((window.scrollY - top + 100) / distance) * 100));
+      updateReadingProgress(post.slug, progress);
+      const depth = Math.floor(progress / 25) * 25;
+      if (depth > lastDepth) {
+        lastDepth = depth;
+        track("article_open", { slug: post.slug, depth });
+      }
     };
     void import("highlight.js").then(({ default: hljs }) => {
-      if (!cancelled)
-        article
-          ?.querySelectorAll<HTMLElement>("pre code:not([data-highlighted])")
-          .forEach((code) => hljs.highlightElement(code));
+      if (cancelled) return;
+      article?.querySelectorAll<HTMLElement>("pre code:not([data-highlighted])").forEach((code) => hljs.highlightElement(code));
+    });
+    const added: HTMLElement[] = [];
+    article?.querySelectorAll("pre").forEach((pre) => {
+      if (pre.querySelector(".reader-code-label")) return;
+      const code = pre.querySelector("code");
+      const language = [...(code?.classList || [])].find((value) => value.startsWith("language-"))?.replace("language-", "") || "code";
+      const label = document.createElement("span");
+      label.className = "reader-code-label";
+      label.textContent = language;
+      const copy = document.createElement("button");
+      copy.type = "button";
+      copy.className = "reader-code-copy";
+      copy.textContent = "Copy";
+      copy.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(code?.textContent || "");
+        copy.textContent = "Copied";
+        track("code_copy", { language });
+        window.setTimeout(() => { copy.textContent = "Copy"; }, 1400);
+      });
+      pre.append(label, copy);
+      added.push(label, copy);
     });
     const links: HTMLAnchorElement[] = [];
     article?.querySelectorAll("h2[id],h3[id],h4[id]").forEach((heading) => {
@@ -68,6 +88,7 @@ export default function BlogPostClient({
       link.textContent = " #";
       link.className = "heading-anchor";
       link.setAttribute("aria-label", `Link to ${heading.textContent}`);
+      link.addEventListener("click", () => track("table_of_contents_click", { slug: post.slug }));
       heading.appendChild(link);
       links.push(link);
     });
@@ -76,8 +97,10 @@ export default function BlogPostClient({
       cancelled = true;
       window.removeEventListener("scroll", handleScroll);
       links.forEach((link) => link.remove());
+      added.forEach((node) => node.remove());
     };
   }, [post.slug, post.content]);
+  const coverVideoEmbed = post.coverVideo ? { provider: "youtube" as const, url: post.coverVideo, title: "Featured video" } : null;
   return (
     <div className="journal-page journal-reader">
       <ReadingProgress />
@@ -113,6 +136,7 @@ export default function BlogPostClient({
               ))}
             </div>
             <h1>{post.title}</h1>
+            {post.subtitle ? <p className="reader-subtitle">{post.subtitle}</p> : null}
             <p className="reader-deck">{post.excerpt}</p>
           </div>
           <dl className="reader-metadata">
@@ -155,7 +179,7 @@ export default function BlogPostClient({
               <figure className="reader-cover">
                 <Image
                   src={post.image}
-                  alt={post.title}
+                  alt={post.coverImageAlt || post.title}
                   width={1200}
                   height={675}
                   sizes="(max-width: 800px) 100vw, 760px"
@@ -163,12 +187,16 @@ export default function BlogPostClient({
                 />
               </figure>
             )}
+            {post.tldr ? <aside className="reader-tldr" aria-label="TL;DR"><span className="journal-kicker">TL;DR</span><p>{post.tldr}</p></aside> : null}
+            {coverVideoEmbed ? <ConsentAwareEmbed embed={coverVideoEmbed} /> : null}
+            {post.socialEmbeds.length ? <div className="reader-embeds">{post.socialEmbeds.map((embed) => <ConsentAwareEmbed embed={embed} key={`${embed.provider}-${embed.url}`} />)}</div> : null}
             <article
               id="article-body"
               aria-label={post.title}
               className="prose reader-prose"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
+            {post.faqs.length ? <section className="reader-faq" aria-labelledby="reader-faq-title"><p className="journal-kicker">Questions</p><h2 id="reader-faq-title">FAQ</h2>{post.faqs.map((faq) => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}</section> : null}
             <div className="reader-author">
               <span className="reader-author-initial" aria-hidden="true">
                 {post.author.charAt(0)}
@@ -181,19 +209,20 @@ export default function BlogPostClient({
             </div>
             <section className="reader-share" aria-label="Share this article">
               <p className="journal-kicker">Share this note</p>
-              <SocialShareButtons
-                url={`/${locale}/blog/posts/${post.slug}`}
-                title={post.title}
-                description={post.excerpt}
-              />
-            </section>
+               <SocialShareButtons
+                 url={`/${locale}/blog/posts/${post.slug}`}
+                 title={post.title}
+                 description={post.excerpt}
+               />
+               <MediaPreferencesLink />
+             </section>
             <PostEngagement slug={post.slug} />
             {relatedPosts.length > 0 && (
               <section className="reader-related">
                 <p className="journal-kicker">Stay curious</p>
                 <h2>Continue reading</h2>
                 {relatedPosts.map((p) => (
-                  <Link key={p.slug} href={`/${locale}/blog/posts/${p.slug}`}>
+                   <Link key={p.slug} href={`/${locale}/blog/posts/${p.slug}`} onClick={() => track("related_article_click", { from: post.slug, to: p.slug })}>
                     <div>
                       <span>
                         {p.tags[0] || "Field notes"} · {p.readingTime} min read

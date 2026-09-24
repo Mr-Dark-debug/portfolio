@@ -144,7 +144,7 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
+    <html lang={locale} className="scroll-smooth" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <script
           type="application/ld+json"
@@ -162,7 +162,7 @@ export default async function RootLayout({
         </a>
         <Providers>
           <NextIntlClientProvider locale={locale} timeZone="Europe/Berlin" messages={messages}>
-            <div id="main-content">
+            <div id="main-content" tabIndex={-1}>
               {children}
             </div>
             <Toaster position="top-center" richColors />

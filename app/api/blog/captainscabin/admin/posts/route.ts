@@ -1,6 +1,5 @@
 import { refreshBlog } from '@/lib/blog/revalidate';
 import { rateLimit } from '@/lib/rate-limit';
-import { database } from '@/lib/db';
 import { validSlug } from '@/lib/blog/storage';
 import { NextResponse } from 'next/server';
 import { savePost, getAllPostsWithDrafts } from '@/lib/blog/utils';
@@ -34,7 +33,7 @@ export async function POST(req: Request) {
             );
         }
 
-        if ((process.env.VERCEL || process.env.NODE_ENV === 'production') && !database()) return NextResponse.json({ error: 'Hosted editing requires database configuration.' }, { status: 503 });
+        if (process.env.VERCEL || process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'This editor moved to Studio. Sign in at /studio/login.' }, { status: 410 });
         const success = await savePost(slug, content, isDraft);
 
         if (success) {

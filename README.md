@@ -1,132 +1,78 @@
-﻿# 🚀 AI Engineer Portfolio & Captain's Log
+﻿# Prashant Choudhary — Portfolio and Field Notes
 
-A next-generation portfolio and blog platform built with Next.js 15, React 19, and advanced AI integrations. Features a nautical-themed "Captain's Log" blog with a powerful AI-assisted admin dashboard ("Captain's Cabin").
+A Next.js App Router portfolio for Prashant Choudhary: practical AI engineering, full-stack products, project case studies, and the **Field Notes** engineering journal.
 
-<img width="1919" height="930" alt="image" src="https://github.com/user-attachments/assets/5ecb7233-388d-42a4-9a8e-8ad25eff51a3" />
+The public site is intentionally unchanged in identity: night meadow colors, Inter typography, editorial project treatments, localized routes, and the typography-led Field Notes reader remain the baseline. The private publishing system lives at `/studio` and is not part of public navigation.
 
+## Stack
 
-## ✨ Key Features
+- Next.js 16 App Router and React 19
+- TypeScript strict mode
+- Tailwind CSS and scoped Studio CSS
+- `gray-matter`, Remark, GFM, and server-side HTML sanitization
+- Vercel Analytics and Speed Insights
+- GitHub Contents/Commits API for Markdown CMS operations
+- Sharp and optional Vercel Blob for media
+- Optional provider-neutral AI integration
+- Vitest and Playwright
 
-### 🎨 Modern Portfolio
-- **Premium Design**: Glassmorphism, smooth animations with Framer Motion, and distinct dark mode aesthetics.
-- **Responsive**: Fully optimized for mobile, tablet, and desktop.
-- **Dynamic Content**: Showcase projects, skills, and experience with interactive elements.
+## Local setup
 
-### ⚓ Captain's Log (Blog)
-- **Themed Experience**: A unique nautical theme ("Log Entries", "Transmitted", "Vault").
-- **MDX/Markdown Support**: Write in Markdown with full support for GFM.
-- **Syntax Highlighting**: Automatic code highlighting for all major languages using `highlight.js`.
-- **Smart Features**: 
-  - Real-time Search & filtering by tags.
-  - Estimated reading time.
-  - Social sharing with AI-generated captions.
-  - Reading progress bar.
+Use Node 20.18.1 or newer.
 
-### 🛂 Captain's Cabin (Admin Dashboard)
-- **Route**: `/blog/captainscabin` (Hidden command deck).
-- **Content Management**: 
-  - Create, Edit, Delete, and **Schedule** posts.
-  - Dual-pane Markdown editor with real-time preview.
-  - Draft system ("The Vault") vs. Live posts ("Transmitted").
-- **AI-Powered Assistant**:
-  - **Writing Aid**: Improve grammar, summarize, expand, or simplify text on the fly.
-  - **SEO Optimizer**: Get AI suggestions for better visibility.
-  - **Social Media Genius**: Generate platform-specific captions (Twitter/X threads, LinkedIn posts) with "staircase" formatting and emojis.
-
-## 🛠️ Tech Stack
-
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **AI Integration**: [Groq SDK](https://groq.com/) (Qwen 3 32B)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Markdown**: `remark`, `rehype`, `gray-matter`, `highlight.js`
-- **Fonts**: Inter & JetBrains Mono
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+
-- npm or pnpm
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/portfolio.git
-   cd portfolio
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   pnpm install
-   ```
-
-3. **Set up Environment Variables**
-   Create a `.env.local` file in the root:
-   ```env
-   # AI Features (Groq)
-   GROQ_API_KEY=your_groq_api_key_here
-   
-   # Optional: Base URL for SEO
-   NEXT_PUBLIC_BASE_URL=http://localhost:3000
-   ```
-
-4. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-   Visit [http://localhost:3000](http://localhost:3000) to see the portfolio.
-
-## 📂 Project Structure
-
-```
-├── app/
-│   ├── api/             # API Routes (AI assist, posts CRUD)
-│   ├── blog/
-│   │   ├── captainscabin/  # Admin Dashboard & Editor
-│   │   ├── posts/          # Individual Blog Post Pages
-│   │   └── page.tsx        # Main Blog Archive
-│   ├── layout.tsx       # Root Layout
-│   └── page.tsx         # Portfolio Home
-├── components/
-│   ├── blog/            # Blog-specific UI (Cards, AI Features, Social Share)
-│   └── ui/              # Reusable UI components
-├── lib/
-│   ├── blog/            # Blog utilities (Markdown parsing, file system)
-│   └── utils.ts         # Helper functions
-├── data/
-│   ├── posts/           # Published Markdown files
-│   └── drafts/          # Draft Markdown files
-└── public/              # Static assets
+```bash
+npm ci
+cp .env.example .env.local
+npm run dev
 ```
 
-## 🗺️ Roadmap & Future Plans
+Open `http://localhost:3000/en` for the public site and `http://localhost:3000/studio/login` for Studio.
 
-- [x] **Phase 1: Foundation (Completed)**
-  - [x] "Captain's Log" rebrand.
-  - [x] File-based CMS architecture.
-  - [x] Basic AI writing assistance.
+## Studio authentication
 
-- [x] **Phase 2: Enhanced Experience (Completed)**
-  - [x] Syntax highlighting for code blocks.
-  - [x] Scheduled posting capability.
-  - [x] AI social media caption generator.
-  - [x] Advanced search and filtering.
+Studio uses an Argon2id password hash and a signed, HttpOnly, SameSite=Strict session cookie. Generate a hash without putting the password in a command-line argument:
 
-- [ ] **Phase 3: Community & Engagement (Coming Soon)**
-  - [ ] **Comment System**: Integration with Giscus (GitHub Discussions) or simple database-backed comments.
-  - [ ] **Newsletter**: Email subscription for "Weekly Log" updates.
-  - [ ] **Interactive Reactions**: "Clap" or "Star" posts.
+```bash
+npm run hash-password
+```
 
-## 🤝 Contributing
+Copy the printed PHC value to `ADMIN_PASSWORD_HASH`. Set a random `SESSION_SECRET` of at least 32 characters and set `ADMIN_USERNAME`. Passwords and secrets are never sent to client JavaScript.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## Content storage
 
-## 📄 License
+The repository's existing `data/posts` directory remains the Markdown source of truth. Configure the four `GITHUB_CONTENT_*` variables for hosted Studio writes. Without them, local development writes to the filesystem; hosted writes fail with a clear configuration message rather than pretending to persist.
 
-This project is open source and available under the [MIT License](LICENSE).
+Committed drafts in a public repository are readable by people who can access that repository. Use the editor's local autosave for private unfinished work and choose repository saving deliberately.
 
+## Media
+
+Set `BLOB_READ_WRITE_TOKEN` to use Vercel Blob. Without it, Studio uses the Git/local media adapter. Images are signature-checked, size-limited, resized when necessary, and generated as WebP/AVIF variants where appropriate.
+
+## Optional services
+
+- `AI_PROVIDER`, `AI_MODEL`, and `AI_API_KEY` enable TL;DR, SEO suggestions, internal-link assistance, and content repurposing. Manual writing remains available without them.
+- `VERCEL_ANALYTICS_TOKEN`, `VERCEL_PROJECT_ID`, and optional `VERCEL_TEAM_ID` enable the server-only Studio analytics dashboard. Missing credentials show a disconnected state; no metrics are invented.
+- `INSTAGRAM_*`, `X_*`, and `FACEBOOK_ACCESS_TOKEN` are reserved for approved provider metadata. Manual social cards work without them.
+
+## Quality checks
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npm run test:e2e
+```
+
+The E2E suite starts a local development server on port 3100 by default and uses installed Google Chrome. Set `TEST_BASE_URL` to test a deployed preview, or set `E2E_SERVER_COMMAND="npm run start -- -p 3100"` to exercise a production build.
+
+## Documentation
+
+- `AUDIT.md` — repository audit, route inventory, risks, and architecture decisions.
+- `ADMIN-GUIDE.md` — non-technical Studio workflow.
+- `docs/DEPLOYMENT.md` — GitHub, Vercel, media, AI, analytics, and optional social setup.
+- `docs/INTEGRATIONS.md` — existing service notes.
+
+## Public routes
+
+Public routes remain locale-prefixed under `/en`, `/de`, `/de-CH`, `/lb-LU`, `/es`, `/hi-IN`, and `/fr`. Studio routes are top-level, private, noindex, and protected independently at the server/API layer.

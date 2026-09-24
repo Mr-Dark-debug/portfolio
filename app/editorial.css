@@ -1095,3 +1095,14 @@
     height: 250px;
   }
 }
+.home-social-signals { padding-top: 72px; }
+.home-social-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 28px; }
+.home-social-card { display: flex; align-items: center; gap: 12px; min-height: 92px; padding: 16px; border: 1px solid #c4b5fd2b; border-radius: 14px; color: #dce1f3; background: #101631; text-decoration: none; transition: border-color .2s, transform .2s, background .2s; }
+.home-social-card:hover { border-color: #d4f99470; background: #141f3d; transform: translateY(-2px); }
+.home-social-card > span:nth-child(2) { min-width: 0; flex: 1; display: grid; gap: 5px; }
+.home-social-card strong { overflow: hidden; color: #f1f2f8; font-size: .84rem; text-overflow: ellipsis; white-space: nowrap; }
+.home-social-card small { overflow: hidden; color: #8f9bbd; font-size: .7rem; text-overflow: ellipsis; white-space: nowrap; }
+.home-social-card > svg { width: 1rem; color: #c4b5fd; }
+.home-social-icon { display: grid; place-items: center; width: 2.3rem; height: 2.3rem; border-radius: .65rem; color: #d4f994; background: #d4f99412; }
+.home-social-icon svg { width: 1.05rem; height: 1.05rem; }
+@media (max-width: 767px) { .home-social-grid { grid-template-columns: 1fr; } .home-social-signals { padding-top: 52px; } }

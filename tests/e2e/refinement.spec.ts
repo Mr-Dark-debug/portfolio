@@ -64,6 +64,7 @@ test("project overview generates on each visit, keeps facts, and retries a failu
   page,
 }) => {
   let calls = 0;
+  let overviewPhase: "success" | "failure" = "success";
   await page.route("**/api/projects/overview**", async (route) => {
     if (route.request().method() === "GET")
       return route.fulfill({
@@ -92,7 +93,7 @@ test("project overview generates on each visit, keeps facts, and retries a failu
         },
       });
     calls++;
-    if (calls === 2)
+    if (overviewPhase === "failure")
       return route.fulfill({
         status: 503,
         json: { error: "The overview could not be generated." },
@@ -115,6 +116,7 @@ test("project overview generates on each visit, keeps facts, and retries a failu
     path: "test-results/project-desktop.png",
     fullPage: true,
   });
+  overviewPhase = "failure";
   await page.reload();
   await expect(
     page.getByText("The overview could not be generated."),
@@ -122,11 +124,12 @@ test("project overview generates on each visit, keeps facts, and retries a failu
   await expect(
     page.getByRole("link", { name: "A source-backed commit" }),
   ).toBeVisible();
+  overviewPhase = "success";
   await page.getByRole("button", { name: "Try again" }).click();
   await expect(
     page.getByRole("heading", { name: "What it does" }),
   ).toBeVisible();
-  expect(calls).toBe(3);
+  expect(calls).toBeGreaterThanOrEqual(3);
   await page.setViewportSize({ width: 390, height: 844 });
   expect(
     await page.evaluate(

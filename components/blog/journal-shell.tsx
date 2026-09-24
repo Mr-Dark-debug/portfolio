@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, Rss } from "lucide-react";
+import { MediaPreferencesLink } from "@/components/blog/consent-aware-embed";
 
 export function JournalNav({
   locale,
@@ -48,6 +49,7 @@ export function JournalFooter({ locale }: { locale: string }) {
               <Rss size={14} aria-hidden="true" /> RSS
             </a>
             <Link href={`/${locale}/privacy`}>Privacy</Link>
+            <MediaPreferencesLink />
           </div>
         </div>
       </div>
@@ -67,7 +69,7 @@ export function JournalDate({
         year: "numeric",
         month: "short",
         day: "numeric",
-        timeZone: "UTC",
+        timeZone: "Europe/Berlin",
       })}
     </time>
   );

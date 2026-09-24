@@ -28,6 +28,8 @@ import { resume } from "@/lib/resume";
 import { ContactForm } from "@/components/ui/contact-form";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import HomeSocialSignals from "@/components/home-social-signals";
+import type { SocialItem } from "@/lib/studio/schema";
 
 const profileLinks = [
   { href: "https://prashant.sbs/", label: "Website" },
@@ -38,7 +40,7 @@ const profileLinks = [
   { href: "https://x.com/prashanttto", label: "X" },
 ];
 
-export default function HomePage({ hero }: { hero: React.ReactNode }) {
+export default function HomePage({ hero, socialItems }: { hero: React.ReactNode; socialItems: SocialItem[] }) {
   const locale = useLocale();
   const t = useTranslations("HomePage");
 
@@ -173,6 +175,7 @@ export default function HomePage({ hero }: { hero: React.ReactNode }) {
         <CareerSections />
         <SelectedWork locale={locale}/>
         <GitHubProjects username="Mr-Dark-debug" organizations={["PocketLLM", "syntaxandsips", "codex-clone"]} maxProjects={6} />
+        <HomeSocialSignals items={socialItems} locale={locale} />
 
         <section id="skills" className="w-full">
           <TechnologiesSection />

@@ -12,6 +12,7 @@ import {
     X,
     MessageCircle
 } from "lucide-react";
+import { track } from "@vercel/analytics/react";
 import { cn } from "@/lib/utils";
 import { getShareUrl, copyToClipboard } from "@/lib/blog/api";import { Sparkles, Copy, Loader2, ArrowRight } from "lucide-react";
 
@@ -82,12 +83,14 @@ export function SocialShareButtons({
     const handleCopy = useCallback(async () => {
         const success = await copyToClipboard(fullUrl);
         if (success) {
+            track("blog_share", { method: "copy" });
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         }
     }, [fullUrl]);
 
     const handleShareClick = async (platform: string) => {
+        track("blog_share", { platform });
         if (!content) {
             // Fallback to direct share if no content provided
             const shareUrl = getShareUrl(platform, fullUrl, title);

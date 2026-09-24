@@ -49,30 +49,5 @@ export default function BlogPage() {
 }
 
 function BlogLoadingSkeleton() {
-    return (
-        <div className="min-h-screen bg-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                {/* Header skeleton */}
-                <div className="text-center mb-16">
-                    <div className="h-12 w-48 bg-zinc-200 rounded-lg mx-auto mb-4 animate-pulse" />
-                    <div className="h-6 w-96 bg-zinc-200 rounded-lg mx-auto animate-pulse" />
-                </div>
-
-                {/* Cards skeleton */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {[...Array(6)].map((_, i) => (
-                        <div key={i} className="rounded-2xl bg-zinc-100 overflow-hidden animate-pulse">
-                            <div className="h-48 bg-zinc-200" />
-                            <div className="p-6">
-                                <div className="h-4 w-32 bg-zinc-200 rounded mb-3" />
-                                <div className="h-6 w-full bg-zinc-200 rounded mb-3" />
-                                <div className="h-4 w-full bg-zinc-200 rounded mb-2" />
-                                <div className="h-4 w-2/3 bg-zinc-200 rounded" />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
+    return <div className="journal-page"><div className="journal-container" style={{ paddingBlock: "96px" }}><div className="journal-intro"><div><p className="journal-kicker">The engineering journal</p><div className="h-16 w-80 max-w-full rounded bg-[#c4b5fd1a] animate-pulse" /></div><div className="journal-intro-side"><div className="h-5 w-full max-w-sm rounded bg-[#c4b5fd12] animate-pulse" /><div className="mt-10 h-12 w-full max-w-sm rounded border border-[#c4b5fd25] animate-pulse" /></div></div><div className="journal-library" style={{ paddingBlock: "56px" }}><div className="journal-entries">{[1, 2, 3].map((item) => <div className="journal-entry" key={item}><span className="journal-entry-number">0{item}</span><div><div className="h-4 w-28 rounded bg-[#c4b5fd15] animate-pulse" /><div className="mt-4 h-8 w-4/5 rounded bg-[#c4b5fd12] animate-pulse" /><div className="mt-3 h-4 w-3/5 rounded bg-[#c4b5fd0d] animate-pulse" /></div></div>)}</div></div></div></div>;
 }

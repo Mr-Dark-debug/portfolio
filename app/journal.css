@@ -801,7 +801,77 @@
     font-size: 16px;
     margin-top: 22px;
   }
-  .reader-metadata {
+.reader-subtitle {
+  color: #d9d2f5;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  line-height: 1.55;
+  margin-top: 18px;
+  max-width: 760px;
+}
+.reader-faq { margin: 32px 0; padding-top: 24px; border-top: 1px solid var(--journal-line); }
+.reader-faq h2 { margin: 8px 0 14px; color: var(--journal-text); font-size: 24px; letter-spacing: -.04em; }
+.reader-faq details { border-top: 1px solid var(--journal-line); }
+.reader-faq details:last-child { border-bottom: 1px solid var(--journal-line); }
+.reader-faq summary { padding: 15px 0; color: #e7e9f6; cursor: pointer; font-size: 15px; font-weight: 600; }
+.reader-faq details p { padding: 0 0 16px; color: var(--journal-muted); line-height: 1.75; }
+.reader-tldr {
+  margin: 0 0 28px;
+  padding: 18px 20px;
+  border: 1px solid #c4b5fd35;
+  border-left: 3px solid #d4f994;
+  border-radius: 10px;
+  background: #111a35;
+}
+.reader-tldr p {
+  color: #e2e6f5;
+  font-size: 15px;
+  line-height: 1.75;
+  margin-top: 8px;
+}
+.reader-embeds {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 28px;
+}
+.reader-prose pre {
+  position: relative;
+  padding-top: 42px !important;
+}
+.reader-code-label,
+.reader-code-copy {
+  position: absolute;
+  top: 10px;
+  z-index: 1;
+  font: 10px/1.2 monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.reader-code-label { left: 16px; color: #c4b5fd; }
+.reader-code-copy { right: 12px; border: 1px solid #c4b5fd40; border-radius: 5px; padding: 5px 8px; color: #d4f994; background: #101831; cursor: pointer; }
+.reader-code-copy:hover { background: #1a2748; }
+.studio-consent-card { margin: 0 0 18px; padding: 16px; border: 1px solid #c4b5fd35; border-radius: 10px; background: #101831; color: #cbd2e7; }
+.studio-consent-card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.studio-consent-provider { display: flex; align-items: center; gap: 9px; color: #f1f2f8; font-size: 13px; }
+.studio-consent-provider svg { width: 16px; height: 16px; color: #c4b5fd; }
+.studio-consent-card p { color: #a6b2cc; font-size: 12px; line-height: 1.6; margin-top: 7px; }
+.studio-consent-preview { display: grid; grid-template-columns: 150px 1fr; gap: 14px; align-items: center; margin-top: 14px; padding: 12px; border: 1px solid #c4b5fd1c; border-radius: 8px; background: #080f24; }
+.studio-consent-preview img { width: 150px; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 6px; }
+.studio-consent-placeholder { display: grid; place-items: center; width: 150px; aspect-ratio: 16 / 10; border-radius: 6px; color: #c4b5fd; background: #141d39; }
+.studio-consent-placeholder svg { width: 28px; height: 28px; }
+.studio-consent-preview strong { color: #e8ebf8; font-size: 12px; line-height: 1.5; }
+.studio-consent-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.studio-consent-actions .studio-button { min-height: 36px; padding: 7px 10px; font-size: 11px; }
+.studio-consent-actions .studio-button-primary { background: #d4f994; color: #14221a; }
+.studio-consent-actions .studio-button-secondary, .studio-consent-actions .studio-button-quiet { border: 1px solid #c4b5fd40; color: #d9def0; background: #141d39; }
+.studio-consent-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; color: #c4b5fd; font-size: 11px; text-decoration: none; }
+.studio-consent-link:hover { color: #d4f994; }
+.studio-consent-link svg { width: 13px; height: 13px; }
+.studio-consent-revoke { border: 0; color: #8f9bbd; background: transparent; cursor: pointer; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.studio-consent-revoke:hover { color: #d4f994; }
+.studio-consent-frame { width: 100%; aspect-ratio: 16 / 9; margin-top: 14px; overflow: hidden; border-radius: 8px; background: #05091c; }
+.studio-consent-frame iframe { width: 100%; height: 100%; border: 0; }
+@media (max-width: 700px) { .studio-consent-preview { grid-template-columns: 1fr; } .studio-consent-preview img, .studio-consent-placeholder { width: 100%; } }
+.reader-metadata {
     margin-top: 30px;
     display: grid;
     grid-template-columns: 1fr 1fr;
