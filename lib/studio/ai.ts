@@ -49,7 +49,7 @@ export function aiAvailability() {
   return config ? { available: true as const, provider: config.provider, model: config.model } : { available: false as const, message: "AI API not configured" };
 }
 
-async function complete(prompt: string): Promise<string> {
+async function complete(prompt: string, format: "text" | "json" = "json"): Promise<string> {
   const config = providerConfig();
   if (!config) throw new Error("AI API not configured");
   const controller = new AbortController();
@@ -67,8 +67,8 @@ async function complete(prompt: string): Promise<string> {
       const body = (await response.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
       return body.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n") || "";
     }
-    const baseUrl = process.env.AI_API_URL || "https://api.openai.com/v1/chat/completions";
-    const response = await fetch(baseUrl, { method: "POST", signal: controller.signal, headers: { "Content-Type": "application/json", Authorization: `Bearer ${config.apiKey}` }, body: JSON.stringify({ model: config.model, temperature: 0.3, max_tokens: 1400, response_format: { type: "json_object" }, messages: [{ role: "system", content: "Return only valid JSON. Never invent facts that are not supported by the supplied article." }, { role: "user", content: prompt }] }) });
+    const baseUrl = process.env.AI_API_URL || (config.provider === "groq" ? "https://api.groq.com/openai/v1/chat/completions" : "https://api.openai.com/v1/chat/completions");
+    const response = await fetch(baseUrl, { method: "POST", signal: controller.signal, headers: { "Content-Type": "application/json", Authorization: `Bearer ${config.apiKey}` }, body: JSON.stringify({ model: config.model, temperature: 0.3, max_tokens: 1400, ...(format === "json" ? { response_format: { type: "json_object" } } : {}), messages: [{ role: "system", content: format === "json" ? "Return only valid JSON. Never invent facts that are not supported by the supplied article." : "Return plain text. Never invent facts that are not supported by the supplied article." }, { role: "user", content: prompt }] }) });
     if (!response.ok) throw new Error(`AI provider returned ${response.status}`);
     const body = (await response.json()) as { choices?: { message?: { content?: string } }[] };
     return body.choices?.[0]?.message?.content || "";
@@ -78,7 +78,7 @@ async function complete(prompt: string): Promise<string> {
 }
 
 export async function generateTldr(title: string, body: string, style = "concise"): Promise<string> {
-  const result = await complete(`Write a ${style} TL;DR for the article below. Return 2–4 sentences, preserve uncertainty, and do not add facts. Use plain text only.\n\nTitle: ${title}\n\nArticle:\n${body.slice(0, 40000)}`);
+  const result = await complete(`Write a ${style} TL;DR for the article below. Return 2–4 sentences, preserve uncertainty, and do not add facts. Use plain text only.\n\nTitle: ${title}\n\nArticle:\n${body.slice(0, 40000)}`, "text");
   return result.trim().slice(0, 1200);
 }
 
