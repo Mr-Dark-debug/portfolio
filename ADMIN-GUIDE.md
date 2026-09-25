@@ -12,12 +12,13 @@ Studio is the private control center for Field Notes and portfolio content. The 
 ## Create and edit an article
 
 1. Open **Posts → New post** or an existing title.
-2. Write a title, stable slug, excerpt, tags, and topics.
-3. Use the toolbar for headings, emphasis, lists, links, code, tables, images, callouts, and provider URLs.
-4. The status bar shows word count, character count, reading time, local autosave state, and the last repository save.
-5. Use **Preview** to render the same sanitized Markdown pipeline used publicly.
-6. Use **Save locally** for private unfinished work. It is stored in this browser only.
-7. Use **Save draft to repository** only when a committed draft in the content repository is acceptable.
+2. To import an existing article, choose a Markdown or text file, or export a Google Doc as Word (`.docx`) and upload it. Studio fills the title, slug, excerpt, tags, and body, then keeps the result as a local draft for review. Embedded Word images need a separate upload.
+3. Otherwise, write a title, stable slug, excerpt, tags, and topics.
+4. Use the toolbar for headings, emphasis, lists, links, code, tables, images, callouts, and provider URLs. On a phone, switch between **Write & save** and **Details & AI**.
+5. The status bar shows word count, character count, reading time, local autosave state, and the last repository save.
+6. Use **Preview** to render the same sanitized Markdown pipeline used publicly.
+7. Use **Save locally** for private unfinished work. It is stored in this browser only, and can be restored after reopening the editor.
+8. Use **Save draft to repository** only when a committed draft in the content repository is acceptable.
 
 ## Images and media
 
@@ -43,10 +44,11 @@ If a provider has no reliable public embed, the link card remains useful and lin
 ## AI tools
 
 - **Generate TL;DR** creates an editable two-to-four sentence summary from the current title and body. It is generated only when requested and saved only when you save the article.
-- **AI SEO optimize** proposes metadata, topics, headings, links, entities, FAQ opportunities, and content gaps. Apply suggestions individually; AI never overwrites the body or publishes automatically.
+- **AI SEO optimize** proposes metadata, topics, headings, links, entities, FAQ opportunities, and content gaps. On a new post, **Apply locally** updates the browser draft; save it to the repository when ready. On an existing post, **Apply & save** commits supported fields immediately. Guidance without a matching field has no Apply button. AI never overwrites the body or publishes automatically.
 - **Repurpose content** creates editable drafts for LinkedIn, X, Instagram, YouTube, short-form hooks, newsletters, and GitHub announcements. It does not post anywhere.
 
 If AI is not configured, the buttons show a disconnected message and all manual fields remain available.
+Hosted repository saves require `GITHUB_CONTENT_TOKEN` in Vercel. If it is missing, Studio reports the error and retains changes in browser recovery.
 
 ## SEO and quality
 
