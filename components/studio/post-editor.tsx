@@ -5,24 +5,14 @@ import { useRouter } from "next/navigation";
 import { AlertCircle, Archive, Bold, Check, Code2, Eye, FileText, Heading2, ImagePlus, Italic, Link2, List, ListOrdered, Maximize2, Minus, PanelRight, Quote, Redo2, Save, Send, Sparkles, Strikethrough, Table2, Undo2, Upload, Video } from "lucide-react";
 import type { ArticleFrontmatter, ArticleStatus } from "@/lib/studio/schema";
 import type { ManagedArticle } from "@/lib/studio/content";
+import type { SeoSuggestions } from "@/lib/studio/ai";
+import { applySeoSuggestion, editableSeoKeys, type EditableSeoKey } from "@/lib/studio/seo-apply";
 import { calculateReadingTime, countCharacters, countWords } from "@/lib/studio/markdown";
 import DiscoveryFields from "./discovery-fields";
 import { clientQualityChecks } from "./quality-checks";
 import { deploymentMessage, formatDateTime, studioFetch, type DeploymentRequest } from "./studio-api";
 
 type SaveAction = "save" | "publish" | "schedule" | "unpublish" | "archive";
-type SeoSuggestions = {
-  metaTitle?: string;
-  metaDescription?: string;
-  excerpt?: string;
-  slug?: string;
-  topic?: string;
-  tags?: string[];
-  entities?: string[];
-  tldr?: string;
-  ogTitle?: string;
-  ogDescription?: string;
-};
 type Repurposing = {
   linkedin: string;
   xThread: string[];
@@ -77,7 +67,10 @@ export default function PostEditor({ article }: EditorProps) {
   const [tagInput, setTagInput] = useState("");
   const [topicInput, setTopicInput] = useState("");
   const [qualityOpen, setQualityOpen] = useState(true);
-  const storageKey = `prashant-studio-local:${article?.slug || frontmatter.slug || "new"}`;
+  const [mobilePanel, setMobilePanel] = useState<"write" | "details">("write");
+  const [importing, setImporting] = useState(false);
+  const [importWarnings, setImportWarnings] = useState<string[]>([]);
+  const storageKey = `prashant-studio-local:${article?.slug || "new"}`;
   const quality = useMemo(() => clientQualityChecks(frontmatter, body), [frontmatter, body]);
   const words = useMemo(() => countWords(body), [body]);
   const characters = useMemo(() => countCharacters(body), [body]);
@@ -137,11 +130,11 @@ export default function PostEditor({ article }: EditorProps) {
   const addCallout = () => insert("> **Note:** ", "", "Add a useful note");
   const addTable = () => insert("| Column | Value |\n| --- | --- |\n| ", " |  |", "Item");
 
-  const saveLocal = useCallback(() => {
+  const saveLocal = useCallback((notify = false) => {
     const savedAt = new Date().toISOString();
     localStorage.setItem(storageKey, JSON.stringify({ body, frontmatter, savedAt }));
     setLocalSavedAt(savedAt);
-    setMessage("Saved locally in this browser.");
+    if (notify) setMessage("Saved locally in this browser.");
   }, [body, frontmatter, storageKey]);
 
   const loadRevisions = useCallback(async () => {
@@ -157,28 +150,29 @@ export default function PostEditor({ article }: EditorProps) {
     }
   }, [article]);
 
-  const save = async (action: SaveAction) => {
+  const save = async (action: SaveAction, override?: ArticleFrontmatter) => {
     setBusy(action);
     setMessage("");
-    const slug = frontmatter.slug || frontmatter.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 150);
+    const current = override || frontmatter;
+    const slug = current.slug || current.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 150);
     if (!slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
       setMessage("Add a valid lowercase slug before saving.");
       setBusy(null);
       return;
     }
     const nextFrontmatter: ArticleFrontmatter = {
-      ...frontmatter,
+      ...current,
       slug,
       readingTime,
       updatedAt: new Date().toISOString(),
-      status: action === "publish" ? "published" : action === "schedule" ? "scheduled" : action === "unpublish" ? "draft" : action === "archive" ? "archived" : frontmatter.status,
+      status: action === "publish" ? "published" : action === "schedule" ? "scheduled" : action === "unpublish" ? "draft" : action === "archive" ? "archived" : current.status,
     };
     if (action === "publish") {
-      nextFrontmatter.publishedAt = frontmatter.publishedAt || new Date().toISOString();
+      nextFrontmatter.publishedAt = current.publishedAt || new Date().toISOString();
       nextFrontmatter.scheduledAt = null;
     }
     if (action === "schedule") {
-      if (!frontmatter.scheduledAt || Date.parse(frontmatter.scheduledAt) <= Date.now()) {
+      if (!current.scheduledAt || Date.parse(current.scheduledAt) <= Date.now()) {
         setMessage("Choose a future date and time before scheduling.");
         setBusy(null);
         return;
@@ -271,21 +265,52 @@ export default function PostEditor({ article }: EditorProps) {
     }
   };
 
-  const applySeo = (key: keyof SeoSuggestions) => {
-    const value = seoSuggestions?.[key];
-    if (typeof value !== "string" || !value) return;
-    if (["metaTitle", "metaDescription", "excerpt", "slug", "topic", "tldr", "ogTitle", "ogDescription"].includes(key)) setField(key as keyof ArticleFrontmatter, value);
+  const applySeo = async (key: EditableSeoKey) => {
+    if (!seoSuggestions || busy) return;
+    const next = applySeoSuggestion(frontmatter, seoSuggestions, key);
+    if (next === frontmatter) return;
+    setFrontmatter(next);
+    setDirty(true);
+    localStorage.setItem(storageKey, JSON.stringify({ body, frontmatter: next, savedAt: new Date().toISOString() }));
+    if (article) await save("save", next);
+    else setMessage("Suggestion applied and saved in this browser. Save the draft to the repository when ready.");
+  };
+
+  const importFile = async (file: File) => {
+    if ((frontmatter.title || body) && !window.confirm("Replace the current editor contents with this document? Your local copy will be updated.")) return;
+    setImporting(true);
+    setMessage("");
+    try {
+      const form = new FormData();
+      form.set("file", file);
+      const result = await studioFetch<{ document: { frontmatter: ArticleFrontmatter; body: string }; warnings: string[] }>("/api/studio/import", { method: "POST", body: form });
+      const next = { ...initialFrontmatter(), ...result.document.frontmatter };
+      setFrontmatter(next);
+      setBody(result.document.body);
+      setSeoSuggestions(null);
+      setImportWarnings(result.warnings);
+      setDirty(true);
+      const savedAt = new Date().toISOString();
+      localStorage.setItem(storageKey, JSON.stringify({ body: result.document.body, frontmatter: next, savedAt }));
+      setLocalSavedAt(savedAt);
+      setMessage(`Imported ${file.name} into a local draft. Review the fields and save it to the repository when ready.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Document import failed.");
+    } finally {
+      setImporting(false);
+    }
   };
 
   useEffect(() => {
     const raw = localStorage.getItem(storageKey);
-    if (!raw || article) return;
+    if (!raw || dirty) return;
     try {
-      setRecovery(JSON.parse(raw) as { body: string; frontmatter: ArticleFrontmatter; savedAt: string });
+      const local = JSON.parse(raw) as { body: string; frontmatter: ArticleFrontmatter; savedAt: string };
+      if (!article || Date.parse(local.savedAt) > Date.parse(article.frontmatter.updatedAt || "0")) setRecovery(local);
     } catch {
       localStorage.removeItem(storageKey);
     }
-  }, [article, storageKey]);
+  }, [article, storageKey, dirty]);
 
   useEffect(() => {
     if (!dirty) return;
@@ -330,7 +355,9 @@ export default function PostEditor({ article }: EditorProps) {
 
   return (
     <div className={fullscreen ? "studio-fullscreen" : ""}>
-      <div className="studio-editor-layout">
+      {!article ? <section className="studio-panel studio-import-panel"><div><h2>Import a document</h2><p>Upload Markdown, text, or a Word .docx exported from Google Docs. The title, slug, excerpt, tags, and article body fill in automatically. Import stays a draft.</p></div><label className="studio-button studio-button-secondary studio-import-button"><Upload aria-hidden="true" /> {importing ? "Importing…" : "Choose document"}<input type="file" accept=".md,.markdown,.txt,.docx" disabled={importing} onChange={(event) => { const file = event.target.files?.[0]; if (file) void importFile(file); event.target.value = ""; }} /></label>{importWarnings.length ? <ul className="studio-import-warnings">{importWarnings.map((warning) => <li key={warning}>{warning}</li>)}</ul> : null}</section> : null}
+      <div className="studio-mobile-tabs" role="group" aria-label="Editor panels"><button className="studio-button" type="button" aria-pressed={mobilePanel === "write"} onClick={() => setMobilePanel("write")}>Write & save</button><button className="studio-button" type="button" aria-pressed={mobilePanel === "details"} onClick={() => setMobilePanel("details")}>Details & AI</button></div>
+      <div className="studio-editor-layout" data-mobile-panel={mobilePanel}>
         <div className="studio-editor-main">
           <section className="studio-card studio-editor-card">
             <input className="studio-editor-title" value={frontmatter.title} onChange={(event) => setField("title", event.target.value)} placeholder="Article title" aria-label="Article title" />
@@ -365,7 +392,7 @@ export default function PostEditor({ article }: EditorProps) {
             <footer className="studio-editor-status"><div className="studio-counts"><span><strong>{words}</strong> words</span><span><strong>{characters}</strong> characters</span><span><strong>{readingTime}</strong> min read</span></div><span>{dirty ? <strong>Unsaved changes</strong> : lastSavedAt ? `Saved ${formatDateTime(lastSavedAt)}` : "Ready to write"}{localSavedAt ? ` · local ${formatDateTime(localSavedAt)}` : ""}</span></footer>
           </section>
           <div className="studio-actions" style={{ marginTop: ".8rem" }}>
-            <button className="studio-button studio-button-secondary" type="button" onClick={saveLocal}><Save aria-hidden="true" /> Save locally</button>
+            <button className="studio-button studio-button-secondary" type="button" onClick={() => saveLocal(true)}><Save aria-hidden="true" /> Save locally</button>
             {article ? <button className="studio-button studio-button-quiet" type="button" disabled={Boolean(busy)} onClick={() => void renameArticle()}>Rename slug</button> : null}
             <button className="studio-button studio-button-secondary" type="button" disabled={Boolean(busy)} onClick={() => void save("save")}><Upload aria-hidden="true" /> {busy === "save" ? "Saving…" : "Save draft to repository"}</button>
             <button className="studio-button studio-button-ai" type="button" disabled={Boolean(busy)} onClick={() => void save("schedule")}><Send aria-hidden="true" /> Schedule</button>
@@ -415,7 +442,8 @@ export default function PostEditor({ article }: EditorProps) {
           </section>
           <section className="studio-panel">
             <div className="studio-panel-header"><h3>SEO suggestions</h3><Sparkles aria-hidden="true" /></div>
-            {seoSuggestions ? <div className="studio-form">{Object.entries(seoSuggestions).filter(([, value]) => typeof value === "string").map(([key, value]) => <div className="studio-field" key={key}><span>{key}</span><div className="studio-seo-preview"><strong>{key}</strong><p>{String(value)}</p><button className="studio-button studio-button-quiet" type="button" onClick={() => applySeo(key as keyof SeoSuggestions)}>Apply suggestion</button></div></div>)}</div> : <><div className="studio-seo-preview"><strong>{frontmatter.metaTitle || frontmatter.title || "Your meta title"}</strong><span>/en/blog/posts/{frontmatter.slug || "your-slug"}</span><p>{frontmatter.metaDescription || frontmatter.excerpt || "Add a meta description to make the search preview useful."}</p></div><p>Run AI SEO optimize for editable suggestions. Nothing is applied automatically.</p></>}
+            {seoSuggestions && message ? <div className="studio-alert" role="status">{message}</div> : null}
+            {seoSuggestions ? <div className="studio-form">{Object.entries(seoSuggestions).map(([key, value]) => { const editable = editableSeoKeys.includes(key as EditableSeoKey) && !(article && key === "slug"); return <div className="studio-field" key={key}><div className="studio-seo-preview"><strong>{key.replace(/([A-Z])/g, " $1")}</strong><p>{typeof value === "string" ? value : JSON.stringify(value)}</p>{editable ? <button className="studio-button studio-button-quiet" type="button" disabled={Boolean(busy)} onClick={() => void applySeo(key as EditableSeoKey)}>{article ? "Apply & save" : "Apply locally"}</button> : <small>{key === "slug" && article ? "Use Rename slug for an existing post." : "Review suggestion; no direct field to apply."}</small>}</div></div>; })}</div> : <><div className="studio-seo-preview"><strong>{frontmatter.metaTitle || frontmatter.title || "Your meta title"}</strong><span>/en/blog/posts/{frontmatter.slug || "your-slug"}</span><p>{frontmatter.metaDescription || frontmatter.excerpt || "Add a meta description to make the search preview useful."}</p></div><p>Run AI SEO optimize for editable suggestions. Nothing is applied automatically.</p></>}
           </section>
           <section className="studio-panel">
             <div className="studio-panel-header"><h3>Repurpose content</h3><Sparkles aria-hidden="true" /></div><p>Generate reviewable drafts for social, video, newsletter, and GitHub. Nothing posts automatically.</p><button className="studio-button studio-button-secondary" type="button" disabled={busy === "ai"} onClick={() => void repurpose()}><Sparkles aria-hidden="true" /> Create drafts</button>
