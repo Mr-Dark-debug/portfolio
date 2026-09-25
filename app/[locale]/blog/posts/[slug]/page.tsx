@@ -1,14 +1,13 @@
 import { pageMetadata, jsonLd as serializeJsonLd } from '@/lib/metadata';
 import { notFound } from "next/navigation";
-import { getPostBySlug, getAllPosts, getAdjacentPosts, getRelatedPosts, extractTableOfContents } from "@/lib/blog/utils";
+import { getPostBySlug, getAdjacentPosts, getRelatedPosts, extractTableOfContents } from "@/lib/blog/utils";
 import BlogPostClient from "./BlogPostClient";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 import { youtubeVideoId } from "@/lib/studio/embeds";
-import { locales } from '@/navigation';
 
-export const revalidate = 60;
+// A scheduled slug can be requested before it is due. Never cache that 404.
+export const dynamic = "force-dynamic";
 
 interface Props {
     params: Promise<{ locale: string; slug: string }>;
@@ -16,14 +15,9 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { locale, slug } = await params;
-    const t = await getTranslations({ locale, namespace: "Blog" });
     const post = await getPostBySlug(slug);
 
-    if (!post) {
-        return {
-            title: t("noResults"),
-        };
-    }
+    if (!post) notFound();
 
     const absoluteImage = post.ogImage || post.coverImage
         ? new URL(post.ogImage || post.coverImage || "", SITE_URL).href
@@ -60,11 +54,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             images: [absoluteImage],
         },
     };
-}
-
-export async function generateStaticParams() {
-    const posts = await getAllPosts();
-    return locales.flatMap(locale => posts.map(post => ({locale, slug: post.slug})));
 }
 
 export default async function BlogPostPage({ params }: Props) {

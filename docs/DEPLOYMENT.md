@@ -42,7 +42,7 @@ The adapter requests the current file SHA before updates. A GitHub 409 becomes a
 
 GitHub commits are persistent content changes. Studio requests a production deployment after an article, media, settings, or social content commit. The API reports whether the build was queued; a queued build is not proof that the new content is live. Check the production deployment and URL before announcing publication. If the hook is absent or fails, the Git commit is retained and Studio reports the deployment gap.
 
-Scheduled Markdown is included by the build requested when it is scheduled. The public article and listing revalidate on a short interval after the due time; feeds and discovery files have longer cache windows. Vercel Hobby cron cannot run more than once per day and has hour-level timing, so it cannot guarantee an exact schedule-time deployment.
+Scheduled Markdown is included by the build requested when it is scheduled. Article pages and the blog listing read the bundled content on request, so a previously visited scheduled URL becomes readable after its due time. Feeds and discovery files have longer cache windows. Vercel Hobby cron cannot run more than once per day and has hour-level timing, so it cannot guarantee an exact schedule-time deployment.
 
 ## Media
 
